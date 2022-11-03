@@ -1,12 +1,13 @@
 /* eslint-disable @typescript-eslint/explicit-member-accessibility */
 /* eslint-disable @typescript-eslint/semi */
 import { DateTime } from 'luxon';
-import { BaseModel, column } from '@ioc:Adonis/Lucid/Orm';
+import { BaseModel, column, HasMany, hasMany } from '@ioc:Adonis/Lucid/Orm';
 import { Empresa } from '../../../Dominio/Datos/Entidades/Empresa';
+import Tblarchivos from './Archivo';
 
 export default class Tblempresas extends BaseModel {
   @column({ isPrimary: true })
-  public id: number
+  public id: string
 
   @column({ columnName: 'emp_nombre' }) public nombre: string
 
@@ -19,6 +20,7 @@ export default class Tblempresas extends BaseModel {
   @column.dateTime({ autoCreate: true, autoUpdate: true }) public updatedAt: DateTime
 
   public establecerEmpresaDb (empresa: Empresa) {
+    this.id = empresa.id
     this.nombre = empresa.nombre
     this.nit = empresa.nit
     this.estado = empresa.estado
@@ -39,4 +41,7 @@ export default class Tblempresas extends BaseModel {
 
     return empresa
   }
+
+  @hasMany(() => Tblarchivos)
+  public archivo: HasMany<typeof Tblarchivos>
 }

@@ -4,27 +4,29 @@
 import { Paginador } from "App/Dominio/Paginador";
 import { RepositorioEmpresa } from "App/Dominio/Repositorios/RepositorioEmpresa";
 import { Empresa } from "../Entidades/Empresa";
+import { v4 as uuidv4 } from 'uuid'
 
 export class ServicioEmpresa{
   constructor (private repositorio: RepositorioEmpresa) { }
 
-  async obtenerEmpresas (params: any): Promise<{empresas: Empresa[], paginacion: Paginador}> {
+  async obtenerEmpresas (params: any): Promise<{ empresas: Empresa[], paginacion: Paginador }> {
     return this.repositorio.obtenerEmpresas(params);
   }
 
-  async obtenerEmpresaPorId (id: number): Promise<Empresa>{
+  async obtenerEmpresaPorId (id: string): Promise<Empresa>{
     return this.repositorio.obtenerEmpresaPorId(id);
   }
 
   async guardarEmpresa (empresa: Empresa): Promise<void>{
+    empresa.id = uuidv4();
     return this.repositorio.guardarEmpresa(empresa);
   }
 
-  async actualizarEmpresa (id: number, empresa: Empresa): Promise<number> {
+  async actualizarEmpresa (id: string, empresa: Empresa): Promise<string> {
     return this.repositorio.actualizarEmpresa(id, empresa);
   }
 
-  async cambiarEstado (id:number):Promise<number>{
+  async cambiarEstado (id:string):Promise<string>{
     let empresa = await this.repositorio.obtenerEmpresaPorId(id)
     empresa.estado = !empresa.estado
     return await this.repositorio.actualizarEmpresa(id, empresa);
