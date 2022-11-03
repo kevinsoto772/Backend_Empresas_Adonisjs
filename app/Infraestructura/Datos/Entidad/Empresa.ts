@@ -21,12 +21,22 @@ export default class Tblempresas extends BaseModel {
   public establecerEmpresaDb (empresa: Empresa) {
     this.nombre = empresa.nombre
     this.nit = empresa.nit
-    this.estado = empresa.estado? true:false
+    this.estado = empresa.estado
   }
 
   public establecerEmpresaConId (empresa: Empresa) {
     this.nombre = empresa.nombre
     this.nit = empresa.nit
-    this.estado = empresa.estado? true:false
+    this.estado = empresa.estado
+  }
+
+  public obtenerEmpresa (): Empresa {
+    const empresa = new Empresa()
+    empresa.id = this.id
+    empresa.nombre = this.nombre
+    empresa.nit = this.nit
+    empresa.estado = this.estado
+
+    return empresa
   }
 }

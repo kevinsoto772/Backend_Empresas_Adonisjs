@@ -1,13 +1,14 @@
 /* eslint-disable @typescript-eslint/explicit-member-accessibility */
 /* eslint-disable @typescript-eslint/quotes */
 /* eslint-disable @typescript-eslint/semi */
+import { Paginador } from "App/Dominio/Paginador";
 import { RepositorioEmpresa } from "App/Dominio/Repositorios/RepositorioEmpresa";
 import { Empresa } from "../Entidades/Empresa";
 
 export class ServicioEmpresa{
   constructor (private repositorio: RepositorioEmpresa) { }
 
-  async obtenerEmpresas (params: any): Promise<Empresa[]> {
+  async obtenerEmpresas (params: any): Promise<{empresas: Empresa[], paginacion: Paginador}> {
     return this.repositorio.obtenerEmpresas(params);
   }
 
