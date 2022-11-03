@@ -15,7 +15,9 @@
   },
   "preloads": [
     "./start/routes",
-    "./start/kernel"
+    "./start/kernel",
+    "./start/Rutas/ruta_empresa",
+    "./start/Rutas/ruta_archivo"
   ],
   "providers": [
     "./providers/AppProvider",

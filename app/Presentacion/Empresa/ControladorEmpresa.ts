@@ -2,7 +2,6 @@
 import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 import { ServicioEmpresa } from 'App/Dominio/Datos/Servicios/ServicioEmpresa'
 import { RepositorioEmpresaDB } from 'App/Infraestructura/Implementacion/BaseDatos/RepositorioEmpresaDB'
-
 export default class EmpresasController {
   private service: ServicioEmpresa
   constructor () {
@@ -20,14 +19,14 @@ export default class EmpresasController {
   }
 
   public async actualizarEmpresa ({ params, request }) {
-    const data_empresa = request.all()
-    const empresa = await this.service.actualizarEmpresa(params.id, data_empresa)
+    const dataEmpresa = request.all()
+    const empresa = await this.service.actualizarEmpresa(params.id, dataEmpresa)
     return empresa
   }
 
   public async guardarEmpresa ({ request }) {
-    const data_empresa = request.all()
-    const empresa = await this.service.guardarEmpresa(data_empresa)
+    const dataEmpresa = request.all()
+    const empresa = await this.service.guardarEmpresa(dataEmpresa)
     return empresa
   }
 

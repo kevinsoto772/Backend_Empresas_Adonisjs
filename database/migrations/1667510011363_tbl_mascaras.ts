@@ -1,15 +1,11 @@
 import BaseSchema from '@ioc:Adonis/Lucid/Schema'
 
 export default class extends BaseSchema {
-  protected tableName = 'tblempresas'
+  protected tableName = 'tbl_mascaras'
 
   public async up () {
     this.schema.createTable(this.tableName, (table) => {
-      table.uuid('id').primary()
-      table.string('emp_nombre', 200).notNullable()
-      table.integer('emp_nit').notNullable()
-
-      table.boolean('emp_estado').unsigned().notNullable().defaultTo(1)
+      table.uuid('id')
 
       /**
        * Uses timestamptz for PostgreSQL and DATETIME2 for MSSQL

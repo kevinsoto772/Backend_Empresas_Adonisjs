@@ -10,7 +10,7 @@ import { MapeadorPaginacionDB } from './MapeadorPaginacionDB';
 export class RepositorioEmpresaDB implements RepositorioEmpresa {
   async obtenerEmpresas (params: any): Promise<{empresas: Empresa[], paginacion: Paginador}> {
     const empresas: Empresa[] = []
-    const empresasDB = await Tblempresas.query().paginate(params.pagina, params.limite)
+    const empresasDB = await Tblempresas.query().orderBy('id', 'desc').paginate(params.pagina, params.limite)
     empresasDB.forEach(empresaDB => {
       empresas.push(empresaDB.obtenerEmpresa())
     })
@@ -18,7 +18,7 @@ export class RepositorioEmpresaDB implements RepositorioEmpresa {
     return {empresas , paginacion}
   }
 
-  async obtenerEmpresaPorId (id: Number): Promise<Empresa> {
+  async obtenerEmpresaPorId (id: string): Promise<Empresa> {
     const empresa = await Tblempresas.findOrFail(id)
     return empresa.obtenerEmpresa()
   }
@@ -29,10 +29,10 @@ export class RepositorioEmpresaDB implements RepositorioEmpresa {
     await empresaDb.save()
   }
 
-  async actualizarEmpresa (id: number, empresa: Empresa): Promise<number> {
-    let empresa_retorno = await Tblempresas.findOrFail(id)
-    empresa_retorno.establecerEmpresaConId(empresa)
-    await empresa_retorno.save()
+  async actualizarEmpresa (id: string, empresa: Empresa): Promise<string> {
+    let empresaRetorno = await Tblempresas.findOrFail(id)
+    empresaRetorno.establecerEmpresaConId(empresa)
+    await empresaRetorno.save()
     return id
   }
 }
