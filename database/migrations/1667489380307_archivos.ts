@@ -9,7 +9,7 @@ export default class extends BaseSchema {
       table.string('arch_nombre', 200).notNullable()
 
       table.boolean('arch_estado').unsigned().notNullable().defaultTo(1)
-      table.string('arch_empresa_id')
+      table.string('arch_empresa_id').references('id').inTable('tblempresas')
 
       /**
        * Uses timestamptz for PostgreSQL and DATETIME2 for MSSQL
