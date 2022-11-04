@@ -5,13 +5,11 @@ export default class extends BaseSchema {
 
   public async up () {
     this.schema.createTable(this.tableName, (table) => {
-      table.uuid('id')
-
-      /**
-       * Uses timestamptz for PostgreSQL and DATETIME2 for MSSQL
-       */
-      table.timestamp('created_at', { useTz: true })
-      table.timestamp('updated_at', { useTz: true })
+      table.uuid('mas_id').unique()
+      table.string('mas_valor',200).notNullable()
+      table.boolean('mas_estado').defaultTo(true)
+      table.timestamp('mas_creacion', { useTz: true })
+      table.timestamp('mas_actualizacion', { useTz: true })
     })
   }
 

@@ -17,7 +17,8 @@
     "./start/routes",
     "./start/kernel",
     "./start/Rutas/ruta_empresa",
-    "./start/Rutas/ruta_archivo"
+    "./start/Rutas/ruta_archivo",
+    "./start/Rutas/ruta_carga"
   ],
   "providers": [
     "./providers/AppProvider",

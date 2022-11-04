@@ -5,7 +5,7 @@ export default class TblMaestras extends BaseSchema {
 
   public async up () {
     this.schema.createTable(this.tableName, (table) => {
-      table.uuid('mae_id')
+      table.uuid('mae_id').unique()
       table.string('mae_descripcion',200).notNullable()
       table.boolean('mae_tipo_maestra').defaultTo(true)
       table.boolean('mae_estado').defaultTo(true)

@@ -5,7 +5,7 @@ export default class TblArchivos extends BaseSchema {
 
   public async up () {
     this.schema.createTable(this.tableName, (table) => {
-      table.uuid('arc_id')
+      table.uuid('arc_id').unique()
       table.string('arc_nombre',200).notNullable()
       table.string('arc_tipo',100)
       table.boolean('arc_estado').defaultTo(true)
