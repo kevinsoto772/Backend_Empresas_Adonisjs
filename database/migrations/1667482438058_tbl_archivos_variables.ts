@@ -5,7 +5,7 @@ export default class TblArchivosVariables extends BaseSchema {
 
   public async up () {
     this.schema.createTable(this.tableName, (table) => {
-      table.uuid('arv_id')
+      table.uuid('arv_id').unique()
       table.uuid('arv_variable_id')
       table.uuid('arv_archivo_id').references('arc_id').inTable('tbl_archivos')
       table.integer('posicion')

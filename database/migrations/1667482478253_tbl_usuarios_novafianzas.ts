@@ -5,7 +5,7 @@ export default class TblUsuariosNovafianzas extends BaseSchema {
 
   public async up () {
     this.schema.createTable(this.tableName, (table) => {
-      table.uuid('usn_id')
+      table.uuid('usn_id').unique()
       table.string('usn_nombre',200).notNullable()
       table.boolean('usn_estado').defaultTo(true)
       table.timestamp('usn_creacion', { useTz: true })

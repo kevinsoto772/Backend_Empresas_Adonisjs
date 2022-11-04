@@ -5,7 +5,7 @@ export default class TblEmpresas extends BaseSchema {
 
   public async up () {
     this.schema.createTable(this.tableName, (table) => {
-      table.uuid('emp_id')
+      table.uuid('emp_id').unique()
       table.string('emp_nombre',200).notNullable()
       table.integer('emp_nit')
       table.boolean('emp_estado').defaultTo(true)
