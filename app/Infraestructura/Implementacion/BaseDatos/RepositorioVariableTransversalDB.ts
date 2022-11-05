@@ -22,16 +22,17 @@ export class RepositorioVariableTransversalDB implements RepositorioVariableTran
     return variableTransversal.obtenerVariableTransversal()
   }
 
-  async guardarVariableTransversal (variableTransversal: VariableTransversal): Promise<void> {
+  async guardarVariableTransversal (variableTransversal: VariableTransversal): Promise<VariableTransversal> {
     let variableTransversalDb = new TblVariablesTransversales()
     variableTransversalDb.establecerVariableTransversalDb(variableTransversal)
     await variableTransversalDb.save()
+    return variableTransversalDb
   }
 
-  async actualizarVariableTransversal (id: string, variableTransversal: VariableTransversal): Promise<string> {
+  async actualizarVariableTransversal (id: string, variableTransversal: VariableTransversal): Promise<VariableTransversal> {
     let variableTransversalRetorno = await TblVariablesTransversales.findOrFail(id)
     variableTransversalRetorno.establecerVariableTransversalConId(variableTransversal)
     await variableTransversalRetorno.save()
-    return id
+    return variableTransversalRetorno
   }
 }

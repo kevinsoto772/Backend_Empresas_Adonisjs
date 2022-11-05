@@ -23,16 +23,17 @@ export class RepositorioMascaraDB implements RepositorioMascara {
     return mascara.obtenerMascara()
   }
 
-  async guardarMascara (mascara: Mascara): Promise<void> {
+  async guardarMascara (mascara: Mascara): Promise<Mascara> {
     let mascaraDB = new TblMascaras()
     mascaraDB.establecerMascaraDb(mascara)
     await mascaraDB.save()
+    return mascaraDB
   }
 
-  async actualizarMascara (id: string, mascara: Mascara): Promise<string> {
+  async actualizarMascara (id: string, mascara: Mascara): Promise<Mascara> {
     let mascaraRetorno = await TblMascaras.findOrFail(id)
     mascaraRetorno.establecerMascaraConId(mascara)
     await mascaraRetorno.save()
-    return id
+    return mascaraRetorno
   }
 }

@@ -18,16 +18,16 @@ export class ServicioUsuarioEmpresa{
     return this.repositorio.obtenerUsuarioEmpresaPorId(id);
   }
 
-  async guardarUsuarioEmpresa (usuarioEmpresa: UsuarioEmpresa): Promise<void>{
+  async guardarUsuarioEmpresa (usuarioEmpresa: UsuarioEmpresa): Promise<UsuarioEmpresa>{
     usuarioEmpresa.id = uuidv4();
     return this.repositorio.guardarUsuarioEmpresa(usuarioEmpresa);
   }
 
-  async actualizarUsuarioEmpresa (id: string, usuarioEmpresa: UsuarioEmpresa): Promise<string> {
+  async actualizarUsuarioEmpresa (id: string, usuarioEmpresa: UsuarioEmpresa): Promise<UsuarioEmpresa> {
     return this.repositorio.actualizarUsuarioEmpresa(id, usuarioEmpresa);
   }
 
-  async cambiarEstado (id:string):Promise<string>{
+  async cambiarEstado (id:string):Promise<UsuarioEmpresa>{
     let usuarioEmpresa = await this.repositorio.obtenerUsuarioEmpresaPorId(id)
     usuarioEmpresa.estado = !usuarioEmpresa.estado
     return await this.repositorio.actualizarUsuarioEmpresa(id, usuarioEmpresa);

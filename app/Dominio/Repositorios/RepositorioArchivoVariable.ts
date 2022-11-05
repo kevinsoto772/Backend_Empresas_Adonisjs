@@ -5,6 +5,6 @@ import { Paginador } from '../Paginador';
 export interface RepositorioArchivoVariable {
   obtenerArchivosVariables(param: any): Promise<{archivosVariables: ArchivoVariable[], paginacion: Paginador}>
   obtenerArchivoVariablePorId(id: string): Promise<ArchivoVariable>
-  guardarArchivoVariable(archivoVariable: ArchivoVariable): Promise<void>
-  actualizarArchivoVariable(id: string, archivoVariable: ArchivoVariable): Promise<string>
+  guardarArchivoVariable(archivoVariable: ArchivoVariable): Promise<ArchivoVariable>
+  actualizarArchivoVariable(id: string, archivoVariable: ArchivoVariable): Promise<ArchivoVariable>
 }

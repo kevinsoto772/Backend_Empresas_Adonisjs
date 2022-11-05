@@ -5,7 +5,7 @@ import { Paginador } from '../Paginador';
 export interface RepositorioEmpresa {
   obtenerEmpresas(param: any): Promise<{empresas: Empresa[], paginacion: Paginador}>
   obtenerEmpresaPorId(id: string): Promise<Empresa>
-  guardarEmpresa(empresa: Empresa): Promise<void>
-  actualizarEmpresa(id: string, empresa: Empresa): Promise<string>
+  guardarEmpresa(empresa: Empresa): Promise<Empresa>
+  actualizarEmpresa(id: string, empresa: Empresa): Promise<Empresa>
 }
 

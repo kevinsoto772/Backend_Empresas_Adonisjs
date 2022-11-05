@@ -18,16 +18,16 @@ export class ServicioArchivoVariable{
     return this.repositorio.obtenerArchivoVariablePorId(id);
   }
 
-  async guardarArchivoVariable (archivoVariable: ArchivoVariable): Promise<void>{
+  async guardarArchivoVariable (archivoVariable: ArchivoVariable): Promise<ArchivoVariable>{
     archivoVariable.id = uuidv4();
     return this.repositorio.guardarArchivoVariable(archivoVariable);
   }
 
-  async actualizarArchivoVariable (id: string, archivoVariable: ArchivoVariable): Promise<string> {
+  async actualizarArchivoVariable (id: string, archivoVariable: ArchivoVariable): Promise<ArchivoVariable> {
     return this.repositorio.actualizarArchivoVariable(id, archivoVariable);
   }
 
-  async cambiarEstado (id:string):Promise<string>{
+  async cambiarEstado (id:string):Promise<ArchivoVariable>{
     let archivoVariable = await this.repositorio.obtenerArchivoVariablePorId(id)
     archivoVariable.estado = !archivoVariable.estado
     return await this.repositorio.actualizarArchivoVariable(id, archivoVariable);

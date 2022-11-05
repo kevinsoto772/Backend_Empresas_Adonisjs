@@ -21,16 +21,17 @@ export class RepositorioArchivoDB implements RepositorioArchivo {
     return archivo.obtenerArchivo()
   }
 
-  async guardarArchivo (archivo: Archivo): Promise<void> {
+  async guardarArchivo (archivo: Archivo): Promise<Archivo> {
     let archivoDb = new Tblarchivos()
     archivoDb.establecerArchivoDb(archivo)
     await archivoDb.save()
+    return archivoDb
   }
 
-  async actualizarArchivo (id: string, archivo: Archivo): Promise<string> {
+  async actualizarArchivo (id: string, archivo: Archivo): Promise<Archivo> {
     let archivoRetorno = await Tblarchivos.findOrFail(id)
     archivoRetorno.establecerArchivoConId(archivo)
     await archivoRetorno.save()
-    return id
+    return archivoRetorno
   }
 }

@@ -17,16 +17,16 @@ export class ServicioEmpresa{
     return this.repositorio.obtenerEmpresaPorId(id);
   }
 
-  async guardarEmpresa (empresa: Empresa): Promise<void>{
+  async guardarEmpresa (empresa: Empresa): Promise<Empresa>{
     empresa.id = uuidv4();
     return this.repositorio.guardarEmpresa(empresa);
   }
 
-  async actualizarEmpresa (id: string, empresa: Empresa): Promise<string> {
+  async actualizarEmpresa (id: string, empresa: Empresa): Promise<Empresa> {
     return this.repositorio.actualizarEmpresa(id, empresa);
   }
 
-  async cambiarEstado (id:string):Promise<string>{
+  async cambiarEstado (id:string):Promise<Empresa>{
     let empresa = await this.repositorio.obtenerEmpresaPorId(id)
     empresa.estado = !empresa.estado
     return await this.repositorio.actualizarEmpresa(id, empresa);

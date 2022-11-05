@@ -23,16 +23,17 @@ export class RepositorioEmpresaDB implements RepositorioEmpresa {
     return empresa.obtenerEmpresa()
   }
 
-  async guardarEmpresa (empresa: Empresa): Promise<void> {
+  async guardarEmpresa (empresa: Empresa): Promise<Empresa> {
     let empresaDb = new Tblempresas()
     empresaDb.establecerEmpresaDb(empresa)
     await empresaDb.save()
+    return empresaDb
   }
 
-  async actualizarEmpresa (id: string, empresa: Empresa): Promise<string> {
+  async actualizarEmpresa (id: string, empresa: Empresa): Promise<Empresa> {
     let empresaRetorno = await Tblempresas.findOrFail(id)
     empresaRetorno.establecerEmpresaConId(empresa)
     await empresaRetorno.save()
-    return id
+    return empresaRetorno
   }
 }

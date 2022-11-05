@@ -22,16 +22,17 @@ export class RepositorioVariableEspecificaDB implements RepositorioVariableEspec
     return variableEspecifica.obtenerVariableEspecifica()
   }
 
-  async guardarVariableEspecifica (variableEspecifica: VariableEspecifica): Promise<void> {
+  async guardarVariableEspecifica (variableEspecifica: VariableEspecifica): Promise<VariableEspecifica> {
     let variableEspecificaDb = new TblVariablesEspecificas()
     variableEspecificaDb.establecerVariableEspecificaDb(variableEspecifica)
     await variableEspecificaDb.save()
+    return variableEspecificaDb
   }
 
-  async actualizarVariableEspecifica (id: string, variableEspecifica: VariableEspecifica): Promise<string> {
+  async actualizarVariableEspecifica (id: string, variableEspecifica: VariableEspecifica): Promise<VariableEspecifica> {
     let variableEspecificaRetorno = await TblVariablesEspecificas.findOrFail(id)
     variableEspecificaRetorno.establecerVariableEspecificaConId(variableEspecifica)
     await variableEspecificaRetorno.save()
-    return id
+    return variableEspecificaRetorno
   }
 }

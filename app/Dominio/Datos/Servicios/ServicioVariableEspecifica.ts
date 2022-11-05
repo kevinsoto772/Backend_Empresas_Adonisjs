@@ -18,28 +18,28 @@ export class ServicioVariableEspecifica{
     return this.repositorio.obtenerVariableEspecificaPorId(id);
   }
 
-  async guardarVariableEspecifica (variableEspecifica: VariableEspecifica): Promise<void>{
+  async guardarVariableEspecifica (variableEspecifica: VariableEspecifica): Promise<VariableEspecifica>{
     variableEspecifica.id = uuidv4();
     return this.repositorio.guardarVariableEspecifica(variableEspecifica);
   }
 
-  async actualizarVariableEspecifica (id: string, variableEspecifica: VariableEspecifica): Promise<string> {
+  async actualizarVariableEspecifica (id: string, variableEspecifica: VariableEspecifica): Promise<VariableEspecifica> {
     return this.repositorio.actualizarVariableEspecifica(id, variableEspecifica);
   }
 
-  async cambiarEstado (id:string):Promise<string>{
+  async cambiarEstado (id:string):Promise<VariableEspecifica>{
     let variableEspecifica = await this.repositorio.obtenerVariableEspecificaPorId(id)
     variableEspecifica.estado = !variableEspecifica.estado
     return await this.repositorio.actualizarVariableEspecifica(id, variableEspecifica);
   }
 
-  async cambiarMaestra (id:string):Promise<string>{
+  async cambiarMaestra (id:string):Promise<VariableEspecifica>{
     let variableEspecifica = await this.repositorio.obtenerVariableEspecificaPorId(id)
     variableEspecifica.maestra = !variableEspecifica.maestra
     return await this.repositorio.actualizarVariableEspecifica(id, variableEspecifica);
   }
 
-  async cambiarObligatoria (id:string):Promise<string>{
+  async cambiarObligatoria (id:string):Promise<VariableEspecifica>{
     let variableEspecifica = await this.repositorio.obtenerVariableEspecificaPorId(id)
     variableEspecifica.obligatoria = !variableEspecifica.obligatoria
     return await this.repositorio.actualizarVariableEspecifica(id, variableEspecifica);

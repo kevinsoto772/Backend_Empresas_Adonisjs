@@ -24,16 +24,17 @@ export class RepositorioUsuarioNovafianzaDB implements RepositorioUsuarioNovafia
     return usuarioNovafianza.obtenerUsuarioNovafianza()
   }
 
-  async guardarUsuarioNovafianza (usuarioNovafianza: UsuarioNovafianza): Promise<void> {
+  async guardarUsuarioNovafianza (usuarioNovafianza: UsuarioNovafianza): Promise<UsuarioNovafianza> {
     let usuarioNovafianzaDB = new TblUsuariosNovafianzas()
     usuarioNovafianzaDB.establecerUsuarioNovafianzaDb(usuarioNovafianza)
     await usuarioNovafianzaDB.save()
+    return usuarioNovafianzaDB
   }
 
-  async actualizarUsuarioNovafianza (id: string, usuarioNovafianza: UsuarioNovafianza): Promise<string> {
+  async actualizarUsuarioNovafianza (id: string, usuarioNovafianza: UsuarioNovafianza): Promise<UsuarioNovafianza> {
     let usuarioNovafianzaRetorno = await TblUsuariosNovafianzas.findOrFail(id)
     usuarioNovafianzaRetorno.estableceUsuarioNovafianzaConId(usuarioNovafianza)
     await usuarioNovafianzaRetorno.save()
-    return id
+    return usuarioNovafianzaRetorno
   }
 }

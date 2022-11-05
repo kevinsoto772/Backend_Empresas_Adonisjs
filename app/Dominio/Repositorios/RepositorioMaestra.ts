@@ -5,6 +5,6 @@ import { Paginador } from '../Paginador';
 export interface RepositorioMaestra {
   obtenerMaestras(param: any): Promise<{maestras: Maestra[], paginacion: Paginador}>
   obtenerMaestraPorId(id: string): Promise<Maestra>
-  guardarMaestra(maestra: Maestra): Promise<void>
-  actualizarMaestra(id: string, maestra: Maestra): Promise<string>
+  guardarMaestra(maestra: Maestra): Promise<Maestra>
+  actualizarMaestra(id: string, maestra: Maestra): Promise<Maestra>
 }

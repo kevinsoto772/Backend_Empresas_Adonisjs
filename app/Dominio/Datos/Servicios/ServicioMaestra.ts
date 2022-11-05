@@ -17,22 +17,22 @@ export class ServicioMaestra{
     return this.repositorio.obtenerMaestraPorId(id);
   }
 
-  async guardarMaestra (maestra: Maestra): Promise<void>{
+  async guardarMaestra (maestra: Maestra): Promise<Maestra>{
     maestra.id = uuidv4();
     return this.repositorio.guardarMaestra(maestra);
   }
 
-  async actualizarMaestra (id: string, maestra: Maestra): Promise<string> {
+  async actualizarMaestra (id: string, maestra: Maestra): Promise<Maestra> {
     return this.repositorio.actualizarMaestra(id, maestra);
   }
 
-  async cambiarEstado (id:string):Promise<string>{
+  async cambiarEstado (id:string):Promise<Maestra>{
     let maestra = await this.repositorio.obtenerMaestraPorId(id)
     maestra.estado = !maestra.estado
     return await this.repositorio.actualizarMaestra(id, maestra);
   }
 
-  async cambiarTipo (id:string):Promise<string>{
+  async cambiarTipo (id:string):Promise<Maestra>{
     let maestra = await this.repositorio.obtenerMaestraPorId(id)
     maestra.tipo = !maestra.tipo
     return await this.repositorio.actualizarMaestra(id, maestra);
