@@ -23,16 +23,17 @@ export class RepositorioMaestraDB implements RepositorioMaestra {
     return maestra.obtenerMaestra()
   }
 
-  async guardarMaestra (maestra: Maestra): Promise<void> {
+  async guardarMaestra (maestra: Maestra): Promise<Maestra> {
     let maestraDB = new TblMaestras()
     maestraDB.establecerMaestraDb(maestra)
     await maestraDB.save()
+    return maestraDB
   }
 
-  async actualizarMaestra (id: string, maestra: Maestra): Promise<string> {
+  async actualizarMaestra (id: string, maestra: Maestra): Promise<Maestra> {
     let maestraRetorno = await TblMaestras.findOrFail(id)
     maestraRetorno.establecerMaestraConId(maestra)
     await maestraRetorno.save()
-    return id
+    return maestraRetorno
   }
 }

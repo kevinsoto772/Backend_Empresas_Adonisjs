@@ -24,16 +24,17 @@ export class RepositorioArchivoVariableDB implements RepositorioArchivoVariable 
     return archivoVariable.obtenerArchivoVariable()
   }
 
-  async guardarArchivoVariable (archivoVariable: ArchivoVariable): Promise<void> {
+  async guardarArchivoVariable (archivoVariable: ArchivoVariable): Promise<ArchivoVariable> {
     let archivoVariableDB = new TblArchivosVariables()
     archivoVariableDB.establecerArchivoVariableDb(archivoVariable)
     await archivoVariableDB.save()
+    return archivoVariableDB
   }
 
-  async actualizarArchivoVariable (id: string, archivoVariable: ArchivoVariable): Promise<string> {
+  async actualizarArchivoVariable (id: string, archivoVariable: ArchivoVariable): Promise<ArchivoVariable> {
     let archivoVariableRetorno = await TblArchivosVariables.findOrFail(id)
     archivoVariableRetorno.establecerArchivoVariableConId(archivoVariable)
     await archivoVariableRetorno.save()
-    return id
+    return archivoVariableRetorno
   }
 }

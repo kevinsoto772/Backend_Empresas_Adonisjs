@@ -17,16 +17,16 @@ export class ServicioArchivo{
     return this.repositorio.obtenerArchivoPorId(id);
   }
 
-  async guardarArchivo (archivo: Archivo): Promise<void>{
+  async guardarArchivo (archivo: Archivo): Promise<Archivo>{
     archivo.id = uuidv4();
     return this.repositorio.guardarArchivo(archivo);
   }
 
-  async actualizarArchivo (id: string, archivo: Archivo): Promise<string> {
+  async actualizarArchivo (id: string, archivo: Archivo): Promise<Archivo> {
     return this.repositorio.actualizarArchivo(id, archivo);
   }
 
-  async cambiarEstado (id:string):Promise<string>{
+  async cambiarEstado (id:string):Promise<Archivo>{
     let archivo = await this.repositorio.obtenerArchivoPorId(id)
     archivo.estado = !archivo.estado
     return await this.repositorio.actualizarArchivo(id, archivo);

@@ -19,16 +19,16 @@ export class ServicioUsuarioNovafianza{
     return this.repositorio.obtenerUsuarioNovafianzaPorId(id);
   }
 
-  async guardarUsuarioNovafianza (usuarioNovafianza: UsuarioNovafianza): Promise<void>{
+  async guardarUsuarioNovafianza (usuarioNovafianza: UsuarioNovafianza): Promise<UsuarioNovafianza>{
     usuarioNovafianza.id = uuidv4();
     return this.repositorio.guardarUsuarioNovafianza(usuarioNovafianza);
   }
 
-  async actualizarUsuarioNovafianza (id: string, usuarioNovafianza: UsuarioNovafianza): Promise<string> {
+  async actualizarUsuarioNovafianza (id: string, usuarioNovafianza: UsuarioNovafianza): Promise<UsuarioNovafianza> {
     return this.repositorio.actualizarUsuarioNovafianza(id, usuarioNovafianza);
   }
 
-  async cambiarEstado (id:string):Promise<string>{
+  async cambiarEstado (id:string):Promise<UsuarioNovafianza>{
     let usuarioNovafianza = await this.repositorio.obtenerUsuarioNovafianzaPorId(id)
     usuarioNovafianza.estado = !usuarioNovafianza.estado
     return await this.repositorio.actualizarUsuarioNovafianza(id, usuarioNovafianza);

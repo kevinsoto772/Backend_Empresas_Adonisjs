@@ -24,16 +24,17 @@ export class RepositorioUsuarioEmpresaDB implements RepositorioUsuarioEmpresa {
     return usuarioEmpresa.obtenerUsuarioEmpresa()
   }
 
-  async guardarUsuarioEmpresa (usuarioEmpresa: UsuarioEmpresa): Promise<void> {
+  async guardarUsuarioEmpresa (usuarioEmpresa: UsuarioEmpresa): Promise<UsuarioEmpresa> {
     let usuarioEmpresaDB = new TblUsuariosEmpresas()
     usuarioEmpresaDB.establecerUsuarioEmpresaDb(usuarioEmpresa)
     await usuarioEmpresaDB.save()
+    return usuarioEmpresaDB
   }
 
-  async actualizarUsuarioEmpresa (id: string, usuarioEmpresa: UsuarioEmpresa): Promise<string> {
+  async actualizarUsuarioEmpresa (id: string, usuarioEmpresa: UsuarioEmpresa): Promise<UsuarioEmpresa> {
     let usuarioEmpresaRetorno = await TblUsuariosEmpresas.findOrFail(id)
     usuarioEmpresaRetorno.estableceUsuarioEmpresaConId(usuarioEmpresa)
     await usuarioEmpresaRetorno.save()
-    return id
+    return usuarioEmpresaRetorno
   }
 }

@@ -18,16 +18,16 @@ export class ServicioMascara{
     return this.repositorio.obtenerMascaraPorId(id);
   }
 
-  async guardarMascara (mascara: Mascara): Promise<void>{
+  async guardarMascara (mascara: Mascara): Promise<Mascara>{
     mascara.id = uuidv4();
     return this.repositorio.guardarMascara(mascara);
   }
 
-  async actualizarMascara (id: string, mascara: Mascara): Promise<string> {
+  async actualizarMascara (id: string, mascara: Mascara): Promise<Mascara> {
     return this.repositorio.actualizarMascara(id, mascara);
   }
 
-  async cambiarEstado (id:string):Promise<string>{
+  async cambiarEstado (id:string):Promise<Mascara>{
     let mascara = await this.repositorio.obtenerMascaraPorId(id)
     mascara.estado = !mascara.estado
     return await this.repositorio.actualizarMascara(id, mascara);

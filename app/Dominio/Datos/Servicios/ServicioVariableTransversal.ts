@@ -18,28 +18,28 @@ export class ServicioVariableTransversal{
     return this.repositorio.obtenerVariableTransversalPorId(id);
   }
 
-  async guardarVariableTransversal (variableTransversal: VariableTransversal): Promise<void>{
+  async guardarVariableTransversal (variableTransversal: VariableTransversal): Promise<VariableTransversal>{
     variableTransversal.id = uuidv4();
     return this.repositorio.guardarVariableTransversal(variableTransversal);
   }
 
-  async actualizarVariableTransversal (id: string, variableTransversal: VariableTransversal): Promise<string> {
+  async actualizarVariableTransversal (id: string, variableTransversal: VariableTransversal): Promise<VariableTransversal> {
     return this.repositorio.actualizarVariableTransversal(id, variableTransversal);
   }
 
-  async cambiarEstado (id:string):Promise<string>{
+  async cambiarEstado (id:string):Promise<VariableTransversal>{
     let variableTransversal = await this.repositorio.obtenerVariableTransversalPorId(id)
     variableTransversal.estado = !variableTransversal.estado
     return await this.repositorio.actualizarVariableTransversal(id, variableTransversal);
   }
 
-  async cambiarMaestra (id:string):Promise<string>{
+  async cambiarMaestra (id:string):Promise<VariableTransversal>{
     let variableTransversal = await this.repositorio.obtenerVariableTransversalPorId(id)
     variableTransversal.maestra = !variableTransversal.maestra
     return await this.repositorio.actualizarVariableTransversal(id, variableTransversal);
   }
 
-  async cambiarObligatoria (id:string):Promise<string>{
+  async cambiarObligatoria (id:string):Promise<VariableTransversal>{
     let variableTransversal = await this.repositorio.obtenerVariableTransversalPorId(id)
     variableTransversal.obligatoria = !variableTransversal.obligatoria
     return await this.repositorio.actualizarVariableTransversal(id, variableTransversal);
