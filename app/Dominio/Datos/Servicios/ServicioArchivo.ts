@@ -3,7 +3,7 @@
 /* eslint-disable @typescript-eslint/semi */
 import { Paginador } from "App/Dominio/Paginador";
 import { RepositorioArchivo } from '../../Repositorios/RepositorioArchivo';
-import { Archivo } from "../Entidades/Archivos";
+import { Archivo } from "../Entidades/Archivo";
 import { v4 as uuidv4 } from 'uuid';
 
 export class ServicioArchivo{

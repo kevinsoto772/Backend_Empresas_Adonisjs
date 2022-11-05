@@ -1,10 +1,9 @@
-import { RepositorioCarga } from '../../Repositorios/RepositorioCarga';
+/* eslint-disable @typescript-eslint/explicit-member-accessibility */
+import { RepositorioCarga } from '../../Repositorios/RepositorioCarga'
 export class ServicioCarga{
   constructor (private repositorio: RepositorioCarga) { }
 
   async procesarArchivo (archivo: any): Promise<{}> {
-    return this.repositorio.ProcesarArchivo(archivo);
+    return this.repositorio.ProcesarArchivo(archivo)
   }
-
- 
 }

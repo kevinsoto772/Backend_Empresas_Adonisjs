@@ -2,7 +2,7 @@
 import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 import { ServicioEmpresa } from 'App/Dominio/Datos/Servicios/ServicioEmpresa'
 import { RepositorioEmpresaDB } from 'App/Infraestructura/Implementacion/BaseDatos/RepositorioEmpresaDB'
-export default class EmpresasController {
+export default class ControladorEmpresa {
   private service: ServicioEmpresa
   constructor () {
     this.service = new ServicioEmpresa(new RepositorioEmpresaDB())

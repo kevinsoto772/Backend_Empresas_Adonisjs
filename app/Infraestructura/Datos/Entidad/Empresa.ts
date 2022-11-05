@@ -3,10 +3,10 @@
 import { DateTime } from 'luxon';
 import { BaseModel, column, HasMany, hasMany } from '@ioc:Adonis/Lucid/Orm';
 import { Empresa } from '../../../Dominio/Datos/Entidades/Empresa';
-import Tblarchivos from './Archivo';
+import TblArchivos from './Archivo';
 
-export default class Tblempresas extends BaseModel {
-  @column({ isPrimary: true })
+export default class TblEmpresas extends BaseModel {
+  @column({ isPrimary: true, columnName: 'emp_id' })
   public id: string
 
   @column({ columnName: 'emp_nombre' }) public nombre: string
@@ -15,9 +15,9 @@ export default class Tblempresas extends BaseModel {
 
   @column({columnName: 'emp_estado'}) public estado: boolean
 
-  @column.dateTime({ autoCreate: true }) public createdAt: DateTime
+  @column.dateTime({ autoCreate: true , columnName: 'emp_creacion'}) public createdAt: DateTime
 
-  @column.dateTime({ autoCreate: true, autoUpdate: true }) public updatedAt: DateTime
+  @column.dateTime({ autoCreate: true, autoUpdate: true, columnName: 'emp_actualizacion' }) public updatedAt: DateTime
 
   public establecerEmpresaDb (empresa: Empresa) {
     this.id = empresa.id
@@ -42,6 +42,6 @@ export default class Tblempresas extends BaseModel {
     return empresa
   }
 
-  @hasMany(() => Tblarchivos)
-  public archivo: HasMany<typeof Tblarchivos>
+  @hasMany(() => TblArchivos)
+  public archivo: HasMany<typeof TblArchivos>
 }

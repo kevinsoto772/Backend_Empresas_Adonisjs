@@ -2,32 +2,32 @@
 import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 import { ServicioArchivo } from 'App/Dominio/Datos/Servicios/ServicioArchivo'
 import { RepositorioArchivoDB } from '../../Infraestructura/Implementacion/BaseDatos/RepositorioArchivoDB'
-export default class ArchivosController {
+export default class ControladorArchivo {
   private service: ServicioArchivo
   constructor () {
     this.service = new ServicioArchivo(new RepositorioArchivoDB())
   }
 
   public async listar ({ params }) {
-    const empresa = await this.service.obtenerArchivos(params)
-    return empresa
+    const archivos = await this.service.obtenerArchivos(params)
+    return archivos
   }
 
   public async obtenerArchivoPorId ({ params }) {
-    const empresa = await this.service.obtenerArchivoPorId(params.id)
-    return empresa
+    const archivo = await this.service.obtenerArchivoPorId(params.id)
+    return archivo
   }
 
   public async actualizarArchivo ({ params, request }) {
-    const dataEmpresa = request.all()
-    const empresa = await this.service.actualizarArchivo(params.id, dataEmpresa)
-    return empresa
+    const dataArchivo = request.all()
+    const archivo = await this.service.actualizarArchivo(params.id, dataArchivo)
+    return archivo
   }
 
   public async guardarArchivo ({ request }) {
-    const dataEmpresa = request.all()
-    const empresa = await this.service.guardarArchivo(dataEmpresa)
-    return empresa
+    const dataArchivo = request.all()
+    const archivo = await this.service.guardarArchivo(dataArchivo)
+    return archivo
   }
 
   public async cambiarEstado ({request, response}:HttpContextContract){
