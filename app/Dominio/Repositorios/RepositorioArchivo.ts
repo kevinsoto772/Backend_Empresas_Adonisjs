@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/semi */
-import { Archivo } from '../Datos/Entidades/Archivos';
+import { Archivo } from '../Datos/Entidades/Archivo';
 import { Paginador } from '../Paginador';
 
 export interface RepositorioArchivo {

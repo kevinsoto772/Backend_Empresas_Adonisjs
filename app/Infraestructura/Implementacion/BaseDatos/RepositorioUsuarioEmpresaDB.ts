@@ -1,0 +1,39 @@
+/* eslint-disable max-len */
+/* eslint-disable @typescript-eslint/semi */
+/* eslint-disable @typescript-eslint/naming-convention */
+/* eslint-disable @typescript-eslint/explicit-member-accessibility */
+import { Paginador } from 'App/Dominio/Paginador';
+import { MapeadorPaginacionDB } from './MapeadorPaginacionDB';
+import { RepositorioUsuarioEmpresa } from '../../../Dominio/Repositorios/RepositorioUsuarioEmpresa';
+import { UsuarioEmpresa } from 'App/Dominio/Datos/Entidades/UsuarioEmpresa';
+import TblUsuariosEmpresas from 'App/Infraestructura/Datos/Entidad/UsuarioEmpresa';
+
+export class RepositorioUsuarioEmpresaDB implements RepositorioUsuarioEmpresa {
+  async obtenerUsuariosEmpresa (params: any): Promise<{usuariosEmpresa: UsuarioEmpresa[], paginacion: Paginador}> {
+    const usuariosEmpresa: UsuarioEmpresa[] = []
+    const usuariosEmpresaDB = await TblUsuariosEmpresas.query().orderBy('id', 'desc').paginate(params.pagina, params.limite)
+    usuariosEmpresaDB.forEach(usuariosEmpresaDB => {
+      usuariosEmpresa.push(usuariosEmpresaDB.obtenerUsuarioEmpresa())
+    })
+    const paginacion = MapeadorPaginacionDB.obtenerPaginacion(usuariosEmpresaDB)
+    return {usuariosEmpresa , paginacion}
+  }
+
+  async obtenerUsuarioEmpresaPorId (id: string): Promise<UsuarioEmpresa> {
+    const usuarioEmpresa = await TblUsuariosEmpresas.findOrFail(id)
+    return usuarioEmpresa.obtenerUsuarioEmpresa()
+  }
+
+  async guardarUsuarioEmpresa (usuarioEmpresa: UsuarioEmpresa): Promise<void> {
+    let usuarioEmpresaDB = new TblUsuariosEmpresas()
+    usuarioEmpresaDB.establecerUsuarioEmpresaDb(usuarioEmpresa)
+    await usuarioEmpresaDB.save()
+  }
+
+  async actualizarUsuarioEmpresa (id: string, usuarioEmpresa: UsuarioEmpresa): Promise<string> {
+    let usuarioEmpresaRetorno = await TblUsuariosEmpresas.findOrFail(id)
+    usuarioEmpresaRetorno.estableceUsuarioEmpresaConId(usuarioEmpresa)
+    await usuarioEmpresaRetorno.save()
+    return id
+  }
+}

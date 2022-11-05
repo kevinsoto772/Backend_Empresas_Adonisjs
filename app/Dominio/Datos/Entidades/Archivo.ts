@@ -4,6 +4,7 @@
 export class Archivo{
   id: string;
   nombre: string;
+  tipo: string;
   estado: boolean;
   idEmpresa: string;
 }

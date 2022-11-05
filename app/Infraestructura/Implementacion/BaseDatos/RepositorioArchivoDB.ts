@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/explicit-member-accessibility */
-import { Archivo } from 'App/Dominio/Datos/Entidades/Archivos'
+import { Archivo } from 'App/Dominio/Datos/Entidades/Archivo'
 import { Paginador } from 'App/Dominio/Paginador'
 import { RepositorioArchivo } from 'App/Dominio/Repositorios/RepositorioArchivo'
 import Tblarchivos from 'App/Infraestructura/Datos/Entidad/Archivo'
@@ -17,8 +17,8 @@ export class RepositorioArchivoDB implements RepositorioArchivo {
   }
 
   async obtenerArchivoPorId (id: string): Promise<Archivo> {
-    const empresa = await Tblarchivos.findOrFail(id)
-    return empresa.obtenerArchivo()
+    const archivo = await Tblarchivos.findOrFail(id)
+    return archivo.obtenerArchivo()
   }
 
   async guardarArchivo (archivo: Archivo): Promise<void> {
