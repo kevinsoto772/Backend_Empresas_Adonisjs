@@ -6,7 +6,8 @@
     "dev": "node ace serve --watch",
     "build": "node ace build --production",
     "start": "node server.js",
-    "lint": "eslint . --ext=.ts"
+    "lint": "eslint . --ext=.ts",
+    "swagger": "node ace swagger:generate"
   },
   "eslintConfig": {
     "extends": [
@@ -33,7 +34,9 @@
     "@adonisjs/core": "^5.8.8",
     "@adonisjs/lucid": "^18.2.0",
     "@adonisjs/repl": "^3.1.11",
+    "adonis5-swagger": "^1.4.1",
     "fs": "^0.0.1-security",
+    "jsonwebtoken": "^8.5.1",
     "luxon": "^3.1.0",
     "pg": "^8.8.0",
     "prettier": "^2.7.1",
