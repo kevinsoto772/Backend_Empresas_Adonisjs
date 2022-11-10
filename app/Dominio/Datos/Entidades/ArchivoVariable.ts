@@ -4,7 +4,7 @@
 export class ArchivoVariable{
   id: string;
   idVariable: string;
-  idArchivo: string;
+  idArchivoEmpresaFormato: string;
   posicion: number;
   tipo: string;
   estado: boolean;

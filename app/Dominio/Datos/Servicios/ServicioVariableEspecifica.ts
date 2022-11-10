@@ -32,16 +32,4 @@ export class ServicioVariableEspecifica{
     variableEspecifica.estado = !variableEspecifica.estado
     return await this.repositorio.actualizarVariableEspecifica(id, variableEspecifica);
   }
-
-  async cambiarMaestra (id:string):Promise<VariableEspecifica>{
-    let variableEspecifica = await this.repositorio.obtenerVariableEspecificaPorId(id)
-    variableEspecifica.maestra = !variableEspecifica.maestra
-    return await this.repositorio.actualizarVariableEspecifica(id, variableEspecifica);
-  }
-
-  async cambiarObligatoria (id:string):Promise<VariableEspecifica>{
-    let variableEspecifica = await this.repositorio.obtenerVariableEspecificaPorId(id)
-    variableEspecifica.obligatoria = !variableEspecifica.obligatoria
-    return await this.repositorio.actualizarVariableEspecifica(id, variableEspecifica);
-  }
 }

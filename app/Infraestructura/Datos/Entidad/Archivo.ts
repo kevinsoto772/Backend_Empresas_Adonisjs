@@ -1,10 +1,7 @@
 /* eslint-disable @typescript-eslint/semi */
 import { DateTime } from 'luxon';
-import { BaseModel, BelongsTo, belongsTo, column, hasMany, HasMany } from '@ioc:Adonis/Lucid/Orm';
+import { BaseModel, column} from '@ioc:Adonis/Lucid/Orm';
 import { Archivo } from 'App/Dominio/Datos/Entidades/Archivo';
-import TblEmpresas from './Empresa';
-import TblArchivosVariables from './ArchivoVariable';
-
 export default class TblArchivos extends BaseModel {
   @column({ isPrimary: true, columnName: 'arc_id' })
   public id: string
@@ -46,13 +43,4 @@ export default class TblArchivos extends BaseModel {
 
     return archivo
   }
-
-  @belongsTo(() => TblEmpresas, {
-    localKey: 'id',
-    foreignKey: 'idEmpresa',
-  })
-  public empresa: BelongsTo<typeof TblEmpresas>
-
-  @hasMany(() => TblArchivosVariables)
-  public archivoVariable: HasMany<typeof TblArchivosVariables>
 }
