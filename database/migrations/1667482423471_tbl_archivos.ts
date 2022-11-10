@@ -9,7 +9,7 @@ export default class TblArchivos extends BaseSchema {
       table.string('arc_nombre',200).notNullable()
       table.string('arc_tipo',100)
       table.boolean('arc_estado').defaultTo(true)
-      table.uuid('arc_empresa_id').references('emp_id').inTable('tbl_empresas')
+      /* table.uuid('arc_empresa_id').references('emp_id').inTable('tbl_empresas') */
       table.timestamp('arc_creacion', { useTz: true })
       table.timestamp('arc_actualizacion', { useTz: true })
     })

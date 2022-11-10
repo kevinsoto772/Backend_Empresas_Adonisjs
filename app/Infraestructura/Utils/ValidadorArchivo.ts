@@ -11,7 +11,7 @@ const validador = async (path: string) => {
       continue;
     }
     let objeto = {};
-    const dato = lineaDatos[i].split(';');
+    const dato = lineaDatos[i].split('|');
     for (let j = 0; j < lineaDatos[i].length; j++) {
       objeto['var_' + j] = dato[j]
     }

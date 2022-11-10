@@ -5,14 +5,12 @@ export class RepositorioCargaDB implements RepositorioCarga {
   async ProcesarArchivo (archivo: any): Promise<{}> {
     console.log('archivo')
 
-
   await archivo.moveToDisk('./',{name:archivo.clientName})
   
   const path = `./uploads/${archivo.clientName}`;
  
   return validador(path);
+
 }
 
-
- 
 }
