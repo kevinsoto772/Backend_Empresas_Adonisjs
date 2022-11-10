@@ -8,7 +8,7 @@ export default class extends BaseSchema {
       table.uuid('vre_id').unique()
       table.string('vre_mombre',200)
       table.string('vre_descripcion',255)
-      table.string('vre_tipo',100).comment('int, varchar, float, boolean')
+      table.uuid('vre_tipo_id').references('tiv_id').inTable('tbl_tipo_variables').comment('int, varchar, float, boolean')
       table.uuid('vre_mascara_id').references('mas_id').inTable('tbl_mascaras').comment('Formato')
       table.integer('vre_longitud')
       table.string('vre_valor_inicial',100)
