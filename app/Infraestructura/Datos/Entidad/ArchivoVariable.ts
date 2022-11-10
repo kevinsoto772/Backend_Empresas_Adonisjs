@@ -3,14 +3,14 @@
 import { DateTime } from 'luxon';
 import { BaseModel, BelongsTo, belongsTo, column} from '@ioc:Adonis/Lucid/Orm';
 import { ArchivoVariable } from 'App/Dominio/Datos/Entidades/ArchivoVariable';
-import TblArchivos from './Archivo';
+import TblArchivoEmpresaFormatos from './ArchivoEmpresaFormato';
 
 export default class TblArchivosVariables extends BaseModel {
   @column({ isPrimary: true, columnName: 'arv_id' })
   public id: string
 
   @column({ columnName: 'arv_variable_id' }) public idVariable: string
-  @column({ columnName: 'arv_archivo_id' }) public idArchivo: string
+  @column({ columnName: 'arv_archivo_empresa_id' }) public idArchivoEmpresaFormato: string
 
   @column({ columnName: 'posicion' }) public posicion: number
 
@@ -26,7 +26,7 @@ export default class TblArchivosVariables extends BaseModel {
     this.id = archivoVariable.id
     this.idVariable = archivoVariable.idVariable
     this.posicion = archivoVariable.posicion
-    this.idArchivo = archivoVariable.idArchivo
+    this.idArchivoEmpresaFormato = archivoVariable.idArchivoEmpresaFormato
     this.tipo = archivoVariable.tipo
     this.estado = archivoVariable.estado
   }
@@ -34,7 +34,7 @@ export default class TblArchivosVariables extends BaseModel {
   public establecerArchivoVariableConId (archivoVariable: ArchivoVariable) {
     this.idVariable = archivoVariable.idVariable
     this.posicion = archivoVariable.posicion
-    this.idArchivo = archivoVariable.idArchivo
+    this.idArchivoEmpresaFormato = archivoVariable.idArchivoEmpresaFormato
     this.tipo = archivoVariable.tipo
     this.estado = archivoVariable.estado
   }
@@ -43,7 +43,7 @@ export default class TblArchivosVariables extends BaseModel {
     const archivoVariable = new ArchivoVariable()
     archivoVariable.id = this.id
     archivoVariable.idVariable = this.idVariable
-    archivoVariable.idArchivo = this.idArchivo
+    archivoVariable.idArchivoEmpresaFormato = this.idArchivoEmpresaFormato
     archivoVariable.posicion = this.posicion
     archivoVariable.tipo = this.tipo
     archivoVariable.estado = this.estado
@@ -51,9 +51,9 @@ export default class TblArchivosVariables extends BaseModel {
     return archivoVariable
   }
 
-  @belongsTo(() => TblArchivos, {
+  @belongsTo(() => TblArchivoEmpresaFormatos, {
     localKey: 'id',
-    foreignKey: 'idArchivo',
+    foreignKey: 'idArchivoEmpresaFormato',
   })
-  public archivo: BelongsTo<typeof TblArchivos>
+  public archivoEmpresaFormato: BelongsTo<typeof TblArchivoEmpresaFormatos>
 }

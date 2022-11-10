@@ -25,7 +25,13 @@
     "./start/Rutas/ruta_archivos_variables",
     "./start/Rutas/ruta_mascara",
     "./start/Rutas/ruta_variableEspecifica",
-    "./start/Rutas/ruta_variableTransversal"
+    "./start/Rutas/ruta_variableTransversal",
+    "./start/Rutas/ruta_formatoArchivo",
+    "./start/Rutas/ruta_archivo_empresa",
+    "./start/Rutas/ruta_archivo_empresa_formato",
+    "./start/Rutas/ruta_log_exito",
+    "./start/Rutas/ruta_log_errores",
+    "./start/Rutas/ruta_log_advertencia"
   ],
   "providers": [
     "./providers/AppProvider",

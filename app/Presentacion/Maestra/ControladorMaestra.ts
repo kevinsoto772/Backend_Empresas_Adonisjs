@@ -40,14 +40,4 @@ export default class ControladorMaestra {
       response.status(200).send(e)
     }
   }
-
-  public async cambiarTipo ({request, response}:HttpContextContract){
-    try{
-      let id = request.param('id')
-      await this.service.cambiarTipo(id)
-      response.status(200).send('Cambio realizado correctamente')
-    } catch (e) {
-      response.status(200).send(e)
-    }
-  }
 }

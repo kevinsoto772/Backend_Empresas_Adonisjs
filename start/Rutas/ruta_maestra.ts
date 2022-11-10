@@ -9,5 +9,4 @@ Route.group(() => {
   Route.get('/:id', accion_path + '.obtenerMaestraPorId')
   Route.patch('/:id', accion_path + '.actualizarMaestra')
   Route.put('/estado/:id', accion_path + '.cambiarEstado')
-  Route.put('/tipo/:id', accion_path + '.cambiarTipo')
 }).prefix('api/v1/maestra')
