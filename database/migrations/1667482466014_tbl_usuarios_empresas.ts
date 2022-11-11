@@ -7,7 +7,9 @@ export default class TblUsuariosEmpresas extends BaseSchema {
     this.schema.createTable(this.tableName, (table) => {
       table.uuid('use_id').unique()
       table.string('use_nombre',200).notNullable()
+      table.string('use_clave', 255)
       table.boolean('use_estado').defaultTo(true)
+      
       table.timestamp('use_creacion', { useTz: true })
       table.timestamp('use_actualizacion', { useTz: true })
     })

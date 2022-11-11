@@ -11,6 +11,8 @@ const validador = async (path: string) => {
       continue;
     }
     let objeto = {};
+
+    // Preguntar si se agrega el separador a la tabla archivo formato "|"
     const dato = lineaDatos[i].split('|');
     for (let j = 0; j < lineaDatos[i].length; j++) {
       objeto['var_' + j] = dato[j]
