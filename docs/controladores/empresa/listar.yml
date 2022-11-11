@@ -6,11 +6,11 @@
     parameters:
       - name: pagina
         in:  path
-        required: true
+        required: false
         description: La página que se desea obtener
       - name: porPagina
         in: path
-        required: true
+        required: false
         description: Cantidad de registros por página
     produces:
       - application/json
@@ -39,9 +39,9 @@
               {
                 "empresas": [
                   {
-                    "id": "753c...",
+                    "id": "753c1653-e139-4d6a-8d2f-54617f0652eb",
                     "nombre": "Tigo",
-                    "nit": "123456",
+                    "nit": 9001274376,
                     "estado": true
                   }
                 ],

@@ -9,4 +9,4 @@ Route.group(() => {
   Route.get('/:id', accion_path + '.obtenerFormatoArchivoPorId')
   Route.patch('/:id', accion_path + '.actualizarFormatoArchivo')
   Route.put('/estado/:id', accion_path + '.cambiarEstado')
-}).prefix('api/v1/formato_archivo')
+}).prefix('api/v1/formato_archivo').middleware('autenticacionJwt')

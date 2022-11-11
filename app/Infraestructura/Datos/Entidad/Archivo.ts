@@ -12,8 +12,6 @@ export default class TblArchivos extends BaseModel {
 
   @column({ columnName: 'arc_estado' }) public estado: boolean
 
-  @column({columnName: 'arc_empresa_id'}) public idEmpresa: string
-
   @column.dateTime({ autoCreate: true, columnName: 'arc_creacion' }) public createdAt: DateTime
 
   @column.dateTime({ autoCreate: true, autoUpdate: true, columnName: 'arc_actualizacion' }) public updatedAt: DateTime
@@ -23,14 +21,12 @@ export default class TblArchivos extends BaseModel {
     this.nombre = archivo.nombre
     this.tipo = archivo.tipo
     this.estado = archivo.estado
-    this.idEmpresa = archivo.idEmpresa
   }
 
   public establecerArchivoConId (archivo: Archivo) {
     this.nombre = archivo.nombre
     this.tipo = archivo.tipo
     this.estado = archivo.estado
-    this.idEmpresa = archivo.idEmpresa
   }
 
   public obtenerArchivo (): Archivo {
@@ -39,8 +35,6 @@ export default class TblArchivos extends BaseModel {
     archivo.nombre = this.nombre
     archivo.tipo = this.tipo
     archivo.estado = this.estado
-    archivo.idEmpresa = this.idEmpresa
-
     return archivo
   }
 }

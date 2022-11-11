@@ -36,7 +36,7 @@ export default class ControladorEmpresa {
       await this.service.cambiarEstado(id)
       response.status(200).send('Cambio realizado correctamente')
     } catch (e) {
-      response.status(200).send(e)
+      response.status(500).send(e)
     }
   }
 }

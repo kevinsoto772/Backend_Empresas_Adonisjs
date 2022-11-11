@@ -1,5 +1,4 @@
 import BaseSchema from '@ioc:Adonis/Lucid/Schema'
-
 export default class extends BaseSchema {
   protected tableName = 'tbl_archivos_variables_transversales'
 

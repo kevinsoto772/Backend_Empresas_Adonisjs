@@ -9,4 +9,4 @@ Route.group(() => {
   Route.get('/:id', accion_path + '.obtenerMascaraPorId')
   Route.patch('/:id', accion_path + '.actualizarMascara')
   Route.put('/estado/:id', accion_path + '.cambiarEstado')
-}).prefix('api/v1/mascara')
+}).prefix('api/v1/mascara').middleware('autenticacionJwt')

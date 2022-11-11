@@ -5,4 +5,5 @@ export class UsuarioNovafianza{
   id: string;
   nombre: string;
   estado: boolean;
+  clave: string;
 }

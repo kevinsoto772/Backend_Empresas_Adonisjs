@@ -8,4 +8,4 @@ Route.group(() => {
   Route.get('/:id', accion_path + '.obtenerVariableTransversalPorId')
   Route.patch('/:id', accion_path + '.actualizarVariableTransversal')
   Route.put('/estado/:id', accion_path + '.cambiarEstado')
-}).prefix('api/v1/variable_transversal')
+}).prefix('api/v1/variable_transversal').middleware('autenticacionJwt')

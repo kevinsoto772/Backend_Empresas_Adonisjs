@@ -10,4 +10,4 @@ Route.group(() => {
   Route.patch('/:id', accion_path + '.actualizarArchivoVariable')
   Route.put('/estado/:id', accion_path + '.cambiarEstado')
   Route.put('/tipo/:id', accion_path + '.cambiarTipo')
-}).prefix('api/v1/archivo_variable')
+}).prefix('api/v1/archivo_variable').middleware('autenticacionJwt')

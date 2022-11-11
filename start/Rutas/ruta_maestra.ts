@@ -9,4 +9,4 @@ Route.group(() => {
   Route.get('/:id', accion_path + '.obtenerMaestraPorId')
   Route.patch('/:id', accion_path + '.actualizarMaestra')
   Route.put('/estado/:id', accion_path + '.cambiarEstado')
-}).prefix('api/v1/maestra')
+}).prefix('api/v1/maestra').middleware('autenticacionJwt')
