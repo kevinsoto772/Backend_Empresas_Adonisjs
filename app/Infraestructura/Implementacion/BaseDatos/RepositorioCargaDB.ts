@@ -2,8 +2,11 @@
 import { RepositorioCarga } from 'App/Dominio/Repositorios/RepositorioCarga'
 import { validador } from '../../Utils/ValidadorArchivo'
 export class RepositorioCargaDB implements RepositorioCarga {
-  async ProcesarArchivo (archivo: any): Promise<{}> {
-    console.log('archivo')
+
+
+  async ProcesarArchivo (archivo: any, usuario: string): Promise<{}> {
+
+    console.log(usuario)
 
     await archivo.moveToDisk('./',{name:archivo.clientName})
 

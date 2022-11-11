@@ -9,6 +9,7 @@ export default class ControladorCarga {
 
   public async cargar ({ request, response }) {
     try {
+      const { usuario } = request.all();
       const archivo = request.file('archivo', {
         extnames: ['txt', 'csv'],
       })
@@ -20,7 +21,7 @@ export default class ControladorCarga {
         return response.status(400).send({mensaje:'Formato incorrecto para el archivo'})
       }
 
-      return this.servicio.procesarArchivo(archivo)
+      return this.servicio.procesarArchivo(archivo, usuario)
     } catch (error) {
       return error
     }
