@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/explicit-member-accessibility */
 /* eslint-disable @typescript-eslint/semi */
 import { DateTime } from 'luxon';
-import { BaseModel, column, hasMany, HasMany} from '@ioc:Adonis/Lucid/Orm';
+import { BaseModel, column, HasOne, hasOne} from '@ioc:Adonis/Lucid/Orm';
 import { Maestra } from 'App/Dominio/Datos/Entidades/Maestra';
 import TblVariablesEspecificas from './VariableEspecifica';
 import TblVariablesTransversales from './VariableTransversal';
@@ -43,9 +43,9 @@ export default class TblMaestras extends BaseModel {
     return maestra
   }
 
-  @hasMany(() => TblVariablesEspecificas)
-  public variableEspecifica: HasMany<typeof TblVariablesEspecificas>
+  @hasOne(() => TblVariablesEspecificas)
+  public variableEspecifica: HasOne<typeof TblVariablesEspecificas>
 
-  @hasMany(() => TblVariablesTransversales)
-  public variableTransversal: HasMany<typeof TblVariablesTransversales>
+  @hasOne(() => TblVariablesTransversales)
+  public variableTransversal: HasOne<typeof TblVariablesTransversales>
 }

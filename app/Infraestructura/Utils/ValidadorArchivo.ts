@@ -1,30 +1,27 @@
-const fs = require('fs');
+/* eslint-disable no-array-constructor */
+const fs = require('fs')
 const validador = async (path: string) => {
+  const archivo = fs.readFileSync(path).toString()
+  const lineaDatos = archivo.split('\r\n')
 
-  const archivo = fs.readFileSync(path).toString();
-  const lineaDatos = archivo.split('\r\n');
-
-  let listaObjetos = new Array();
+  let listaObjetos = new Array()
 
   for (let i = 0; i < lineaDatos.length; i++) {
-    if(lineaDatos[i] === ""){
-      continue;
+    if(lineaDatos[i] === ''){
+      continue
     }
-    let objeto = {};
-
-    // Preguntar si se agrega el separador a la tabla archivo formato "|"
-    const dato = lineaDatos[i].split('|');
+    let objeto = {}
+    const dato = lineaDatos[i].split('|')
     for (let j = 0; j < lineaDatos[i].length; j++) {
       objeto['var_' + j] = dato[j]
     }
-    listaObjetos.push(objeto);
+    listaObjetos.push(objeto)
   }
 
-  const archivoJson = JSON.stringify(listaObjetos, null, 2);
+  const archivoJson = JSON.stringify(listaObjetos, null, 2)
 
   return archivoJson
 
   //return { errores, alertas }
-
 }
-export { validador };
+export { validador }

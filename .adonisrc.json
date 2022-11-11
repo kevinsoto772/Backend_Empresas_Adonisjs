@@ -4,7 +4,8 @@
     "./commands",
     "@adonisjs/core/build/commands/index.js",
     "@adonisjs/repl/build/commands",
-    "@adonisjs/lucid/build/commands"
+    "@adonisjs/lucid/build/commands",
+    "adonis5-swagger/build/commands"
   ],
   "exceptionHandlerNamespace": "App/Exceptions/Handler",
   "aliases": {
@@ -25,12 +26,20 @@
     "./start/Rutas/ruta_archivos_variables",
     "./start/Rutas/ruta_mascara",
     "./start/Rutas/ruta_variableEspecifica",
-    "./start/Rutas/ruta_variableTransversal"
+    "./start/Rutas/ruta_variableTransversal",
+    "./start/Rutas/ruta_formatoArchivo",
+    "./start/Rutas/ruta_archivo_empresa",
+    "./start/Rutas/ruta_archivo_empresa_formato",
+    "./start/Rutas/ruta_log_exito",
+    "./start/Rutas/ruta_log_errores",
+    "./start/Rutas/ruta_log_advertencia",
+    "./start/Rutas/ruta_autenticacion"
   ],
   "providers": [
     "./providers/AppProvider",
     "@adonisjs/core",
-    "@adonisjs/lucid"
+    "@adonisjs/lucid",
+    "adonis5-swagger"
   ],
   "aceProviders": [
     "@adonisjs/repl"

@@ -32,16 +32,4 @@ export class ServicioVariableTransversal{
     variableTransversal.estado = !variableTransversal.estado
     return await this.repositorio.actualizarVariableTransversal(id, variableTransversal);
   }
-
-  async cambiarMaestra (id:string):Promise<VariableTransversal>{
-    let variableTransversal = await this.repositorio.obtenerVariableTransversalPorId(id)
-    variableTransversal.maestra = !variableTransversal.maestra
-    return await this.repositorio.actualizarVariableTransversal(id, variableTransversal);
-  }
-
-  async cambiarObligatoria (id:string):Promise<VariableTransversal>{
-    let variableTransversal = await this.repositorio.obtenerVariableTransversalPorId(id)
-    variableTransversal.obligatoria = !variableTransversal.obligatoria
-    return await this.repositorio.actualizarVariableTransversal(id, variableTransversal);
-  }
 }

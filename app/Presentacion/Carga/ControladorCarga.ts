@@ -7,18 +7,18 @@ export default class ControladorCarga {
     this.servicio = new ServicioCarga(new RepositorioCargaDB())
   }
 
-  public async cargar({ request, response }) {
+  public async cargar ({ request, response }) {
     try {
       const { usuario } = request.all();
       const archivo = request.file('archivo', {
         extnames: ['txt', 'csv'],
-      });
+      })
       if (!archivo) {
-        return response.status(400).send({mensaje:"No se encontro archivo"}); 
+        return response.status(400).send({mensaje:'No se encontro archivo'})
       }
-      
+
       if (!archivo.isValid) {
-        return response.status(400).send({mensaje:"Formato incorrecto para el archivo"}); 
+        return response.status(400).send({mensaje:'Formato incorrecto para el archivo'})
       }
 
       return this.servicio.procesarArchivo(archivo, usuario)

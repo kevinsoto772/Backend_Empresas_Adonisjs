@@ -31,10 +31,4 @@ export class ServicioMaestra{
     maestra.estado = !maestra.estado
     return await this.repositorio.actualizarMaestra(id, maestra);
   }
-
-  async cambiarTipo (id:string):Promise<Maestra>{
-    let maestra = await this.repositorio.obtenerMaestraPorId(id)
-    maestra.tipo = !maestra.tipo
-    return await this.repositorio.actualizarMaestra(id, maestra);
-  }
 }

@@ -41,24 +41,4 @@ export default class ControladorVariableTransversal {
       response.status(200).send(e)
     }
   }
-
-  public async cambiarMaestra ({request, response}:HttpContextContract){
-    try{
-      let id = request.param('id')
-      await this.service.cambiarMaestra(id)
-      response.status(200).send('Cambio realizado correctamente')
-    } catch (e) {
-      response.status(200).send(e)
-    }
-  }
-
-  public async cambiarObligatoria ({request, response}:HttpContextContract){
-    try{
-      let id = request.param('id')
-      await this.service.cambiarObligatoria(id)
-      response.status(200).send('Cambio realizado correctamente')
-    } catch (e) {
-      response.status(200).send(e)
-    }
-  }
 }
