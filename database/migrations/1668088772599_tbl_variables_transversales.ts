@@ -1,3 +1,4 @@
+/* eslint-disable max-len */
 import BaseSchema from '@ioc:Adonis/Lucid/Schema'
 
 export default class extends BaseSchema {

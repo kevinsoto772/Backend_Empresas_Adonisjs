@@ -10,6 +10,8 @@ export default class TblUsuariosNovafianzas extends BaseModel {
 
   @column({ columnName: 'usn_nombre' }) public nombre: string
 
+  @column({ columnName: 'usn_clave' }) public clave: string
+
   @column({columnName: 'usn_estado'}) public estado: boolean
 
   @column.dateTime({ autoCreate: true , columnName: 'usn_creacion'}) public createdAt: DateTime
@@ -19,11 +21,13 @@ export default class TblUsuariosNovafianzas extends BaseModel {
   public establecerUsuarioNovafianzaDb (usuarioNovafianza: UsuarioNovafianza) {
     this.id = usuarioNovafianza.id
     this.nombre = usuarioNovafianza.nombre
+    this.clave = usuarioNovafianza.clave
     this.estado = usuarioNovafianza.estado
   }
 
   public estableceUsuarioNovafianzaConId (usuarioNovafianza: UsuarioNovafianza) {
     this.nombre = usuarioNovafianza.nombre
+    this.clave = usuarioNovafianza.clave
     this.estado = usuarioNovafianza.estado
   }
 
@@ -31,6 +35,7 @@ export default class TblUsuariosNovafianzas extends BaseModel {
     const usuarioNovafianza = new UsuarioNovafianza()
     usuarioNovafianza.id = this.id
     usuarioNovafianza.nombre = this.nombre
+    usuarioNovafianza.clave = this.clave
     usuarioNovafianza.estado = this.estado
 
     return usuarioNovafianza

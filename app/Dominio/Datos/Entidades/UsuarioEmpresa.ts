@@ -5,4 +5,5 @@ export class UsuarioEmpresa{
   id: string;
   nombre: string;
   estado: boolean;
+  clave: string;
 }

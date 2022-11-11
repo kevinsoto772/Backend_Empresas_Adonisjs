@@ -9,4 +9,4 @@ Route.group(() => {
   Route.get('/:id', accion_path + '.obtenerUsuarioNovafianzaPorId')
   Route.patch('/:id', accion_path + '.actualizarUsuarioNovafianza')
   Route.put('/estado/:id', accion_path + '.cambiarEstado')
-}).prefix('api/v1/usuario_novafianza')
+}).prefix('api/v1/usuario_novafianza').middleware('autenticacionJwt')

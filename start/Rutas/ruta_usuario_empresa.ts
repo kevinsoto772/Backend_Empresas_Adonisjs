@@ -9,4 +9,4 @@ Route.group(() => {
   Route.get('/:id', accion_path + '.obtenerUsuarioEmpresaPorId')
   Route.patch('/:id', accion_path + '.actualizarUsuarioEmpresa')
   Route.put('/estado/:id', accion_path + '.cambiarEstado')
-}).prefix('api/v1/usuario_empresa')
+}).prefix('api/v1/usuario_empresa').middleware('autenticacionJwt')

@@ -8,4 +8,4 @@ Route.group(() => {
   Route.get('/:id', accion_path + '.obtenerArchivoEmpresaFormatoPorId')
   Route.patch('/:id', accion_path + '.actualizarArchivoEmpresaFormato')
   Route.put('/estado/:id', accion_path + '.cambiarEstado')
-}).prefix('api/v1/archivo_empresa_formato')
+}).prefix('api/v1/archivo_empresa_formato').middleware('autenticacionJwt')

@@ -6,5 +6,4 @@ export class Archivo{
   nombre: string;
   tipo: string;
   estado: boolean;
-  idEmpresa: string;
 }

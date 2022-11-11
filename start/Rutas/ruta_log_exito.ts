@@ -9,4 +9,4 @@ Route.group(() => {
   Route.get('/:id', accion_path + '.obtenerLogExitoPorId')
   Route.patch('/:id', accion_path + '.actualizarLogExito')
   Route.put('/estado/:id', accion_path + '.cambiarEstado')
-}).prefix('api/v1/logsExitos')
+}).prefix('api/v1/logsExitos').middleware('autenticacionJwt')
