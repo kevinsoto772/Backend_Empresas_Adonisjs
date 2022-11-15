@@ -11,6 +11,10 @@ export default class TblUsuariosEmpresas extends BaseModel {
 
   @column({ columnName: 'use_nombre' }) public nombre: string
 
+  @column({ columnName: 'use_usuario' }) public usuario: string
+
+  @column({ columnName: 'use_empresa_id' }) public idEmpresa: string
+
   @column({ columnName: 'use_clave' }) public clave: string
 
   @column({columnName: 'use_estado'}) public estado: boolean
@@ -24,12 +28,16 @@ export default class TblUsuariosEmpresas extends BaseModel {
     this.nombre = usuarioEmpresa.nombre
     this.clave = usuarioEmpresa.clave
     this.estado = usuarioEmpresa.estado
+    this.usuario = usuarioEmpresa.usuario
+    this.idEmpresa = usuarioEmpresa.idEmpresa
   }
 
   public estableceUsuarioEmpresaConId (usuarioEmpresa: UsuarioEmpresa) {
     this.clave = usuarioEmpresa.clave
     this.nombre = usuarioEmpresa.nombre
     this.estado = usuarioEmpresa.estado
+    this.usuario = usuarioEmpresa.usuario
+    this.idEmpresa = usuarioEmpresa.idEmpresa
   }
 
   public obtenerUsuarioEmpresa (): UsuarioEmpresa {
@@ -38,7 +46,8 @@ export default class TblUsuariosEmpresas extends BaseModel {
     usuarioEmpresa.nombre = this.nombre
     usuarioEmpresa.clave = this.clave
     usuarioEmpresa.estado = this.estado
-
+    usuarioEmpresa.usuario = this.usuario
+    usuarioEmpresa.idEmpresa = this.idEmpresa
     return usuarioEmpresa
   }
 
