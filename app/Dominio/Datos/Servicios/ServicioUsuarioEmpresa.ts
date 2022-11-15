@@ -6,9 +6,10 @@ import { Paginador } from "App/Dominio/Paginador";
 import { v4 as uuidv4 } from 'uuid'
 import { RepositorioUsuarioEmpresa } from "App/Dominio/Repositorios/RepositorioUsuarioEmpresa";
 import { UsuarioEmpresa } from "../Entidades/UsuarioEmpresa";
+import { Encriptador } from "App/Dominio/Encriptacion/Encriptador";
 
 export class ServicioUsuarioEmpresa{
-  constructor (private repositorio: RepositorioUsuarioEmpresa) { }
+  constructor (private repositorio: RepositorioUsuarioEmpresa, private encriptador: Encriptador) { }
 
   async obtenerUsuariosEmpresa (params: any): Promise<{ usuariosEmpresa: UsuarioEmpresa[], paginacion: Paginador }> {
     return this.repositorio.obtenerUsuariosEmpresa(params);
@@ -20,6 +21,7 @@ export class ServicioUsuarioEmpresa{
 
   async guardarUsuarioEmpresa (usuarioEmpresa: UsuarioEmpresa): Promise<UsuarioEmpresa>{
     usuarioEmpresa.id = uuidv4();
+    usuarioEmpresa.clave = await this.encriptador.encriptar(usuarioEmpresa.clave)
     return this.repositorio.guardarUsuarioEmpresa(usuarioEmpresa);
   }
 
