@@ -5,6 +5,7 @@ import { BaseModel, BelongsTo, belongsTo, column, HasMany, hasMany} from '@ioc:A
 import { UsuarioEmpresa } from 'App/Dominio/Datos/Entidades/UsuarioEmpresa';
 import TblVariablesEspecificas from './VariableEspecifica';
 import TblEmpresas from './Empresa';
+import TblRoles from './Autorizacion/Rol';
 
 export default class TblUsuariosEmpresas extends BaseModel {
   @column({ isPrimary: true, columnName: 'use_id' })
@@ -16,7 +17,7 @@ export default class TblUsuariosEmpresas extends BaseModel {
 
   @column({ columnName: 'use_identificacion' }) public identificacion: number
 
-  @column({ columnName: 'use_clave_temporal' }) public claveTemporal: string
+  @column({ columnName: 'use_clave_temporal' }) public claveTemporal: boolean
 
   @column({ columnName: 'use_empresa_id' }) public idEmpresa: string
 
@@ -32,7 +33,9 @@ export default class TblUsuariosEmpresas extends BaseModel {
 
   @column({ columnName: 'use_clave' }) public clave: string
 
-  @column({columnName: 'use_estado'}) public estado: boolean
+  @column({ columnName: 'use_estado' }) public estado: boolean
+
+  @column({ columnName: 'use_rol_id' }) public idRol: string
 
   @column.dateTime({ autoCreate: true , columnName: 'use_creacion'}) public createdAt: DateTime
 
@@ -52,6 +55,7 @@ export default class TblUsuariosEmpresas extends BaseModel {
     this.correo = usuarioEmpresa.correo
     this.telefono = usuarioEmpresa.telefono
     this.claveTemporal = usuarioEmpresa.claveTemporal
+    this.idRol = usuarioEmpresa.idRol
   }
 
   public estableceUsuarioEmpresaConId (usuarioEmpresa: UsuarioEmpresa) {
@@ -67,6 +71,7 @@ export default class TblUsuariosEmpresas extends BaseModel {
     this.correo = usuarioEmpresa.correo
     this.telefono = usuarioEmpresa.telefono
     this.claveTemporal = usuarioEmpresa.claveTemporal
+    this.idRol = usuarioEmpresa.idRol
   }
 
   public obtenerUsuarioEmpresa (): UsuarioEmpresa {
@@ -84,6 +89,7 @@ export default class TblUsuariosEmpresas extends BaseModel {
     usuarioEmpresa.cargo = this.cargo
     usuarioEmpresa.telefono = this.telefono
     usuarioEmpresa.apellido = this.apellido
+    usuarioEmpresa.idRol = this.idRol
 
     return usuarioEmpresa
   }
@@ -96,5 +102,11 @@ export default class TblUsuariosEmpresas extends BaseModel {
     foreignKey: 'idEmpresa',
   })
   public empresa: BelongsTo<typeof TblEmpresas>
+
+  @belongsTo(() => TblRoles, {
+    localKey: 'id',
+    foreignKey: 'idRol',
+  })
+  public rol: BelongsTo<typeof TblRoles>
 }
 

@@ -1,3 +1,4 @@
+/* eslint-disable max-len */
 /* eslint-disable @typescript-eslint/semi */
 import { DateTime } from 'luxon';
 import { BaseModel, column} from '@ioc:Adonis/Lucid/Orm';
@@ -15,7 +16,7 @@ export default class TblRoles extends BaseModel {
 
   @column.dateTime({ autoCreate: true, autoUpdate: true, columnName: 'rol_actualizacion' }) public actualizacion: DateTime
 
-  public establecerRolTblRoles(rol:Rol):void{
+  public establecerRolTblRoles (rol:Rol):void{
     this.id = rol.id
     this.nombre = rol.nombre
     this.estado = rol.estado
@@ -23,13 +24,13 @@ export default class TblRoles extends BaseModel {
     this.actualizacion = rol.actualizacion;
   }
 
-  public obtenerRol():Rol{
+  public obtenerRol ():Rol{
     return new Rol(
-        this.id, 
-        this.nombre, 
-        this.estado,
-        this.creacion,
-        this.actualizacion
+      this.id,
+      this.nombre,
+      this.estado,
+      this.creacion,
+      this.actualizacion
     )
   }
 }

@@ -34,7 +34,8 @@
     "./start/Rutas/ruta_log_exito",
     "./start/Rutas/ruta_log_errores",
     "./start/Rutas/ruta_log_advertencia",
-    "./start/Rutas/ruta_autenticacion"
+    "./start/Rutas/ruta_autenticacion",
+    "./start/Rutas/ruta_enviar_email"
   ],
   "providers": [
     "./providers/AppProvider",

@@ -1,9 +1,9 @@
-import { DateTime } from 'luxon';
-import { BaseModel, column} from '@ioc:Adonis/Lucid/Orm';
-import { Modulo } from 'App/Dominio/Datos/Entidades/Autenticacion/Modulo';
+/* eslint-disable max-len */
+import { DateTime } from 'luxon'
+import { BaseModel, column} from '@ioc:Adonis/Lucid/Orm'
+import { Modulo } from 'App/Dominio/Datos/Entidades/Autenticacion/Modulo'
 export default class TblModulos extends BaseModel {
   public static readonly table = 'tbl_modulos'
-
 
   @column({ isPrimary: true, columnName: 'mod_id' }) public id: string
 
@@ -19,25 +19,25 @@ export default class TblModulos extends BaseModel {
 
   @column.dateTime({ autoCreate: true, autoUpdate: true, columnName: 'mod_actualizacion' }) public actualizacion: DateTime
 
-  public establecerModuloDb(modulo:Modulo):void{
+  public establecerModuloDb (modulo:Modulo):void{
     this.id = modulo.id
     this.nombre = modulo.nombre
     this.ruta = modulo.ruta
     this.icono = modulo.icono
     this.estado = modulo.estado
-    this.creacion = modulo.creacion;
-    this.actualizacion = modulo.actualizacion;
+    this.creacion = modulo.creacion
+    this.actualizacion = modulo.actualizacion
   }
 
-  public obtenerModulo():Modulo{
+  public obtenerModulo ():Modulo{
     return new Modulo(
-        this.id, 
-        this.nombre,
-        this.ruta,
-        this.icono,
-        this.estado,
-        this.creacion,
-        this.actualizacion
+      this.id,
+      this.nombre,
+      this.ruta,
+      this.icono,
+      this.estado,
+      this.creacion,
+      this.actualizacion
     )
   }
 }

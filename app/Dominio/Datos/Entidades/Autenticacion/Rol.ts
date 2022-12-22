@@ -1,44 +1,44 @@
-import { DateTime } from "luxon"
-import { Modulo } from "./Modulo"
+import { DateTime } from 'luxon'
+import { Modulo } from './Modulo'
 
 export class Rol {
-    private _modulos:Modulo[] = []
-    
-    public constructor(
-        private _id: string,
-        private _nombre: string,
-        private _estado:boolean = true,
-        private _creacion:DateTime = DateTime.now(),
-        private _actualizacion:DateTime = DateTime.now()
-    ){
-    }
+  private _modulos:Modulo[] = []
 
-    public get id(){
-        return this._id
-    }
+  constructor (
+    private _id: string,
+    private _nombre: string,
+    private _estado:boolean = true,
+    private _creacion:DateTime = DateTime.now(),
+    private _actualizacion:DateTime = DateTime.now()
+  ){
+  }
 
-    public get nombre(){
-        return this._nombre
-    }
+  public get id (){
+    return this._id
+  }
 
-    public get modulos(){
-        return this._modulos
-    }
+  public get nombre (){
+    return this._nombre
+  }
 
-    public get estado(){
-        return this._estado
-    }
+  public get modulos (){
+    return this._modulos
+  }
 
-    public get creacion(){
-        return this._creacion
-    }
+  public get estado (){
+    return this._estado
+  }
 
-    public get actualizacion(){
-        return this._actualizacion
-    }
+  public get creacion (){
+    return this._creacion
+  }
 
-    public agregarModulo(modulo:Modulo):Rol{
-        this._modulos.push(modulo)
-        return this
-    }
+  public get actualizacion (){
+    return this._actualizacion
+  }
+
+  public agregarModulo (modulo:Modulo):Rol{
+    this._modulos.push(modulo)
+    return this
+  }
 }
