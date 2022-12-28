@@ -1,8 +1,9 @@
 /* eslint-disable @typescript-eslint/explicit-member-accessibility */
 /* eslint-disable @typescript-eslint/semi */
 import { DateTime } from 'luxon';
-import { BaseModel, column} from '@ioc:Adonis/Lucid/Orm';
+import { BaseModel, BelongsTo, belongsTo, column} from '@ioc:Adonis/Lucid/Orm';
 import { UsuarioNovafianza } from 'App/Dominio/Datos/Entidades/UsuarioNovafianza';
+import TblRoles from './Autorizacion/Rol';
 
 export default class TblUsuariosNovafianzas extends BaseModel {
   @column({ isPrimary: true, columnName: 'usn_id' })
@@ -18,7 +19,7 @@ export default class TblUsuariosNovafianzas extends BaseModel {
 
   @column({ columnName: 'usn_estado' }) public estado: boolean
 
-  @column({ columnName: 'usn_clave_temporal' }) public claveTemporal: string
+  @column({ columnName: 'usn_clave_temporal' }) public claveTemporal: boolean
 
   @column({ columnName: 'usn_telefono' }) public telefono: string
 
@@ -29,6 +30,8 @@ export default class TblUsuariosNovafianzas extends BaseModel {
   @column({ columnName: 'usn_cargo' }) public cargo: string
 
   @column({ columnName: 'usn_apellido' }) public apellido: string
+
+  @column({ columnName: 'usn_rol_id' }) public idRol: string
 
   @column.dateTime({ autoCreate: true , columnName: 'usn_creacion'}) public createdAt: DateTime
 
@@ -47,6 +50,7 @@ export default class TblUsuariosNovafianzas extends BaseModel {
     this.apellido = usuarioNovafianza.apellido
     this.identificacion = usuarioNovafianza.identificacion
     this.estado = usuarioNovafianza.estado
+    this.idRol = usuarioNovafianza.idRol
   }
 
   public estableceUsuarioNovafianzaConId (usuarioNovafianza: UsuarioNovafianza) {
@@ -61,6 +65,7 @@ export default class TblUsuariosNovafianzas extends BaseModel {
     this.apellido = usuarioNovafianza.apellido
     this.identificacion = usuarioNovafianza.identificacion
     this.estado = usuarioNovafianza.estado
+    this.idRol = usuarioNovafianza.idRol
   }
 
   public obtenerUsuarioNovafianza (): UsuarioNovafianza {
@@ -77,7 +82,14 @@ export default class TblUsuariosNovafianzas extends BaseModel {
     usuarioNovafianza.correo = this.correo
     usuarioNovafianza.fechaNacimiento = this.fechaNacimiento
     usuarioNovafianza.telefono = this.telefono
+    usuarioNovafianza.idRol = this.idRol
 
     return usuarioNovafianza
   }
+
+  @belongsTo(() => TblRoles, {
+    localKey: 'id',
+    foreignKey: 'idRol',
+  })
+  public rol: BelongsTo<typeof TblRoles>
 }

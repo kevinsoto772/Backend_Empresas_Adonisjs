@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/explicit-member-accessibility */
 export class EmpresaDto {
-  id: number
+  id: string
   nit: number
   nombre: string
   estado: boolean

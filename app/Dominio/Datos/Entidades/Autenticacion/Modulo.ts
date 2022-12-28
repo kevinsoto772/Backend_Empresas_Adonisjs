@@ -1,53 +1,52 @@
-import { DateTime } from "luxon";
-import { Funcionalidad } from "./Funcionalidad";
+import { DateTime } from 'luxon'
+import { Funcionalidad } from './Funcionalidad'
 
 export class Modulo {
-    private _funcionalidades:Funcionalidad[] = []
-    public constructor(
-        private _id: string,
-        private _nombre: string,
-        private _ruta: string,
-        private _icono: string,
-        private _estado: boolean = true,
-        private _creacion: DateTime = DateTime.now(),
-        private _actualizacion:DateTime = DateTime.now(),
-    ){}
-    
-    public get id(){
-        return this._id
-    }
+  private _funcionalidades:Funcionalidad[] = []
+  constructor (
+    private _id: string,
+    private _nombre: string,
+    private _ruta: string,
+    private _icono: string,
+    private _estado: boolean = true,
+    private _creacion: DateTime = DateTime.now(),
+    private _actualizacion:DateTime = DateTime.now(),
+  ){}
 
-    public get funcionalidades(){
-        return this._funcionalidades
-    }
+  public get id (){
+    return this._id
+  }
 
-    public get nombre(){
-        return this._nombre
-    }
+  public get funcionalidades (){
+    return this._funcionalidades
+  }
 
-    public get ruta(){
-        return this._ruta
-    }
+  public get nombre (){
+    return this._nombre
+  }
 
-    public get icono(){
-        return this._icono
-    }
+  public get ruta (){
+    return this._ruta
+  }
 
-    public get estado(){
-        return this._estado
-    }
+  public get icono (){
+    return this._icono
+  }
 
-    public get creacion(){
-        return this._creacion
-    }
+  public get estado (){
+    return this._estado
+  }
 
-    public get actualizacion(){
-        return this._actualizacion
-    }
+  public get creacion (){
+    return this._creacion
+  }
 
+  public get actualizacion (){
+    return this._actualizacion
+  }
 
-    public agregarFuncionalidad(funcionalidad:Funcionalidad):Modulo{
-        this._funcionalidades.push(funcionalidad)
-        return this
-    }
+  public agregarFuncionalidad (funcionalidad:Funcionalidad):Modulo{
+    this._funcionalidades.push(funcionalidad)
+    return this
+  }
 }

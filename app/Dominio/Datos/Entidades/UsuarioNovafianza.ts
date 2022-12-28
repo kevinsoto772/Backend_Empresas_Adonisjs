@@ -13,5 +13,6 @@ export class UsuarioNovafianza{
   telefono: string;
   estado: boolean;
   clave: string;
-  claveTemporal: string;
+  claveTemporal: boolean;
+  idRol: string;
 }
