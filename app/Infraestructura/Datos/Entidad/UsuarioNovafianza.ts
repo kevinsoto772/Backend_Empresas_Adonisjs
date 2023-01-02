@@ -10,11 +10,25 @@ export default class TblUsuariosNovafianzas extends BaseModel {
 
   @column({ columnName: 'usn_nombre' }) public nombre: string
 
+  @column({ columnName: 'usn_identificacion' }) public identificacion: number
+
   @column({ columnName: 'usn_usuario' }) public usuario: string
 
   @column({ columnName: 'usn_clave' }) public clave: string
 
-  @column({columnName: 'usn_estado'}) public estado: boolean
+  @column({ columnName: 'usn_estado' }) public estado: boolean
+
+  @column({ columnName: 'usn_clave_temporal' }) public claveTemporal: string
+
+  @column({ columnName: 'usn_telefono' }) public telefono: string
+
+  @column({ columnName: 'usn_correo' }) public correo: string
+
+  @column({ columnName: 'usn_fechaNacimiento' }) public fechaNacimiento: DateTime
+
+  @column({ columnName: 'usn_cargo' }) public cargo: string
+
+  @column({ columnName: 'usn_apellido' }) public apellido: string
 
   @column.dateTime({ autoCreate: true , columnName: 'usn_creacion'}) public createdAt: DateTime
 
@@ -25,6 +39,13 @@ export default class TblUsuariosNovafianzas extends BaseModel {
     this.nombre = usuarioNovafianza.nombre
     this.usuario = usuarioNovafianza.usuario
     this.clave = usuarioNovafianza.clave
+    this.claveTemporal = usuarioNovafianza.claveTemporal
+    this.telefono = usuarioNovafianza.telefono
+    this.correo = usuarioNovafianza.correo
+    this.fechaNacimiento = usuarioNovafianza.fechaNacimiento
+    this.cargo = usuarioNovafianza.cargo
+    this.apellido = usuarioNovafianza.apellido
+    this.identificacion = usuarioNovafianza.identificacion
     this.estado = usuarioNovafianza.estado
   }
 
@@ -32,6 +53,13 @@ export default class TblUsuariosNovafianzas extends BaseModel {
     this.nombre = usuarioNovafianza.nombre
     this.usuario = usuarioNovafianza.usuario
     this.clave = usuarioNovafianza.clave
+    this.claveTemporal = usuarioNovafianza.claveTemporal
+    this.telefono = usuarioNovafianza.telefono
+    this.correo = usuarioNovafianza.correo
+    this.fechaNacimiento = usuarioNovafianza.fechaNacimiento
+    this.cargo = usuarioNovafianza.cargo
+    this.apellido = usuarioNovafianza.apellido
+    this.identificacion = usuarioNovafianza.identificacion
     this.estado = usuarioNovafianza.estado
   }
 
@@ -42,6 +70,13 @@ export default class TblUsuariosNovafianzas extends BaseModel {
     usuarioNovafianza.usuario = this.usuario
     usuarioNovafianza.clave = this.clave
     usuarioNovafianza.estado = this.estado
+    usuarioNovafianza.apellido = this.apellido
+    usuarioNovafianza.cargo = this.cargo
+    usuarioNovafianza.identificacion = this.identificacion
+    usuarioNovafianza.claveTemporal = this.claveTemporal
+    usuarioNovafianza.correo = this.correo
+    usuarioNovafianza.fechaNacimiento = this.fechaNacimiento
+    usuarioNovafianza.telefono = this.telefono
 
     return usuarioNovafianza
   }

@@ -1,8 +1,9 @@
 /* eslint-disable @typescript-eslint/explicit-member-accessibility */
 /* eslint-disable @typescript-eslint/semi */
 import { DateTime } from 'luxon';
-import { BaseModel, column} from '@ioc:Adonis/Lucid/Orm';
+import { BaseModel, column, HasMany, hasMany} from '@ioc:Adonis/Lucid/Orm';
 import { Empresa } from '../../../Dominio/Datos/Entidades/Empresa';
+import TblUsuariosEmpresas from './UsuarioEmpresa';
 export default class TblEmpresas extends BaseModel {
   @column({ isPrimary: true, columnName: 'emp_id' })
   public id: string
@@ -39,4 +40,9 @@ export default class TblEmpresas extends BaseModel {
 
     return empresa
   }
+
+  //hasMany
+
+  @hasMany(() => TblUsuariosEmpresas)
+  public UsuarioEmpresa: HasMany<typeof TblUsuariosEmpresas>
 }

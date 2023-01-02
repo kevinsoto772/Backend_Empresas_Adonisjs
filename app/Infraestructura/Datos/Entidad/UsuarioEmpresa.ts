@@ -1,9 +1,10 @@
 /* eslint-disable @typescript-eslint/explicit-member-accessibility */
 /* eslint-disable @typescript-eslint/semi */
 import { DateTime } from 'luxon';
-import { BaseModel, column, HasMany, hasMany} from '@ioc:Adonis/Lucid/Orm';
+import { BaseModel, BelongsTo, belongsTo, column, HasMany, hasMany} from '@ioc:Adonis/Lucid/Orm';
 import { UsuarioEmpresa } from 'App/Dominio/Datos/Entidades/UsuarioEmpresa';
 import TblVariablesEspecificas from './VariableEspecifica';
+import TblEmpresas from './Empresa';
 
 export default class TblUsuariosEmpresas extends BaseModel {
   @column({ isPrimary: true, columnName: 'use_id' })
@@ -13,7 +14,21 @@ export default class TblUsuariosEmpresas extends BaseModel {
 
   @column({ columnName: 'use_usuario' }) public usuario: string
 
+  @column({ columnName: 'use_identificacion' }) public identificacion: number
+
+  @column({ columnName: 'use_clave_temporal' }) public claveTemporal: string
+
   @column({ columnName: 'use_empresa_id' }) public idEmpresa: string
+
+  @column({ columnName: 'use_telefono' }) public telefono: string
+
+  @column({ columnName: 'use_correo' }) public correo: string
+
+  @column({ columnName: 'use_fechaNacimiento' }) public fechaNacimiento: DateTime
+
+  @column({ columnName: 'use_cargo' }) public cargo: string
+
+  @column({ columnName: 'use_apellido' }) public apellido: string
 
   @column({ columnName: 'use_clave' }) public clave: string
 
@@ -30,14 +45,28 @@ export default class TblUsuariosEmpresas extends BaseModel {
     this.estado = usuarioEmpresa.estado
     this.usuario = usuarioEmpresa.usuario
     this.idEmpresa = usuarioEmpresa.idEmpresa
+    this.identificacion = usuarioEmpresa.identificacion
+    this.apellido = usuarioEmpresa.apellido
+    this.cargo = usuarioEmpresa.cargo
+    this.fechaNacimiento = usuarioEmpresa.fechaNacimiento
+    this.correo = usuarioEmpresa.correo
+    this.telefono = usuarioEmpresa.telefono
+    this.claveTemporal = usuarioEmpresa.claveTemporal
   }
 
   public estableceUsuarioEmpresaConId (usuarioEmpresa: UsuarioEmpresa) {
-    this.clave = usuarioEmpresa.clave
     this.nombre = usuarioEmpresa.nombre
+    this.clave = usuarioEmpresa.clave
     this.estado = usuarioEmpresa.estado
     this.usuario = usuarioEmpresa.usuario
     this.idEmpresa = usuarioEmpresa.idEmpresa
+    this.identificacion = usuarioEmpresa.identificacion
+    this.apellido = usuarioEmpresa.apellido
+    this.cargo = usuarioEmpresa.cargo
+    this.fechaNacimiento = usuarioEmpresa.fechaNacimiento
+    this.correo = usuarioEmpresa.correo
+    this.telefono = usuarioEmpresa.telefono
+    this.claveTemporal = usuarioEmpresa.claveTemporal
   }
 
   public obtenerUsuarioEmpresa (): UsuarioEmpresa {
@@ -48,10 +77,24 @@ export default class TblUsuariosEmpresas extends BaseModel {
     usuarioEmpresa.estado = this.estado
     usuarioEmpresa.usuario = this.usuario
     usuarioEmpresa.idEmpresa = this.idEmpresa
+    usuarioEmpresa.claveTemporal = this.claveTemporal
+    usuarioEmpresa.identificacion = this.identificacion
+    usuarioEmpresa.correo = this.correo
+    usuarioEmpresa.fechaNacimiento = this.fechaNacimiento
+    usuarioEmpresa.cargo = this.cargo
+    usuarioEmpresa.telefono = this.telefono
+    usuarioEmpresa.apellido = this.apellido
+
     return usuarioEmpresa
   }
 
   @hasMany(() => TblVariablesEspecificas)
   public variableEspecifica: HasMany<typeof TblVariablesEspecificas>
+
+  @belongsTo(() => TblEmpresas, {
+    localKey: 'id',
+    foreignKey: 'idEmpresa',
+  })
+  public empresa: BelongsTo<typeof TblEmpresas>
 }
 

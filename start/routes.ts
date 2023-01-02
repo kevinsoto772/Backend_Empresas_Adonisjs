@@ -7,15 +7,16 @@ import { Exception } from '@adonisjs/core/build/standalone'
 import TblModulos from 'App/Infraestructura/Datos/Entidad/Autorizacion/Modulo'
 
 Route.get('/', async ({response}:HttpContextContract)=>{
-    response.status(200).send('¡Bienvenido al API de Novafianza!')
+  response.status(200).send('¡Bienvenido al API de Novafianza!')
 })
 
 Route.get('/prueba-email', async ({response}:HttpContextContract)=>{
-    const enviadorEmail = new EnviadorEmailAdonis()
-    enviadorEmail.enviarEmail('Hola mundo!', 'Hola mundo desde smtp gmail - adonis', ['jesdady482@gmail.com'])
-    response.status(200).send({
-        mensaje: 'Correo enviado con éxito'
-    })
+  const enviadorEmail = new EnviadorEmailAdonis()
+  // eslint-disable-next-line max-len
+  enviadorEmail.enviarEmail('Hola mundo!', 'Hola mundo desde smtp gmail - adonis', ['kosotosimanca@gmail.com'])
+  response.status(200).send({
+    mensaje: 'Correo enviado con éxito',
+  })
 })
 
 Route.get('/prueba-roles', async ({response}:HttpContextContract)=>{
