@@ -1,3 +1,4 @@
+/* eslint-disable max-len */
 /* eslint-disable @typescript-eslint/semi */
 import { DateTime } from 'luxon';
 import { BaseModel, column} from '@ioc:Adonis/Lucid/Orm';
@@ -15,7 +16,7 @@ export default class TblFuncionalidades extends BaseModel {
 
   @column.dateTime({ autoCreate: true, autoUpdate: true, columnName: 'fun_actualizacion' }) public actualizacion: DateTime
 
-  public establecerFuncionalidadDb(rol:Funcionalidad):void{
+  public establecerFuncionalidadDb (rol:Funcionalidad):void{
     this.id = rol.id
     this.nombre = rol.nombre
     this.estado = rol.estado
@@ -23,13 +24,13 @@ export default class TblFuncionalidades extends BaseModel {
     this.actualizacion = rol.actualizacion;
   }
 
-  public obtenerRol():Funcionalidad{
+  public obtenerRol ():Funcionalidad{
     return new Funcionalidad(
-        this.id, 
-        this.nombre, 
-        this.estado,
-        this.creacion,
-        this.actualizacion
+      this.id,
+      this.nombre,
+      this.estado,
+      this.creacion,
+      this.actualizacion
     )
   }
 }

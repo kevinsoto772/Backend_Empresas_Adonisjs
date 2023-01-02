@@ -15,5 +15,6 @@ export class UsuarioEmpresa{
   estado: boolean;
   clave: string;
   idEmpresa: string;
-  claveTemporal: string;
+  claveTemporal: boolean;
+  idRol: string
 }
