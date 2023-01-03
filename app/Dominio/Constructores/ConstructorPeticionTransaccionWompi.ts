@@ -4,6 +4,7 @@ export class ConstructorPeticionTransaccionWompi {
     private peticion: PeticionTransaccionWompi
 
     public constructor(){
+        this.peticion = {}
         this.peticion.currency = "COP"
     }
 
@@ -18,6 +19,7 @@ export class ConstructorPeticionTransaccionWompi {
         tipoDocumento?:string,
         telefono?:string
     }): ConstructorPeticionTransaccionWompi{
+        this.peticion.customer_data = {}
         this.peticion.customer_data.full_name = nombre ?? null
         this.peticion.customer_data.legal_id  = documento ?? null
         this.peticion.customer_data.legal_id_type  = tipoDocumento ?? null
@@ -64,6 +66,7 @@ export class ConstructorPeticionTransaccionWompi {
         telefono?: string,
         codigoPostal?: string
     }):ConstructorPeticionTransaccionWompi{
+        this.peticion.shipping_address = {}
         this.peticion.shipping_address.address_line_1 = linea1 ?? null
         this.peticion.shipping_address.address_line_2 = linea2 ?? null
         this.peticion.shipping_address.country = pais ?? null
@@ -86,6 +89,7 @@ export class ConstructorPeticionTransaccionWompi {
         descripcionPago: string, 
         estadoSandbox?: string
     }):ConstructorPeticionTransaccionWompi{
+        this.peticion.payment_method = {}
         this.peticion.payment_method.payment_description = descripcionPago
         this.peticion.payment_method.type = tipo
         this.peticion.payment_method.user_type = tipoUsuario
