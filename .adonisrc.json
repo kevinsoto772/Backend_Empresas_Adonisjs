@@ -55,6 +55,13 @@
           "tests/functional/**/*.spec(.ts|.js)"
         ],
         "timeout": 60000
+      },
+      {
+        "name": "integration",
+        "files": [
+          "tests/integracion/**/*.test(.ts|.js)"
+        ],
+        "timeout": 60000
       }
     ]
   },
