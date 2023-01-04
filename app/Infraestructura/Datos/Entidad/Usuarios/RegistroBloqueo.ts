@@ -4,6 +4,8 @@ import { DateTime } from "luxon";
 
 
 export class TblRegistroBloqueo extends BaseModel{
+
+    public static table = 'tbl_bloqueo_usuarios'
     @column({columnName: 'blu_id'})
     id:string;
 
@@ -17,7 +19,7 @@ export class TblRegistroBloqueo extends BaseModel{
     bloqueado:boolean;
 
     @column.dateTime({columnName: 'blu_ultimo_intento'})
-    ultimoIntento:DateTime;
+    ultimoIntento:DateTime | null;
 
     @column.dateTime({columnName: 'blu_creacion'})
     creacion:DateTime;
