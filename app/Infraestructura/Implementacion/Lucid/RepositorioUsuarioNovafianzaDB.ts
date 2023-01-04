@@ -26,7 +26,7 @@ export class RepositorioUsuarioNovafianzaDB implements RepositorioUsuarioNovafia
 
   async obtenerUsuarioNovafianzaPorUsuario (nombreUsuario: string): Promise<UsuarioNovafianza>{
     const usuario = await TblUsuariosNovafianzas.query().where('usuario', '=', nombreUsuario).first()
-    return usuario!
+    return usuario!.obtenerUsuarioNovafianza()
   }
 
   async guardarUsuarioNovafianza (usuarioNovafianza: UsuarioNovafianza): Promise<UsuarioNovafianza> {
