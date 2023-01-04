@@ -85,6 +85,9 @@ export class ServicioAutenticacion{
     const usuarioEmpresa = await this.servicioUsuarioEmpresa.obtenerUsuarioEmpresaPorUsuario(usuario)
     if (!usuarioEmpresa) {
       const usuarioNovafianza = await this.servicioUsuarioNovafianza.obtenerUsuarioNovafianzaPorUsuario(usuario)
+      if(!usuarioNovafianza){
+        throw new Exception('Credenciales incorrectas', 400)
+      }
       return usuarioNovafianza
     }
     return usuarioEmpresa

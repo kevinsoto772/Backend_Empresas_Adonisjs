@@ -34,7 +34,7 @@ export class ServicioUsuarioEmpresa{
     return this.repositorio.actualizarUsuarioEmpresa(id, usuarioEmpresa);
   }
 
-  async obtenerUsuarioEmpresaPorUsuario (nombreUsuario: string): Promise<UsuarioEmpresa>{
+  async obtenerUsuarioEmpresaPorUsuario (nombreUsuario: string): Promise<UsuarioEmpresa | null>{
     return this.repositorio.obtenerUsuarioEmpresaPorUsuario(nombreUsuario);
   }
 

@@ -21,7 +21,7 @@ export class ServicioUsuarioNovafianza{
     return this.repositorio.obtenerUsuarioNovafianzaPorId(id);
   }
 
-  async obtenerUsuarioNovafianzaPorUsuario (nombreUsuario: string): Promise<UsuarioNovafianza>{
+  async obtenerUsuarioNovafianzaPorUsuario (nombreUsuario: string): Promise<UsuarioNovafianza | null>{
     return this.repositorio.obtenerUsuarioNovafianzaPorUsuario(nombreUsuario);
   }
 

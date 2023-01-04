@@ -63,6 +63,9 @@ export class ServicioEmail{
 
     if (!usuarioEmpresa) {
       const usuarioNovafianza = await this.servicioUsuarioNovafianza.obtenerUsuarioNovafianzaPorUsuario(usuario)
+      if(!usuarioNovafianza){
+        throw new Exception('No se encuentra usuario registrado', 400)
+      }
       return usuarioNovafianza
     }
     return usuarioEmpresa

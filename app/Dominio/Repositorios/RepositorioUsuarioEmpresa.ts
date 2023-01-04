@@ -7,5 +7,5 @@ export interface RepositorioUsuarioEmpresa {
   obtenerUsuarioEmpresaPorId(id: string): Promise<UsuarioEmpresa>
   guardarUsuarioEmpresa(usuarioEmpresa: UsuarioEmpresa): Promise<UsuarioEmpresa>
   actualizarUsuarioEmpresa(id: string, usuarioEmpresa: UsuarioEmpresa): Promise<UsuarioEmpresa>
-  obtenerUsuarioEmpresaPorUsuario(nombreUsuario: string): Promise<UsuarioEmpresa>
+  obtenerUsuarioEmpresaPorUsuario(nombreUsuario: string): Promise<UsuarioEmpresa | null>
 }
