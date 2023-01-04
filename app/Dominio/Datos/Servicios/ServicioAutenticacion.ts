@@ -34,7 +34,7 @@ export class ServicioAutenticacion{
       if(!(await this.encriptador.comparar(clave, usuario.clave))){
         throw new Exception('Credenciales incorrectas', 400)
       }
-      usuario.clave = await this.encriptador.encriptar(nuevaClave)
+      usuario.clave = nuevaClave
       usuario.claveTemporal = false;
       this.servicioUsuarioEmpresa.actualizarUsuarioEmpresa(usuario.id, usuario)
       return;
