@@ -8,15 +8,19 @@ import { ServicioUsuarioEmpresa } from 'App/Dominio/Datos/Servicios/ServicioUsua
 import { ServicioUsuarioNovafianza } from 'App/Dominio/Datos/Servicios/ServicioUsuarioNovafianza'
 import { GenerarContrasena } from 'App/Dominio/GenerarContrasena/GenerarContrasena'
 import { EncriptadorAdonis } from 'App/Infraestructura/Encriptacion/EncriptadorAdonis'
+import { RepositorioBloqueoUsuarioDB } from 'App/Infraestructura/Implementacion/Lucid/RepositorioBloqueoUsuarioDB'
 import { RepositorioRolDB } from 'App/Infraestructura/Implementacion/Lucid/RepositorioRolDB'
 import { RepositorioUsuarioEmpresaDB } from 'App/Infraestructura/Implementacion/Lucid/RepositorioUsuarioEmpresaDB'
 import { RepositorioUsuarioNovafianzaDB } from 'App/Infraestructura/Implementacion/Lucid/RepositorioUsuarioNovafianzaDB'
 export default class ControladorArchivoVariable {
   private service: ServicioAutenticacion
   constructor () {
-    this.service = new ServicioAutenticacion(new ServicioUsuarioEmpresa(new RepositorioUsuarioEmpresaDB(), new GenerarContrasena(), new EncriptadorAdonis()),
-      new ServicioUsuarioNovafianza(new RepositorioUsuarioNovafianzaDB(), new GenerarContrasena()),
-      new ServicioRol(new RepositorioRolDB()), new EncriptadorAdonis()
+    this.service = new ServicioAutenticacion(
+      new ServicioUsuarioEmpresa(new RepositorioUsuarioEmpresaDB(), new GenerarContrasena(), new EncriptadorAdonis()),
+      new ServicioUsuarioNovafianza(new RepositorioUsuarioNovafianzaDB(), new GenerarContrasena(), new EncriptadorAdonis()),
+      new ServicioRol(new RepositorioRolDB()), 
+      new EncriptadorAdonis(), 
+      new RepositorioBloqueoUsuarioDB()
     )
   }
 
