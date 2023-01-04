@@ -40,6 +40,7 @@ export class TblRegistroBloqueo extends BaseModel{
     }
 
     public establecerRegistroBloqueo(registro:RegistroBloqueo):void{
+        this.id = registro.id
         this.identificacion = registro.identificacion
         this.intentos = registro.intentos
         this.bloqueado = registro.bloqueado
