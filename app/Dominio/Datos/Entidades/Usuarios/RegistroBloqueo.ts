@@ -39,7 +39,9 @@ export class RegistroBloqueo{
 
     public agregarIntentoFallido():void{
         this._intentos ++;
-        if(this._intentos >= this.cantidadMaximaIntentos)
+        if(this._intentos >= this.cantidadMaximaIntentos){
+            this.bloquearUsuario()
+        }
         this._ultimoIntento = DateTime.now()
         this._actualizacion = DateTime.now()
     }
