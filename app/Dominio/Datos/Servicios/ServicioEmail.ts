@@ -25,11 +25,11 @@ export class ServicioEmail{
     const clave = await this.generarContrasena.generar()
     usuarioVerificado.clave = clave,
     usuarioVerificado.claveTemporal = true
-    if (usuarioVerificado as UsuarioEmpresa) {
+    if (usuarioVerificado instanceof UsuarioEmpresa) {
       const actualizacionDatos = await this.servicioUsuarioEmpresa.actualizarUsuarioEmpresa(usuarioVerificado.id, (usuarioVerificado as UsuarioEmpresa))
     }
 
-    if (usuarioVerificado as UsuarioNovafianza) {
+    if (usuarioVerificado instanceof UsuarioNovafianza) {
       const actualizacionDatos = await this.servicioUsuarioNovafianza.actualizarUsuarioNovafianza(usuarioVerificado.id,(usuarioVerificado as UsuarioNovafianza))
     }
 
