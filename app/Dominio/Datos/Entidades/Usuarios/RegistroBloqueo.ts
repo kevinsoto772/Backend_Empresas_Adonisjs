@@ -53,6 +53,7 @@ export class RegistroBloqueo{
 
     public desbloquearUsuario():void{
         this._bloqueado = false
+        this._intentos = 0
         this._actualizacion = DateTime.now()
     }
 
