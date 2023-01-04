@@ -28,6 +28,27 @@ export class ServicioAutenticacion{
     this.servicioUsuarioEmpresa = new ServicioUsuarioEmpresa(new RepositorioUsuarioEmpresaDB(), new GenerarContrasena(), new EncriptadorAdonis())
   }
 
+  public async cambiarClave(identificacion: string, clave: string, nuevaClave: string){
+    const usuario = await this.verificarUsuario(identificacion)
+    if(usuario instanceof UsuarioEmpresa){
+      if(!(await this.encriptador.comparar(clave, usuario.clave))){
+        throw new Exception('Credenciales incorrectas', 400)
+      }
+      usuario.clave = await this.encriptador.encriptar(nuevaClave)
+      this.servicioUsuarioEmpresa.actualizarUsuarioEmpresa(usuario.id, usuario)
+      return;
+    }
+    if(usuario instanceof UsuarioNovafianza){
+      if(!(await this.encriptador.comparar(clave, usuario.clave))){
+        throw new Exception('Credenciales incorrectas', 400)
+      }
+      usuario.clave = await this.encriptador.encriptar(nuevaClave)
+      this.servicioUsuarioNovafianza.actualizarUsuarioNovafianza(usuario.id, usuario)
+      return;
+    }
+    throw new Exception('Credenciales incorrectas', 400)
+  }
+
   public async iniciarSesion (usuario: string, contrasena: string): Promise<RespuestaInicioSesion>{
     const usuarioVerificado = await this.verificarUsuario(usuario)
     let registroDeBloqueo = await this.repositorioBloqueo.obtenerRegistroPorUsuario(usuarioVerificado.identificacion)

@@ -40,4 +40,17 @@ export default class ControladorArchivoVariable {
       token: ServicioAutenticacionJWT.generarToken(usuario, contrasena),
     })
   }
+
+  public async cambiarClave({request, response}:HttpContextContract){
+    const peticion = await request.body()
+    const identificacion = peticion.identificacion
+    const clave = peticion.clave
+    const nuevaClave = peticion.nuevaClave
+
+    await this.service.cambiarClave(identificacion, clave, nuevaClave)
+    response.status(200).send({
+      mensaje: 'Su contraseña ha sido cambiada exitosamente',
+      estado: 200
+    })
+  }
 }
