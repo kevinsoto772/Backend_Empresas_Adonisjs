@@ -11,7 +11,7 @@ export default class TblUsuariosNovafianzas extends BaseModel {
 
   @column({ columnName: 'usn_nombre' }) public nombre: string
 
-  @column({ columnName: 'usn_identificacion' }) public identificacion: number
+  @column({ columnName: 'usn_identificacion' }) public identificacion: string
 
   @column({ columnName: 'usn_usuario' }) public usuario: string
 

@@ -1,7 +1,7 @@
 import { RepositorioPagosNovafianza } from "App/Dominio/Repositorios/RepositorioPagosNovafianza";
 import Env from "@ioc:Adonis/Core/Env"
 import { RespuestaDeudaNovafianza } from "App/Dominio/Dto/RespuestaDeudaNovafianza";
-import { ClienteHttp } from "App/Dominio/HttpClient";
+import { ClienteHttp } from "App/Dominio/ClienteHttp";
 
 export class RepositorioPagosNovafianzaHttp implements RepositorioPagosNovafianza{
 

@@ -8,7 +8,7 @@ export default class TblUsuariosEmpresas extends BaseSchema {
       table.uuid('use_id').unique()
       table.string('use_nombre', 200).notNullable()
       table.string('use_apellido', 255)
-      table.integer('use_identificacion').unique()
+      table.string('use_identificacion').unique()
       table.boolean('use_clave_temporal').defaultTo(true)
       table.string('use_usuario', 255)
       table.string('use_clave', 255)

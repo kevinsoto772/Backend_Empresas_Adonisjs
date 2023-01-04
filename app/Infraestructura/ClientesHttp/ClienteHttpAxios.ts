@@ -1,4 +1,4 @@
-import { ClienteHttp } from "App/Dominio/HttpClient";
+import { ClienteHttp } from "App/Dominio/ClienteHttp";
 import axios from 'axios'
 
 export class ClienteHttpAxios implements ClienteHttp {

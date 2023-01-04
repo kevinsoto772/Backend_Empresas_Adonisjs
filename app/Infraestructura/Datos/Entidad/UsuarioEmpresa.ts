@@ -15,7 +15,7 @@ export default class TblUsuariosEmpresas extends BaseModel {
 
   @column({ columnName: 'use_usuario' }) public usuario: string
 
-  @column({ columnName: 'use_identificacion' }) public identificacion: number
+  @column({ columnName: 'use_identificacion' }) public identificacion: string
 
   @column({ columnName: 'use_clave_temporal' }) public claveTemporal: boolean
 

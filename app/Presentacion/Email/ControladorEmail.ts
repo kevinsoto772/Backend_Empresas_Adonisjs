@@ -7,8 +7,8 @@ import { ServicioUsuarioNovafianza } from 'App/Dominio/Datos/Servicios/ServicioU
 import { GenerarContrasena } from 'App/Dominio/GenerarContrasena/GenerarContrasena'
 import { EnviadorEmailAdonis } from 'App/Infraestructura/Email/EnviadorEmailAdonis'
 import { EncriptadorAdonis } from 'App/Infraestructura/Encriptacion/EncriptadorAdonis'
-import { RepositorioUsuarioEmpresaDB } from 'App/Infraestructura/Implementacion/BaseDatos/RepositorioUsuarioEmpresaDB'
-import { RepositorioUsuarioNovafianzaDB } from '../../Infraestructura/Implementacion/BaseDatos/RepositorioUsuarioNovafianzaDB'
+import { RepositorioUsuarioEmpresaDB } from 'App/Infraestructura/Implementacion/Lucid/RepositorioUsuarioEmpresaDB'
+import { RepositorioUsuarioNovafianzaDB } from '../../Infraestructura/Implementacion/Lucid/RepositorioUsuarioNovafianzaDB'
 
 export default class ControladorEmpresa {
   private service: ServicioEmail
