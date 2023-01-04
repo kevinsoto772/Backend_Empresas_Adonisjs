@@ -35,6 +35,7 @@ export class ServicioAutenticacion{
         throw new Exception('Credenciales incorrectas', 400)
       }
       usuario.clave = await this.encriptador.encriptar(nuevaClave)
+      usuario.claveTemporal = false;
       this.servicioUsuarioEmpresa.actualizarUsuarioEmpresa(usuario.id, usuario)
       return;
     }
@@ -43,6 +44,7 @@ export class ServicioAutenticacion{
         throw new Exception('Credenciales incorrectas', 400)
       }
       usuario.clave = await this.encriptador.encriptar(nuevaClave)
+      usuario.claveTemporal = false;
       this.servicioUsuarioNovafianza.actualizarUsuarioNovafianza(usuario.id, usuario)
       return;
     }
