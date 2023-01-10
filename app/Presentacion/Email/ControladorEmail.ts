@@ -7,14 +7,20 @@ import { ServicioUsuarioNovafianza } from 'App/Dominio/Datos/Servicios/ServicioU
 import { GenerarContrasena } from 'App/Dominio/GenerarContrasena/GenerarContrasena'
 import { EnviadorEmailAdonis } from 'App/Infraestructura/Email/EnviadorEmailAdonis'
 import { EncriptadorAdonis } from 'App/Infraestructura/Encriptacion/EncriptadorAdonis'
-import { RepositorioUsuarioEmpresaDB } from 'App/Infraestructura/Implementacion/BaseDatos/RepositorioUsuarioEmpresaDB'
-import { RepositorioUsuarioNovafianzaDB } from '../../Infraestructura/Implementacion/BaseDatos/RepositorioUsuarioNovafianzaDB'
+import { RepositorioUsuarioEmpresaDB } from 'App/Infraestructura/Implementacion/Lucid/RepositorioUsuarioEmpresaDB'
+import { RepositorioUsuarioNovafianzaDB } from '../../Infraestructura/Implementacion/Lucid/RepositorioUsuarioNovafianzaDB'
+import { RepositorioBloqueoUsuarioDB } from 'App/Infraestructura/Implementacion/Lucid/RepositorioBloqueoUsuarioDB'
 
 export default class ControladorEmpresa {
   private service: ServicioEmail
   constructor () {
-    this.service = new ServicioEmail (new EnviadorEmailAdonis(), new ServicioUsuarioEmpresa(new RepositorioUsuarioEmpresaDB()
-      , new GenerarContrasena(), new EncriptadorAdonis()), new GenerarContrasena(), new ServicioUsuarioNovafianza(new RepositorioUsuarioNovafianzaDB(),new GenerarContrasena(), new EncriptadorAdonis()))
+    this.service = new ServicioEmail (
+      new EnviadorEmailAdonis(), 
+      new ServicioUsuarioEmpresa(new RepositorioUsuarioEmpresaDB(), new GenerarContrasena(), new EncriptadorAdonis()), 
+      new GenerarContrasena(), 
+      new ServicioUsuarioNovafianza(new RepositorioUsuarioNovafianzaDB(),new GenerarContrasena(), new EncriptadorAdonis()),
+      new RepositorioBloqueoUsuarioDB()
+    )
   }
 
   public EnviarEmail ({request, response}:HttpContextContract) {

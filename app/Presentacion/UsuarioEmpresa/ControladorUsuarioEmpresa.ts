@@ -5,7 +5,7 @@ import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 import { ServicioUsuarioEmpresa } from 'App/Dominio/Datos/Servicios/ServicioUsuarioEmpresa'
 import { GenerarContrasena } from 'App/Dominio/GenerarContrasena/GenerarContrasena'
 import { EncriptadorAdonis } from 'App/Infraestructura/Encriptacion/EncriptadorAdonis'
-import { RepositorioUsuarioEmpresaDB } from '../../Infraestructura/Implementacion/BaseDatos/RepositorioUsuarioEmpresaDB'
+import { RepositorioUsuarioEmpresaDB } from '../../Infraestructura/Implementacion/Lucid/RepositorioUsuarioEmpresaDB'
 
 export default class ControladorUsuarioEmpresa {
   private service: ServicioUsuarioEmpresa

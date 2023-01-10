@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 import { ServicioLogErrores } from 'App/Dominio/Datos/Servicios/ServicioLogErrores'
-import { RepositorioLogErroresDB } from 'App/Infraestructura/Implementacion/BaseDatos/RepositorioLogErroresDB'
+import { RepositorioLogErroresDB } from 'App/Infraestructura/Implementacion/Lucid/RepositorioLogErroresDB'
 
 export default class ControladorLogErrores {
   private service: ServicioLogErrores

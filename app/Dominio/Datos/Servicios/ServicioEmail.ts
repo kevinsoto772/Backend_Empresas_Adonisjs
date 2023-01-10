@@ -8,10 +8,16 @@ import { UsuarioEmpresa } from '../Entidades/UsuarioEmpresa'
 import { UsuarioNovafianza } from '../Entidades/UsuarioNovafianza'
 import { ServicioUsuarioEmpresa } from './ServicioUsuarioEmpresa'
 import { ServicioUsuarioNovafianza } from './ServicioUsuarioNovafianza'
+import { RepositorioBloqueoUsuario } from 'App/Dominio/Repositorios/RepositorioBloqueoUsuario'
 
 export class ServicioEmail{
-  constructor (private enviadorEmail: EnviadorEmail, private servicioUsuarioEmpresa: ServicioUsuarioEmpresa,
-    private generarContrasena: GenerarContrasena, private servicioUsuarioNovafianza: ServicioUsuarioNovafianza) { }
+  constructor (
+    private enviadorEmail: EnviadorEmail, 
+    private servicioUsuarioEmpresa: ServicioUsuarioEmpresa,
+    private generarContrasena: GenerarContrasena, 
+    private servicioUsuarioNovafianza: ServicioUsuarioNovafianza,
+    private repositorioRegistroBloqueo: RepositorioBloqueoUsuario
+    ) { }
 
   public async ComprobarUsuario (usuario: string, correo: string) {
     const usuarioVerificado = await this.verificarUsuario(usuario)
@@ -25,12 +31,22 @@ export class ServicioEmail{
     const clave = await this.generarContrasena.generar()
     usuarioVerificado.clave = clave,
     usuarioVerificado.claveTemporal = true
-    if (usuarioVerificado as UsuarioEmpresa) {
-      const actualizacionDatos = await this.servicioUsuarioEmpresa.actualizarUsuarioEmpresa(usuarioVerificado.id, (usuarioVerificado as UsuarioEmpresa))
+    if (usuarioVerificado instanceof UsuarioEmpresa) {
+      await this.servicioUsuarioEmpresa.actualizarUsuarioEmpresa(usuarioVerificado.id, usuarioVerificado )
+      const registroBloqueo = await this.repositorioRegistroBloqueo.obtenerRegistroPorUsuario(usuarioVerificado.identificacion)
+      if(registroBloqueo && registroBloqueo.elUsuarioEstaBloqueado()){
+        registroBloqueo.desbloquearUsuario()
+        await this.repositorioRegistroBloqueo.actualizarRegistro(registroBloqueo)
+      } 
     }
 
-    if (usuarioVerificado as UsuarioNovafianza) {
-      const actualizacionDatos = await this.servicioUsuarioNovafianza.actualizarUsuarioNovafianza(usuarioVerificado.id,(usuarioVerificado as UsuarioNovafianza))
+    if (usuarioVerificado instanceof UsuarioNovafianza) {
+      await this.servicioUsuarioNovafianza.actualizarUsuarioNovafianza(usuarioVerificado.id, usuarioVerificado)
+      const registroBloqueo = await this.repositorioRegistroBloqueo.obtenerRegistroPorUsuario(usuarioVerificado.identificacion)
+      if(registroBloqueo && registroBloqueo.elUsuarioEstaBloqueado()){
+        registroBloqueo.desbloquearUsuario()
+        await this.repositorioRegistroBloqueo.actualizarRegistro(registroBloqueo)
+      } 
     }
 
     this.enviarEmail('Recuperar contraseña novafianza (No responder)', `Hola ${usuarioVerificado.nombre} ${usuarioVerificado.apellido} recibimos su solicitud
@@ -47,6 +63,9 @@ export class ServicioEmail{
 
     if (!usuarioEmpresa) {
       const usuarioNovafianza = await this.servicioUsuarioNovafianza.obtenerUsuarioNovafianzaPorUsuario(usuario)
+      if(!usuarioNovafianza){
+        throw new Exception('No se encuentra usuario registrado', 400)
+      }
       return usuarioNovafianza
     }
     return usuarioEmpresa

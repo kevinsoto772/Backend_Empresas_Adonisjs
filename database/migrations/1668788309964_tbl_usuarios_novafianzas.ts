@@ -9,7 +9,7 @@ export default class TblUsuariosNovafianzas extends BaseSchema {
       table.uuid('usn_id').unique()
       table.string('usn_nombre', 200).notNullable()
       table.string('usn_apellido', 255)
-      table.integer('usn_identificacion').unique()
+      table.string('usn_identificacion').unique()
       table.string('usn_usuario', 255)
       table.string('usn_clave', 255)
       table.boolean('usn_clave_temporal').defaultTo(true)

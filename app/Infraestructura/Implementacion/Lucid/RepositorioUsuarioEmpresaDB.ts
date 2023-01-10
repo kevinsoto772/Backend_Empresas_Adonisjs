@@ -31,9 +31,12 @@ export class RepositorioUsuarioEmpresaDB implements RepositorioUsuarioEmpresa {
     return usuarioEmpresaDB
   }
 
-  async obtenerUsuarioEmpresaPorUsuario (nombreUsuario: string): Promise<UsuarioEmpresa>{
+  async obtenerUsuarioEmpresaPorUsuario (nombreUsuario: string): Promise<UsuarioEmpresa | null>{
     const usuario = await TblUsuariosEmpresas.query().where('usuario', '=', nombreUsuario).first()
-    return usuario!
+    if(usuario){
+      return usuario!.obtenerUsuarioEmpresa()
+    }
+    return null
   }
 
   async actualizarUsuarioEmpresa (id: string, usuarioEmpresa: UsuarioEmpresa): Promise<UsuarioEmpresa> {
