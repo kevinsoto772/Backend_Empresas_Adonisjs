@@ -2,12 +2,14 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 import { ServicioUsuarioNovafianza } from 'App/Dominio/Datos/Servicios/ServicioUsuarioNovafianza'
-import { RepositorioUsuarioNovafianzaDB } from '../../Infraestructura/Implementacion/BaseDatos/RepositorioUsuarioNovafianzaDB'
+import { GenerarContrasena } from 'App/Dominio/GenerarContrasena/GenerarContrasena'
+import { EncriptadorAdonis } from 'App/Infraestructura/Encriptacion/EncriptadorAdonis'
+import { RepositorioUsuarioNovafianzaDB } from '../../Infraestructura/Implementacion/Lucid/RepositorioUsuarioNovafianzaDB'
 
 export default class ControladorUsuarioNovafianza {
   private service: ServicioUsuarioNovafianza
   constructor () {
-    this.service = new ServicioUsuarioNovafianza(new RepositorioUsuarioNovafianzaDB())
+    this.service = new ServicioUsuarioNovafianza(new RepositorioUsuarioNovafianzaDB(), new GenerarContrasena(), new EncriptadorAdonis())
   }
 
   public async listar ({ params }) {
@@ -17,6 +19,11 @@ export default class ControladorUsuarioNovafianza {
 
   public async obtenerUsuarioNovafianzaPorId ({ params }) {
     const usuarioNovafianza = await this.service.obtenerUsuarioNovafianzaPorId(params.id)
+    return usuarioNovafianza
+  }
+
+  public async obtenerUsuarioNovafianzaPorUsuario ({ request }:HttpContextContract) {
+    const usuarioNovafianza = await this.service.obtenerUsuarioNovafianzaPorUsuario(request.param('usuario'))
     return usuarioNovafianza
   }
 

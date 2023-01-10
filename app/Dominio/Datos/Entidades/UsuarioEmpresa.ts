@@ -5,7 +5,7 @@ import { DateTime } from 'luxon'
 export class UsuarioEmpresa{
   id: string;
   usuario: string;
-  identificacion: number;
+  identificacion: string;
   nombre: string;
   apellido: string;
   fechaNacimiento: DateTime;
@@ -15,5 +15,6 @@ export class UsuarioEmpresa{
   estado: boolean;
   clave: string;
   idEmpresa: string;
-  claveTemporal: string;
+  claveTemporal: boolean;
+  idRol: string
 }

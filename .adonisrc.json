@@ -34,7 +34,9 @@
     "./start/Rutas/ruta_log_exito",
     "./start/Rutas/ruta_log_errores",
     "./start/Rutas/ruta_log_advertencia",
-    "./start/Rutas/ruta_autenticacion"
+    "./start/Rutas/ruta_autenticacion",
+    "./start/Rutas/ruta_enviar_email",
+    "./start/Rutas/ruta_pagos"
   ],
   "providers": [
     "./providers/AppProvider",
@@ -52,6 +54,13 @@
         "name": "functional",
         "files": [
           "tests/functional/**/*.spec(.ts|.js)"
+        ],
+        "timeout": 60000
+      },
+      {
+        "name": "integration",
+        "files": [
+          "tests/integracion/**/*.test(.ts|.js)"
         ],
         "timeout": 60000
       }

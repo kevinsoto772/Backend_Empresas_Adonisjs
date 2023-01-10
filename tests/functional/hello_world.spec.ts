@@ -11,6 +11,6 @@ test('consultar empresas', async ({ client })=>{
   const token = respuestaToken.body().token
   console.log('este es el supuesto token', token)
   const response = await client.get('/api/v1/empresa/listar/1/100')
-                                .header('Authorization', `Bearer ${token}`)
+    .header('Authorization', `Bearer ${token}`)
   response.assertTextIncludes('"empresas":[')
 })

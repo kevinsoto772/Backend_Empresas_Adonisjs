@@ -1,6 +1,6 @@
 
 import { ServicioCarga } from 'App/Dominio/Datos/Servicios/ServicioCarga'
-import { RepositorioCargaDB } from '../../Infraestructura/Implementacion/BaseDatos/RepositorioCargaDB'
+import { RepositorioCargaDB } from '../../Infraestructura/Implementacion/Lucid/RepositorioCargaDB'
 export default class ControladorCarga {
   private servicio: ServicioCarga
   constructor () {
