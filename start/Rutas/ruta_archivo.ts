@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 import Route from '@ioc:Adonis/Core/Route'
-const accion_path = '../../../app/Presentacion/Archivo/ControladorArchivo.ts'
+const accion_path = '../../../app/Presentacion/Archivo/ControladorArchivo'
 
 Route.group(() => {
   Route.post('/registro', accion_path + '.guardarArchivo')

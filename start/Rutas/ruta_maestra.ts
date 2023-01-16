@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/quotes */
 /* eslint-disable @typescript-eslint/naming-convention */
 import Route from '@ioc:Adonis/Core/Route'
-const accion_path = '../../../app/Presentacion/Maestra/ControladorMaestra.ts'
+const accion_path = '../../../app/Presentacion/Maestra/ControladorMaestra'
 
 Route.group(() => {
   Route.post('/registro', accion_path + '.guardarMaestra')
