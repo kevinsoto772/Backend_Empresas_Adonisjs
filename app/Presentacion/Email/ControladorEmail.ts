@@ -23,16 +23,14 @@ export default class ControladorEmpresa {
     )
   }
 
-  public EnviarEmail ({request, response}:HttpContextContract) {
-    try {
+  public async EnviarEmail ({request, response}:HttpContextContract) {
+    
       const peticion = request.all()
       let usuario = peticion['usuario']
       let correo = peticion['correo']
-      this.service.ComprobarUsuario(usuario, correo)
+      await this.service.ComprobarUsuario(usuario, correo)
       response.status(200).send({mensaje: 'Mensaje enviado correctamente'})
-    } catch (e) {
-      response.status(500).send(e)
-    }
+   
   }
 }
 
