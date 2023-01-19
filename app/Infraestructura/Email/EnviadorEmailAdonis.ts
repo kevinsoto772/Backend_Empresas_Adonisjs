@@ -6,10 +6,12 @@ import { EnviadorEmail } from 'App/Dominio/Email/EnviadorEmail'
 
 export class EnviadorEmailAdonis implements EnviadorEmail {
   enviarEmail (asunto:string, texto: string, destinatarios: string[], etiquetas?: string[] | undefined): void {
+    console.log("entro");
+    
     Mail.send(mensaje => {
       mensaje
         .subject(asunto)
-        .from('jesing482@gmail.com', Env.get('EMAIL_ALIAS'))
+        .from(Env.get('SMTP_USERNAME'), Env.get('EMAIL_ALIAS'))
         .cc(destinatarios.join(';'))
         .text(texto)
     })
