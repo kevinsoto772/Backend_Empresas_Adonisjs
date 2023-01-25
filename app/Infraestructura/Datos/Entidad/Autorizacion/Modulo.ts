@@ -15,9 +15,9 @@ export default class TblModulos extends BaseModel {
 
   @column({ columnName: 'mod_icono'}) public icono: string
 
-  @column.dateTime({ autoCreate: true, columnName: 'mod_creacion' }) public creacion: DateTime
+  @column.dateTime({ autoCreate: true, columnName: 'mod_creado' }) public creacion: DateTime
 
-  @column.dateTime({ autoCreate: true, autoUpdate: true, columnName: 'mod_actualizacion' }) public actualizacion: DateTime
+  @column.dateTime({ autoCreate: true, autoUpdate: true, columnName: 'mod_actualizado' }) public actualizacion: DateTime
 
   public establecerModuloDb (modulo:Modulo):void{
     this.id = modulo.id

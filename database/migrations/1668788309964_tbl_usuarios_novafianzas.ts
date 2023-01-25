@@ -17,7 +17,7 @@ export default class TblUsuariosNovafianzas extends BaseSchema {
       table.string('usn_cargo', 255)
       table.string('usn_telefono', 255)
       table.string('usn_correo', 255)
-      table.uuid('usn_rol_id').references('rol_id').inTable('tbl_roles')
+      table.string('usn_rol_id').references('rol_id').inTable('tbl_roles')
       table.boolean('usn_estado').defaultTo(true)
       table.timestamp('usn_creacion', { useTz: true })
       table.timestamp('usn_actualizacion', { useTz: true })

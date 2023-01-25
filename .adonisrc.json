@@ -24,6 +24,7 @@
     "./start/Rutas/ruta_maestra",
     "./start/Rutas/ruta_usuario_empresa",
     "./start/Rutas/ruta_usuario_novafianza",
+    "./start/Rutas/ruta_usuario",
     "./start/Rutas/ruta_archivos_variables",
     "./start/Rutas/ruta_mascara",
     "./start/Rutas/ruta_variableEspecifica",

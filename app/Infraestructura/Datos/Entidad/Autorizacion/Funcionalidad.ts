@@ -12,9 +12,9 @@ export default class TblFuncionalidades extends BaseModel {
 
   @column({ columnName: 'fun_estado' }) public estado: boolean
 
-  @column.dateTime({ autoCreate: true, columnName: 'fun_creacion' }) public creacion: DateTime
+  @column.dateTime({ autoCreate: true, columnName: 'fun_creado' }) public creacion: DateTime
 
-  @column.dateTime({ autoCreate: true, autoUpdate: true, columnName: 'fun_actualizacion' }) public actualizacion: DateTime
+  @column.dateTime({ autoCreate: true, autoUpdate: true, columnName: 'fun_actualizado' }) public actualizacion: DateTime
 
   public establecerFuncionalidadDb (rol:Funcionalidad):void{
     this.id = rol.id

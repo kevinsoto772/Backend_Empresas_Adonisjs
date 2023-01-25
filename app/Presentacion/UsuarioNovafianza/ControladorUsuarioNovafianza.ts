@@ -5,11 +5,17 @@ import { ServicioUsuarioNovafianza } from 'App/Dominio/Datos/Servicios/ServicioU
 import { GenerarContrasena } from 'App/Dominio/GenerarContrasena/GenerarContrasena'
 import { EncriptadorAdonis } from 'App/Infraestructura/Encriptacion/EncriptadorAdonis'
 import { RepositorioUsuarioNovafianzaDB } from '../../Infraestructura/Implementacion/Lucid/RepositorioUsuarioNovafianzaDB'
+import { EnviadorEmailAdonis } from 'App/Infraestructura/Email/EnviadorEmailAdonis'
 
 export default class ControladorUsuarioNovafianza {
   private service: ServicioUsuarioNovafianza
   constructor () {
-    this.service = new ServicioUsuarioNovafianza(new RepositorioUsuarioNovafianzaDB(), new GenerarContrasena(), new EncriptadorAdonis())
+    this.service = new ServicioUsuarioNovafianza(
+      new RepositorioUsuarioNovafianzaDB(), 
+      new GenerarContrasena(), 
+      new EncriptadorAdonis(),
+      new EnviadorEmailAdonis()
+    )
   }
 
   public async listar ({ params }) {
