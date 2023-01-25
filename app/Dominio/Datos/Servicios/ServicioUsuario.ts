@@ -15,7 +15,7 @@ export class ServicioUsuario {
         let usuario = await this.obtenerUsuario(identificacion)
         usuario = this.actualizarInformacion(usuario, informacion)
         if(usuario instanceof UsuarioEmpresa){
-            await this.repositorioUsuariosEmpresas.actualizarUsuarioEmpresa(identificacion, usuario)
+            await this.repositorioUsuariosEmpresas.actualizarUsuarioEmpresa(usuario.id, usuario)
         }else{
             await this.repositorioUsuariosNovafianza.actualizarUsuarioNovafianza(usuario.id, usuario)
         }
