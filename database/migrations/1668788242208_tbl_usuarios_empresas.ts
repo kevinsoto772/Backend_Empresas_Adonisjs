@@ -17,7 +17,7 @@ export default class TblUsuariosEmpresas extends BaseSchema {
       table.string('use_telefono', 255)
       table.string('use_correo', 255)
       table.uuid('use_empresa_id').references('emp_id').inTable('tbl_empresas')
-      table.uuid('use_rol_id').references('rol_id').inTable('tbl_roles')
+      table.string('use_rol_id').references('rol_id').inTable('tbl_roles')
       table.boolean('use_estado').defaultTo(true)
       table.timestamp('use_creacion', { useTz: true })
       table.timestamp('use_actualizacion', { useTz: true })

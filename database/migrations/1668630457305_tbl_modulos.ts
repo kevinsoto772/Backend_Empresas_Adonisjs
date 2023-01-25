@@ -5,7 +5,7 @@ export default class extends BaseSchema {
 
   public async up () {
     this.schema.createTable(this.tableName, (table) => {
-      table.uuid('mod_id').primary()
+      table.string('mod_id', 5).primary()
       table.string('mod_nombre', 30)
       table.string('mod_ruta', 100)
       table.string('mod_icono')

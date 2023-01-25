@@ -6,8 +6,8 @@ export default class extends BaseSchema {
   public async up () {
     this.schema.createTable(this.tableName, (table) => {
       table.uuid('rom_id').primary()
-      table.uuid('rom_rol_id').references('rol_id').inTable('tbl_roles')
-      table.uuid('rom_modulo_id').references('mod_id').inTable('tbl_modulos')
+      table.string('rom_rol_id').references('rol_id').inTable('tbl_roles')
+      table.string('rom_modulo_id').references('mod_id').inTable('tbl_modulos')
       table.timestamp('rom_creado', { useTz: true }).defaultTo(this.now())
       table.timestamp('rom_actualizado', { useTz: true }).defaultTo(this.now())
     })
