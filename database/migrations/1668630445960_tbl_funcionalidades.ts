@@ -5,7 +5,7 @@ export default class extends BaseSchema {
 
   public async up () {
     this.schema.createTable(this.tableName, (table) => {
-      table.uuid('fun_id').primary()
+      table.string('fun_id', 5).primary()
       table.string('fun_nombre', 30)
       table.boolean('fun_estado')
       table.timestamp('fun_creado', { useTz: true }).defaultTo(this.now())

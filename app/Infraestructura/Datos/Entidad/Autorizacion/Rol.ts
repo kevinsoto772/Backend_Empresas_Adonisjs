@@ -12,9 +12,9 @@ export default class TblRoles extends BaseModel {
 
   @column({ columnName: 'rol_estado' }) public estado: boolean
 
-  @column.dateTime({ autoCreate: true, columnName: 'rol_creacion' }) public creacion: DateTime
+  @column.dateTime({ autoCreate: true, columnName: 'rol_creado' }) public creacion: DateTime
 
-  @column.dateTime({ autoCreate: true, autoUpdate: true, columnName: 'rol_actualizacion' }) public actualizacion: DateTime
+  @column.dateTime({ autoCreate: true, autoUpdate: true, columnName: 'rol_actualizado' }) public actualizacion: DateTime
 
   public establecerRolTblRoles (rol:Rol):void{
     this.id = rol.id

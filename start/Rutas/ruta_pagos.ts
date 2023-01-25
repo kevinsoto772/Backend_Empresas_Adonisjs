@@ -1,5 +1,5 @@
 import Route from '@ioc:Adonis/Core/Route'
-const accion_path = '../../../app/Presentacion/Pagos/ControladorPagos.ts'
+const accion_path = '../../../app/Presentacion/Pagos/ControladorPagos'
 
 Route.group(() => {
     Route.post('/transaccion', `${accion_path}.transaccion`)

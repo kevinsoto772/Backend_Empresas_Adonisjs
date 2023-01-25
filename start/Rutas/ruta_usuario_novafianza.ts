@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/quotes */
 /* eslint-disable @typescript-eslint/naming-convention */
 import Route from '@ioc:Adonis/Core/Route'
-const accion_path = '../../../app/Presentacion/UsuarioNovafianza/ControladorUsuarioNovafianza.ts'
+const accion_path = '../../../app/Presentacion/UsuarioNovafianza/ControladorUsuarioNovafianza'
 
 Route.group(() => {
   Route.post('/registro', accion_path + '.guardarUsuarioNovafianza')
@@ -10,4 +10,4 @@ Route.group(() => {
   Route.get('/usuario/:usuario', accion_path + '.obtenerUsuarioNovafianzaPorUsuario')
   Route.patch('/:id', accion_path + '.actualizarUsuarioNovafianza')
   Route.put('/estado/:id', accion_path + '.cambiarEstado')
-}).prefix('api/v1/usuario_novafianza').middleware('autenticacionJwt')
+}).prefix('api/v1/usuario_novafianza')
