@@ -1,5 +1,5 @@
 /* eslint-disable max-len */
-import { GenerarContrasena} from 'App/Dominio/GenerarContrasena/GenerarContrasena'
+import { GenerarContrasena } from 'App/Dominio/GenerarContrasena/GenerarContrasena'
 import { EncriptadorAdonis } from 'App/Infraestructura/Encriptacion/EncriptadorAdonis'
 import { RepositorioRolDB } from 'App/Infraestructura/Implementacion/Lucid/RepositorioRolDB'
 import { RepositorioUsuarioEmpresaDB } from 'App/Infraestructura/Implementacion/Lucid/RepositorioUsuarioEmpresaDB'
@@ -16,11 +16,11 @@ import { RepositorioBloqueoUsuario } from 'App/Dominio/Repositorios/RepositorioB
 import { RegistroBloqueo } from '../Entidades/Usuarios/RegistroBloqueo'
 import { v4 as uuid } from 'uuid'
 
-export class ServicioAutenticacion{
-  constructor (
-    private servicioUsuarioEmpresa:ServicioUsuarioEmpresa,
-    private servicioUsuarioNovafianza:ServicioUsuarioNovafianza, 
-    private Rolservice: ServicioRol, 
+export class ServicioAutenticacion {
+  constructor(
+    private servicioUsuarioEmpresa: ServicioUsuarioEmpresa,
+    private servicioUsuarioNovafianza: ServicioUsuarioNovafianza,
+    private Rolservice: ServicioRol,
     private encriptador: Encriptador,
     private repositorioBloqueo: RepositorioBloqueoUsuario
   ) {
@@ -28,10 +28,10 @@ export class ServicioAutenticacion{
     this.servicioUsuarioEmpresa = new ServicioUsuarioEmpresa(new RepositorioUsuarioEmpresaDB(), new GenerarContrasena(), new EncriptadorAdonis())
   }
 
-  public async cambiarClave(identificacion: string, clave: string, nuevaClave: string){
+  public async cambiarClave(identificacion: string, clave: string, nuevaClave: string) {
     const usuario = await this.verificarUsuario(identificacion)
-    if(usuario instanceof UsuarioEmpresa){
-      if(!(await this.encriptador.comparar(clave, usuario.clave))){
+    if (usuario instanceof UsuarioEmpresa) {
+      if (!(await this.encriptador.comparar(clave, usuario.clave))) {
         throw new Exception('Credenciales incorrectas', 400)
       }
       usuario.clave = nuevaClave
@@ -39,8 +39,8 @@ export class ServicioAutenticacion{
       this.servicioUsuarioEmpresa.actualizarUsuarioEmpresa(usuario.id, usuario)
       return;
     }
-    if(usuario instanceof UsuarioNovafianza){
-      if(!(await this.encriptador.comparar(clave, usuario.clave))){
+    if (usuario instanceof UsuarioNovafianza) {
+      if (!(await this.encriptador.comparar(clave, usuario.clave))) {
         throw new Exception('Credenciales incorrectas', 400)
       }
       usuario.clave = nuevaClave
@@ -51,13 +51,13 @@ export class ServicioAutenticacion{
     throw new Exception('Credenciales incorrectas', 400)
   }
 
-  public async iniciarSesion (usuario: string, contrasena: string): Promise<RespuestaInicioSesion>{
+  public async iniciarSesion(usuario: string, contrasena: string): Promise<RespuestaInicioSesion> {
     const usuarioVerificado = await this.verificarUsuario(usuario)
     let registroDeBloqueo = await this.repositorioBloqueo.obtenerRegistroPorUsuario(usuarioVerificado.identificacion)
-    if(!registroDeBloqueo){
+    if (!registroDeBloqueo) {
       registroDeBloqueo = await this.crearRegistroDeBloqueo(usuarioVerificado.identificacion)
     }
-    if(registroDeBloqueo.elUsuarioEstaBloqueado()){
+    if (registroDeBloqueo.elUsuarioEstaBloqueado()) {
       throw new Exception('El usuario se encuentra bloqueado por exceder el número de intentos de inicio de sesión', 423)
     }
     if (!usuarioVerificado) {
@@ -71,23 +71,27 @@ export class ServicioAutenticacion{
     }
 
     const rolUsuario = await this.Rolservice.obtenerRolporID(usuarioVerificado.idRol)
-    const nombre = `${usuarioVerificado.nombre} ${usuarioVerificado.apellido}`
     const token = ServicioAutenticacionJWT.generarToken(usuario, contrasena)
 
     return new RespuestaInicioSesion(
-      usuarioVerificado.id,
-      usuario,
+      {
+        id: usuarioVerificado.id,
+        usuario: usuarioVerificado.identificacion,
+        nombre: usuarioVerificado.nombre,
+        apellido: usuarioVerificado.apellido,
+        telefono: usuarioVerificado.telefono,
+        correo: usuarioVerificado.correo,
+      },
       token,
       rolUsuario,
-      nombre,
       usuarioVerificado.claveTemporal)
   }
 
-  public async verificarUsuario (usuario: string): Promise<UsuarioEmpresa | UsuarioNovafianza> {
+  public async verificarUsuario(usuario: string): Promise<UsuarioEmpresa | UsuarioNovafianza> {
     const usuarioEmpresa = await this.servicioUsuarioEmpresa.obtenerUsuarioEmpresaPorUsuario(usuario)
     if (!usuarioEmpresa) {
       const usuarioNovafianza = await this.servicioUsuarioNovafianza.obtenerUsuarioNovafianzaPorUsuario(usuario)
-      if(!usuarioNovafianza){
+      if (!usuarioNovafianza) {
         throw new Exception('Credenciales incorrectas', 400)
       }
       return usuarioNovafianza
@@ -95,12 +99,12 @@ export class ServicioAutenticacion{
     return usuarioEmpresa
   }
 
-  private async crearRegistroDeBloqueo(identificacion:string):Promise<RegistroBloqueo>{
+  private async crearRegistroDeBloqueo(identificacion: string): Promise<RegistroBloqueo> {
     const registro = new RegistroBloqueo(uuid(), identificacion, 0, false)
     return await this.repositorioBloqueo.crearRegistro(registro)
   }
 
-  private async manejarIntentoFallido(registro:RegistroBloqueo):Promise<RegistroBloqueo>{
+  private async manejarIntentoFallido(registro: RegistroBloqueo): Promise<RegistroBloqueo> {
     registro.agregarIntentoFallido()
     return await this.repositorioBloqueo.actualizarRegistro(registro)
   }
