@@ -1,14 +1,15 @@
 import { ServicioPagos } from "App/Dominio/Datos/Servicios/ServicioPagos";
 import { HttpContextContract } from "@ioc:Adonis/Core/HttpContext"
 import { peticionTransaccionValidador } from "./Validadores/PeticionTransaccion";
-import { RepositorioMockPagosNovafianzaAxios } from "App/Infraestructura/Implementacion/Servicios/RepositorioMockPagosNovafianza";
 import { peticionConsultarDeudaValidador } from "./Validadores/PeticionConsultarDeuda";
+import { RepositorioPagosNovafianzaHttp } from "App/Infraestructura/Implementacion/Servicios/RepositorioPagosNovafianzaAxios";
+import { ClienteHttpAxios } from "App/Infraestructura/ClientesHttp/ClienteHttpAxios";
 
 export default class ControladorPagos {
     private servicioWompi:ServicioPagos
 
     public constructor(){
-        this.servicioWompi = new ServicioPagos(new RepositorioMockPagosNovafianzaAxios(true))
+        this.servicioWompi = new ServicioPagos(new RepositorioPagosNovafianzaHttp(new ClienteHttpAxios()))
     }
 
     public async consultar({request, response}:HttpContextContract){
