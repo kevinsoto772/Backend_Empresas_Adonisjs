@@ -1,3 +1,3 @@
 export interface RepositorioCarga {
-  ProcesarArchivo(archivo: any, usuario:string): Promise<{}>
+  ProcesarArchivo(archivo: any, datos:string): Promise<{}>
 }
