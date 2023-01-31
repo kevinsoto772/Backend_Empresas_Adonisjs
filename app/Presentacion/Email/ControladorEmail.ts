@@ -18,7 +18,12 @@ export default class ControladorEmpresa {
       new EnviadorEmailAdonis(), 
       new ServicioUsuarioEmpresa(new RepositorioUsuarioEmpresaDB(), new GenerarContrasena(), new EncriptadorAdonis()), 
       new GenerarContrasena(), 
-      new ServicioUsuarioNovafianza(new RepositorioUsuarioNovafianzaDB(),new GenerarContrasena(), new EncriptadorAdonis()),
+      new ServicioUsuarioNovafianza(
+        new RepositorioUsuarioNovafianzaDB(),
+        new GenerarContrasena(), 
+        new EncriptadorAdonis(),
+        new EnviadorEmailAdonis()
+      ),
       new RepositorioBloqueoUsuarioDB()
     )
   }
