@@ -12,8 +12,9 @@ export class RepositorioCargaDB implements RepositorioCarga {
     const archivoBase64 = fs.readFileSync(path, {encoding: "base64"});
     fs.unlinkSync(path);
 
-    const datosArchivo = JSON.parse(datos);    
-
+    const {usuario, ...datosArchivo} = JSON.parse(datos);    
+    const nombreArchivo:string = archivo.clientName;
+    
     try {
 
       const data = {
@@ -57,11 +58,14 @@ export class RepositorioCargaDB implements RepositorioCarga {
     const formateoArchivo = archivo.replace(re, '&&')
 
     const filas = formateoArchivo.split('\n')
-    console.log(filas[0]);
 
 
+    for (const fila of filas) {
+      const columna = fila.split('&&')
+      console.log(columna);
+      
+    }
 
-   // const formateoDos = archivo?.replace(']"","note', ']","note')
 
   }
 }
