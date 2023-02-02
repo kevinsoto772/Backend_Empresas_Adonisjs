@@ -15,6 +15,9 @@
     "Database": "database",
     "Contracts": "contracts"
   },
+  "directories":{
+    "views": "./"
+  },
   "preloads": [
     "./start/routes",
     "./start/kernel",
@@ -44,7 +47,8 @@
     "@adonisjs/core",
     "@adonisjs/lucid",
     "adonis5-swagger",
-    "@adonisjs/mail"
+    "@adonisjs/mail",
+    "@adonisjs/view"
   ],
   "aceProviders": [
     "@adonisjs/repl"
@@ -69,5 +73,11 @@
   },
   "testProviders": [
     "@japa/preset-adonis/TestsProvider"
+  ],
+  "metaFiles": [
+    {
+      "pattern": "/**/*.edge",
+      "reloadServer": false
+    }
   ]
 }
