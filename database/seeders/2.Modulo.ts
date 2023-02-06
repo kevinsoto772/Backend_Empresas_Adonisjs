@@ -1,5 +1,4 @@
 import BaseSeeder from '@ioc:Adonis/Lucid/Seeder'
-import { v4 as uuid } from "uuid"
 import TblModulos from 'App/Infraestructura/Datos/Entidad/Autorizacion/Modulo'
 import { DateTime } from 'luxon'
 
