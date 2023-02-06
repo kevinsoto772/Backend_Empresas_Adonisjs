@@ -3,7 +3,7 @@
 
 import { Exception } from '@adonisjs/core/build/standalone'
 import { EnviadorEmail } from 'App/Dominio/Email/EnviadorEmail'
-import { GenerarContrasena } from 'App/Dominio/GenerarContrasena/GenerarContrasena'
+import { GeneradorContrasena } from 'App/Dominio/GenerarContrasena/GenerarContrasena'
 import { UsuarioEmpresa } from '../Entidades/UsuarioEmpresa'
 import { UsuarioNovafianza } from '../Entidades/UsuarioNovafianza'
 import { ServicioUsuarioEmpresa } from './ServicioUsuarioEmpresa'
@@ -14,7 +14,7 @@ export class ServicioEmail{
   constructor (
     private enviadorEmail: EnviadorEmail, 
     private servicioUsuarioEmpresa: ServicioUsuarioEmpresa,
-    private generarContrasena: GenerarContrasena, 
+    private generarContrasena: GeneradorContrasena, 
     private servicioUsuarioNovafianza: ServicioUsuarioNovafianza,
     private repositorioRegistroBloqueo: RepositorioBloqueoUsuario
     ) { }

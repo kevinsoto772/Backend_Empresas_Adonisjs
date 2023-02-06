@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/semi */
 
-export class GenerarContrasena{
+export class GeneradorContrasena{
   constructor () { }
 
   public async generarClave (cadena: string, longitud: number): Promise<string> {
