@@ -1,6 +1,9 @@
 export const ROLES = {
     SUPER: '001',
-    USUARIO: '002'
+    ADMIN_NOVAFIANZA: '002',
+    ADMIN_CLIENTE: '003',
+    USUARIO_OPERATIVO: '004',
+    CONSULTOR: '005'
 }
 
 export const MODULOS = {
