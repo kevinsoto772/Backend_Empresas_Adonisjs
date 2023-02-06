@@ -40,30 +40,6 @@ export default class extends BaseSeeder {
                     rmf_funcionalidad_id: FUNCIONALIDADES.ELIMINAR,
                 },
                 /* Modulo Usuarios */
-                {
-                    rmf_id: uuid(),
-                    rmf_rol_id: ROLES.SUPER,
-                    rmf_modulo_id: MODULOS.USUARIOS,
-                    rmf_funcionalidad_id: FUNCIONALIDADES.CREAR,
-                },
-                {
-                    rmf_id: uuid(),
-                    rmf_rol_id: ROLES.SUPER,
-                    rmf_modulo_id: MODULOS.USUARIOS,
-                    rmf_funcionalidad_id: FUNCIONALIDADES.LEER,
-                },
-                {
-                    rmf_id: uuid(),
-                    rmf_rol_id: ROLES.SUPER,
-                    rmf_modulo_id: MODULOS.USUARIOS,
-                    rmf_funcionalidad_id: FUNCIONALIDADES.ACTUALIZAR,
-                },
-                {
-                    rmf_id: uuid(),
-                    rmf_rol_id: ROLES.SUPER,
-                    rmf_modulo_id: MODULOS.USUARIOS,
-                    rmf_funcionalidad_id: FUNCIONALIDADES.ELIMINAR,
-                },
             ])
     }
 
