@@ -1,4 +1,4 @@
-import { Rol } from 'App/Dominio/Datos/Entidades/Autenticacion/Rol'
+import { Rol } from 'App/Dominio/Datos/Entidades/Autorizacion/Rol'
 import { RolDatos } from '../Dato/RolDatos'
 
 export class MapeadorRol{

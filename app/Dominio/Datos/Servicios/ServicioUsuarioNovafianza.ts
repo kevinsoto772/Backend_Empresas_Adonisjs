@@ -7,14 +7,14 @@ import { Paginador } from "App/Dominio/Paginador";
 import { v4 as uuidv4 } from 'uuid'
 import { RepositorioUsuarioNovafianza } from "App/Dominio/Repositorios/RepositorioUsuarioNovafianza";
 import { UsuarioNovafianza } from "../Entidades/UsuarioNovafianza";
-import { GenerarContrasena } from "App/Dominio/GenerarContrasena/GenerarContrasena";
+import { GeneradorContrasena } from "App/Dominio/GenerarContrasena/GenerarContrasena";
 import { Encriptador } from "App/Dominio/Encriptacion/Encriptador";
 import { EnviadorEmail } from "App/Dominio/Email/EnviadorEmail";
 
 export class ServicioUsuarioNovafianza {
   constructor(
     private repositorio: RepositorioUsuarioNovafianza,
-    private generarContraseña: GenerarContrasena,
+    private generarContraseña: GeneradorContrasena,
     private encriptador: Encriptador,
     private enviadorEmail: EnviadorEmail) { }
 

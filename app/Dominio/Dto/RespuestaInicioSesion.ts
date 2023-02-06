@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/explicit-member-accessibility */
-import { Rol } from '../Datos/Entidades/Autenticacion/Rol'
+import { Rol } from '../Datos/Entidades/Autorizacion/Rol'
 
 export class RespuestaInicioSesion {
 

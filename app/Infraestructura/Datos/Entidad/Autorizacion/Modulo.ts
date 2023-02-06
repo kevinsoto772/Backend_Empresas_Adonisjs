@@ -1,7 +1,7 @@
 /* eslint-disable max-len */
 import { DateTime } from 'luxon'
 import { BaseModel, column} from '@ioc:Adonis/Lucid/Orm'
-import { Modulo } from 'App/Dominio/Datos/Entidades/Autenticacion/Modulo'
+import { Modulo } from 'App/Dominio/Datos/Entidades/Autorizacion/Modulo'
 export default class TblModulos extends BaseModel {
   public static readonly table = 'tbl_modulos'
 

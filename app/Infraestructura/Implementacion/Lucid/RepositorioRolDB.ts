@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/explicit-member-accessibility */
 
 import { Exception } from '@adonisjs/core/build/standalone'
-import { Rol } from 'App/Dominio/Datos/Entidades/Autenticacion/Rol'
+import { Rol } from 'App/Dominio/Datos/Entidades/Autorizacion/Rol'
 import { RepositorioRol } from 'App/Dominio/Repositorios/RepositorioRol'
 import TblModulos from 'App/Infraestructura/Datos/Entidad/Autorizacion/Modulo'
 import TblRoles from 'App/Infraestructura/Datos/Entidad/Autorizacion/Rol'

@@ -1,9 +1,7 @@
 /* eslint-disable max-len */
-import { GenerarContrasena } from 'App/Dominio/GenerarContrasena/GenerarContrasena'
+import { GeneradorContrasena } from 'App/Dominio/GenerarContrasena/GenerarContrasena'
 import { EncriptadorAdonis } from 'App/Infraestructura/Encriptacion/EncriptadorAdonis'
-import { RepositorioRolDB } from 'App/Infraestructura/Implementacion/Lucid/RepositorioRolDB'
 import { RepositorioUsuarioEmpresaDB } from 'App/Infraestructura/Implementacion/Lucid/RepositorioUsuarioEmpresaDB'
-import { ServicioRol } from './ServicioRol'
 import { ServicioUsuarioEmpresa } from './ServicioUsuarioEmpresa'
 import { ServicioUsuarioNovafianza } from './ServicioUsuarioNovafianza'
 import { ServicioAutenticacionJWT } from 'App/Dominio/Datos/Servicios/ServicioJWT'
@@ -15,17 +13,34 @@ import { Encriptador } from 'App/Dominio/Encriptacion/Encriptador'
 import { RepositorioBloqueoUsuario } from 'App/Dominio/Repositorios/RepositorioBloqueoUsuario'
 import { RegistroBloqueo } from '../Entidades/Usuarios/RegistroBloqueo'
 import { v4 as uuid } from 'uuid'
+import { RepositorioAutorizacion } from 'App/Dominio/Repositorios/RepositorioAutorizacion'
+import { RepositorioUsuarioNovafianza } from 'App/Dominio/Repositorios/RepositorioUsuarioNovafianza'
+import { RepositorioUsuarioEmpresa } from 'App/Dominio/Repositorios/RepositorioUsuarioEmpresa'
+import { EnviadorEmail } from 'App/Dominio/Email/EnviadorEmail'
 
 export class ServicioAutenticacion {
+  private servicioUsuarioEmpresa: ServicioUsuarioEmpresa
+  private servicioUsuarioNovafianza: ServicioUsuarioNovafianza
+
   constructor(
-    private servicioUsuarioEmpresa: ServicioUsuarioEmpresa,
-    private servicioUsuarioNovafianza: ServicioUsuarioNovafianza,
-    private Rolservice: ServicioRol,
     private encriptador: Encriptador,
-    private repositorioBloqueo: RepositorioBloqueoUsuario
+    private enviadorEmail: EnviadorEmail,
+    private repositorioBloqueo: RepositorioBloqueoUsuario,
+    private repositorioAutorizacion: RepositorioAutorizacion,
+    private repositorioUsuarioNovafianza: RepositorioUsuarioNovafianza,
+    private repositorioUsuarioEmpresa: RepositorioUsuarioEmpresa
   ) {
-    this.Rolservice = new ServicioRol(new RepositorioRolDB())
-    this.servicioUsuarioEmpresa = new ServicioUsuarioEmpresa(new RepositorioUsuarioEmpresaDB(), new GenerarContrasena(), new EncriptadorAdonis())
+    this.servicioUsuarioNovafianza = new ServicioUsuarioNovafianza(
+      this.repositorioUsuarioNovafianza, 
+      new GeneradorContrasena(),
+      this.encriptador,
+      this.enviadorEmail
+    )
+    this.servicioUsuarioEmpresa = new ServicioUsuarioEmpresa(
+      this.repositorioUsuarioEmpresa, 
+      new GeneradorContrasena(), 
+      this.encriptador
+    )
   }
 
   public async cambiarClave(identificacion: string, clave: string, nuevaClave: string) {
@@ -70,7 +85,7 @@ export class ServicioAutenticacion {
       throw new Exception('Credenciales incorrectas', 400)
     }
 
-    const rolUsuario = await this.Rolservice.obtenerRolporID(usuarioVerificado.idRol)
+    const rolUsuario = await this.repositorioAutorizacion.obtenerRolConModulosYPermisos(usuarioVerificado.idRol)
     const token = ServicioAutenticacionJWT.generarToken(usuario, contrasena)
 
     return new RespuestaInicioSesion(

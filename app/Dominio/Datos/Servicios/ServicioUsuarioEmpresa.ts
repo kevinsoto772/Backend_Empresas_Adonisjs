@@ -7,11 +7,11 @@ import { Paginador } from "App/Dominio/Paginador";
 import { v4 as uuidv4 } from 'uuid'
 import { RepositorioUsuarioEmpresa } from "App/Dominio/Repositorios/RepositorioUsuarioEmpresa";
 import { UsuarioEmpresa } from "../Entidades/UsuarioEmpresa";
-import { GenerarContrasena } from "App/Dominio/GenerarContrasena/GenerarContrasena";
+import { GeneradorContrasena } from "App/Dominio/GenerarContrasena/GenerarContrasena";
 import { Encriptador } from "App/Dominio/Encriptacion/Encriptador";
 
 export class ServicioUsuarioEmpresa{
-  constructor (private repositorio: RepositorioUsuarioEmpresa, private generarContrasena: GenerarContrasena, private encriptador: Encriptador) { }
+  constructor (private repositorio: RepositorioUsuarioEmpresa, private generarContrasena: GeneradorContrasena, private encriptador: Encriptador) { }
 
   async obtenerUsuariosEmpresa (params: any): Promise<{ usuariosEmpresa: UsuarioEmpresa[], paginacion: Paginador }> {
     return this.repositorio.obtenerUsuariosEmpresa(params);

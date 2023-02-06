@@ -2,7 +2,7 @@
 /* eslint-disable @typescript-eslint/semi */
 import { DateTime } from 'luxon';
 import { BaseModel, column} from '@ioc:Adonis/Lucid/Orm';
-import { Rol } from 'App/Dominio/Datos/Entidades/Autenticacion/Rol';
+import { Rol } from 'App/Dominio/Datos/Entidades/Autorizacion/Rol';
 export default class TblRoles extends BaseModel {
   public static readonly table = 'tbl_roles'
 

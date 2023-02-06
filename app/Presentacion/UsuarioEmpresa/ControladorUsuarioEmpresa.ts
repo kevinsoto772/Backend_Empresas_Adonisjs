@@ -3,14 +3,14 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 import { ServicioUsuarioEmpresa } from 'App/Dominio/Datos/Servicios/ServicioUsuarioEmpresa'
-import { GenerarContrasena } from 'App/Dominio/GenerarContrasena/GenerarContrasena'
+import { GeneradorContrasena } from 'App/Dominio/GenerarContrasena/GenerarContrasena'
 import { EncriptadorAdonis } from 'App/Infraestructura/Encriptacion/EncriptadorAdonis'
 import { RepositorioUsuarioEmpresaDB } from '../../Infraestructura/Implementacion/Lucid/RepositorioUsuarioEmpresaDB'
 
 export default class ControladorUsuarioEmpresa {
   private service: ServicioUsuarioEmpresa
   constructor () {
-    this.service = new ServicioUsuarioEmpresa(new RepositorioUsuarioEmpresaDB(), new GenerarContrasena(), new EncriptadorAdonis())
+    this.service = new ServicioUsuarioEmpresa(new RepositorioUsuarioEmpresaDB(), new GeneradorContrasena(), new EncriptadorAdonis())
   }
 
   public async listar ({ params }) {
