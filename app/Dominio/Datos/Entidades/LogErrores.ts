@@ -3,7 +3,7 @@
 
 export class LogErrores{
   id: string;
-  error: JSON;
+  error: string;
   idCarga: string;
   tipo: string;
   estado: boolean;
