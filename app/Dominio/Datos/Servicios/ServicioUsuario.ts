@@ -22,7 +22,7 @@ export class ServicioUsuario {
         return usuario
     }
 
-    private async obtenerUsuario(identificacion: string):Promise<UsuarioEmpresa | UsuarioNovafianza>{
+    public async obtenerUsuario(identificacion: string):Promise<UsuarioEmpresa | UsuarioNovafianza>{
         let usuario: UsuarioEmpresa | UsuarioNovafianza | null = await this.repositorioUsuariosEmpresas.obtenerUsuarioEmpresaPorUsuario(identificacion)
         if(!usuario){
             usuario = await this.repositorioUsuariosNovafianza.obtenerUsuarioNovafianzaPorUsuario(identificacion)

@@ -32,5 +32,6 @@ export default Env.rules({
 
   URL_PAGOS_NOVAFIANZA: Env.schema.string({format: 'url'}),
   URL_WOMPI: Env.schema.string({format: 'url'}),
+  URL_CARGA: Env.schema.string({format: 'url'}),
   KEY_PUBLICA_WOMPI: Env.schema.string()
 })

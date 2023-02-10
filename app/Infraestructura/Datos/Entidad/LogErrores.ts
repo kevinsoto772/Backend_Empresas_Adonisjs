@@ -8,7 +8,7 @@ export default class TblLogsErrores extends BaseModel {
   @column({ isPrimary: true, columnName: 'err_id' })
   public id: string
 
-  @column({ columnName: 'err_json_error' }) public error: JSON
+  @column({ columnName: 'err_json_error' }) public error: string
 
   @column({ columnName: 'err_carga_datos_id' }) public idCarga: string
 
