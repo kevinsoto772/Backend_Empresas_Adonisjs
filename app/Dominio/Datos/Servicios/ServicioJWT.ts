@@ -1,4 +1,5 @@
 import Env from '@ioc:Adonis/Core/Env'
+import { PayloadJWT } from 'App/Dominio/Dto/PayloadJWT'
 import JwtExpiradoException from 'App/Exceptions/JwtExpiradoException'
 import JwtInvalidoException from 'App/Exceptions/JwtInvalidoException'
 import jwt from 'jsonwebtoken'
@@ -10,16 +11,16 @@ export class ServicioAutenticacionJWT {
     INVALIDO: 'JsonWebTokenError',
   }
 
-  public static generarToken (usuario: string, contrasena: string):string {
+  public static generarToken (payload: PayloadJWT):string {
     const opciones = {
       expiresIn: this.tokenExpiraEn,
     }
-    return jwt.sign({}, Env.get('JWT_SECRET_KEY'), opciones)
+    return jwt.sign(payload, Env.get('JWT_SECRET_KEY'), opciones)
   }
 
   public static verificarToken (authorizationHeader: string):boolean {
     let token = authorizationHeader.split(' ')[1]
-    token = jwt.verify(token, Env.get('JWT_SECRET_KEY'), (error) => {
+    jwt.verify(token, Env.get('JWT_SECRET_KEY'), (error) => {
       if (error) {
         this.manejoExcepciones(error)
       }
@@ -34,5 +35,11 @@ export class ServicioAutenticacionJWT {
     if (error.name === this.erroresJwt.INVALIDO) {
       throw new JwtInvalidoException(error.message)
     }
+  }
+
+  public static obtenerPayload (token: string):PayloadJWT {
+    const payload = jwt.verify(token, Env.get("JWT_SECRET_KEY"), {complete: true}).payload as PayloadJWT
+    console.log(payload)
+    return payload
   }
 }

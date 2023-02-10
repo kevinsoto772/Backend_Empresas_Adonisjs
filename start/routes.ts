@@ -31,3 +31,8 @@ Route.get('/prueba-roles', async ({ response }: HttpContextContract) => {
   const rol = await repositorio.obtenerRolConModulosYPermisos('002')
   return rol
 })
+
+Route.get('/prueba-cesar', async ({ response, request }: HttpContextContract) => {
+  const payload = request.getJWTPayload()
+  return payload
+})
