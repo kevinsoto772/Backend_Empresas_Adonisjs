@@ -3,7 +3,7 @@
 
 export class Empresa{
   id: string;
-  nit: number;
+  nit: string;
   nombre: string;
   estado: boolean;
 }

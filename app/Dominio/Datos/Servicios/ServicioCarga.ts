@@ -11,7 +11,7 @@ export class ServicioCarga{
 
   async procesarArchivo (archivo: any, datos: string): Promise<void> {
     this.repositorio.procesarArchivo(archivo, datos)
-    this.enviadorEmail.enviarTemplate({
+ /*    this.enviadorEmail.enviarTemplate({
       asunto: 'Carga completada',
       de: Env.get('SMTP_USERNAME'),
       destinatarios: 'jesing482@gmail.com',
@@ -22,7 +22,7 @@ export class ServicioCarga{
       numeroRadicado: 'Numero radicado',
       resultado: 'Pasó',
       tipoArchivo: 'Tipo archivo'
-    }))
+    })) */
   }
 
   async  archivosCargados (parametros: string): Promise<{}> {

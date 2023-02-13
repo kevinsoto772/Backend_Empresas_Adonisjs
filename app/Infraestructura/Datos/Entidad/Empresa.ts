@@ -10,7 +10,7 @@ export default class TblEmpresas extends BaseModel {
 
   @column({ columnName: 'emp_nombre' }) public nombre: string
 
-  @column({ columnName: 'emp_nit' }) public nit: number
+  @column({ columnName: 'emp_nit' }) public nit: string
 
   @column({columnName: 'emp_estado'}) public estado: boolean
 
