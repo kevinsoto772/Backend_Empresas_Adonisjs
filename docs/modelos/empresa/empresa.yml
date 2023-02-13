@@ -7,6 +7,6 @@ definitions:
       nombre:
         type: string
       nit:
-        type: int
+        type: string
       estado:
         type: boolean

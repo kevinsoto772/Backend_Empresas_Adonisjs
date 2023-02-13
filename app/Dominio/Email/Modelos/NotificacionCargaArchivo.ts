@@ -5,4 +5,5 @@ export interface NotificacionCargaArchivo {
     tipoArchivo: string
     nombreArchivo: string
     numeroRadicado: string
+    resultado: string
 }

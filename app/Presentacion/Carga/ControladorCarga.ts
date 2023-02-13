@@ -3,10 +3,12 @@ import { ServicioCarga } from 'App/Dominio/Datos/Servicios/ServicioCarga'
 import { RepositorioCargaDB } from '../../Infraestructura/Implementacion/Lucid/RepositorioCargaDB'
 import { HttpContextContract } from '@ioc:Adonis/Core/HttpContext';
 import Tblarchivos from 'App/Infraestructura/Datos/Entidad/Archivo';
+import { EnviadorEmailAdonis } from '../../Infraestructura/Email/EnviadorEmailAdonis';
+import { ClienteHttpAxios } from '../../Infraestructura/ClientesHttp/ClienteHttpAxios';
 export default class ControladorCarga {
   private servicio: ServicioCarga
   constructor() {
-    this.servicio = new ServicioCarga(new RepositorioCargaDB())
+    this.servicio = new ServicioCarga(new RepositorioCargaDB(), new EnviadorEmailAdonis(), new ClienteHttpAxios())
   }
 
   public async cargar({ request, response }) {

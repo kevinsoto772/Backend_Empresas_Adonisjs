@@ -6,6 +6,7 @@ const accion_path = '../../../app/Presentacion/Empresa/ControladorEmpresa'
 Route.group(() => {
   Route.post('/registro', accion_path + '.guardarEmpresa')
   Route.get('/listar/:pagina?/:limite?', accion_path + '.listar')
+  Route.get('/buscar', accion_path + '.buscar')
   Route.get('/:id', accion_path + '.obtenerEmpresaPorId')
   Route.patch('/:id', accion_path + '.actualizarEmpresa')
   Route.put('/estado/:id', accion_path + '.cambiarEstado')

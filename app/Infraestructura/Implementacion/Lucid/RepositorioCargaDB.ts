@@ -9,8 +9,8 @@ import Tblarchivos from 'App/Infraestructura/Datos/Entidad/Archivo';
 import TblLogsErrores from '../../Datos/Entidad/LogErrores';
 import { LogErrores } from '../../../Dominio/Datos/Entidades/LogErrores';
 import { generarJsonValidaciones } from 'App/Infraestructura/Utils/GenerarJsonValidaciones';
-import { UsuarioEmpresa } from 'App/Dominio/Datos/Entidades/UsuarioEmpresa';
-import { UsuarioNovafianza } from '../../../Dominio/Datos/Entidades/UsuarioNovafianza';
+/* import { UsuarioEmpresa } from 'App/Dominio/Datos/Entidades/UsuarioEmpresa';
+import { UsuarioNovafianza } from '../../../Dominio/Datos/Entidades/UsuarioNovafianza'; */
 import { ServicioUsuario } from "App/Dominio/Datos/Servicios/ServicioUsuario";
 import { RepositorioUsuarioNovafianzaDB } from './RepositorioUsuarioNovafianzaDB';
 import { RepositorioUsuarioEmpresaDB } from './RepositorioUsuarioEmpresaDB';
@@ -39,8 +39,8 @@ export class RepositorioCargaDB implements RepositorioCarga {
       const data = {
         "pEntidad": entidad,
         "pConvenio": convenio,
-        "pFechaInicio": datosCarga.fechaInicio,
-        "pFechaFin": datosCarga.fechaFin,
+        "pFechaInicio": datosCarga.fechaInicial,
+        "pFechaFin": datosCarga.fechaFinal,
         "pTipoProceso": tipoDeProceso?.prefijo,
         "pRutaArchivo": "",
         "pArchivoBase64": archivoBase64
@@ -160,7 +160,7 @@ export class RepositorioCargaDB implements RepositorioCarga {
       id: uuidv4(),
       nombre,
       fechaInicial: obtenerDatos.fechaInicial,
-      fechaFinal: obtenerDatos.fechaInicial,
+      fechaFinal: obtenerDatos.fechaFinal,
       usuario: obtenerDatos.usuario,
       tipoArchivo: obtenerDatos.tipoArchivo,
       estadoProceso: 1,
