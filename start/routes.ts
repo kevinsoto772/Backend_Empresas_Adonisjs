@@ -9,7 +9,7 @@ Route.get('/', async ({ response }: HttpContextContract) => {
   response.status(200).send('¡Bienvenido al API de Novafianza!')
 })
 
-Route.get('/prueba-email', async ({ response }: HttpContextContract) => {
+/* Route.get('/prueba-email', async ({ response }: HttpContextContract) => {
   const enviadorEmail = new EnviadorEmailAdonis()
   enviadorEmail.enviarTemplate({
     asunto: 'Prueba template',
@@ -24,7 +24,7 @@ Route.get('/prueba-email', async ({ response }: HttpContextContract) => {
   response.status(200).send({
     mensaje: 'Correo enviado con éxito',
   })
-})
+}) */
 
 Route.get('/prueba-roles', async ({ response }: HttpContextContract) => {
   const repositorio = new RepositorioAutorizacionDB()
