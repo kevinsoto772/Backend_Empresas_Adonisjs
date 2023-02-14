@@ -10,3 +10,5 @@ definitions:
         type: string
       estado:
         type: boolean
+      convenio:
+        type: integer

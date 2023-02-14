@@ -39,4 +39,14 @@ export default class ControladorArchivo {
       response.status(200).send(e)
     }
   }
+
+  public async buscar({ request, response }: HttpContextContract) {
+    const archivos = await this.service.buscar(JSON.stringify(request.all()))
+
+    if (Object.keys(archivos).length !== 0) {
+      response.status(202).send(archivos)
+    } else {
+      response.status(400).send({ mensaje: 'Se presento un error al consultar los servicios' })
+    }
+  }
 }
