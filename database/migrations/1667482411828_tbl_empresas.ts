@@ -7,8 +7,9 @@ export default class TblEmpresas extends BaseSchema {
     this.schema.createTable(this.tableName, (table) => {
       table.uuid('emp_id').unique()
       table.string('emp_nombre',200).notNullable()
-      table.integer('emp_nit')
+      table.string('emp_nit')
       table.boolean('emp_estado').defaultTo(true)
+      table.integer('emp_convenio')
       table.timestamp('emp_creacion', { useTz: true })
       table.timestamp('emp_actualizacion', { useTz: true })
     })

@@ -32,8 +32,9 @@ export class ServicioEmpresa{
     return await this.repositorio.actualizarEmpresa(id, empresa);
   }
 
- /*  async buscar (frase: string): Promise<Empresa>{
-    return this.repositorio.buscar(frase);
-  } */
+  async  buscar (parametros: string): Promise<{}> {
+    return this.repositorio.buscar(parametros)
+  }
+
 
 }

@@ -36,4 +36,19 @@ export class RepositorioEmpresaDB implements RepositorioEmpresa {
     await empresaRetorno.save()
     return empresaRetorno
   }
+
+  async buscar (params: string): Promise<{empresas: Empresa[], paginacion: Paginador}> {    
+    const { frase, pagina, limite } = JSON.parse(params);
+    const empresas: Empresa[] = []
+    const empresasDB = await Tblempresas.query().whereILike('emp_nombre', `%${ frase }%`)
+                                                .orWhereILike('emp_nit', `%${ frase }%`)
+                                                .orderBy('emp_id', 'desc').paginate(pagina, limite)
+      
+    empresasDB.forEach(empresaDB => {
+      empresas.push(empresaDB.obtenerEmpresa())
+    })
+    const paginacion = MapeadorPaginacionDB.obtenerPaginacion(empresasDB)
+    return {empresas , paginacion}
+  }
+
 }
