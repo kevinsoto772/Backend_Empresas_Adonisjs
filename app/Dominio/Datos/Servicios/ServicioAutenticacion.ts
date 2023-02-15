@@ -1,7 +1,5 @@
 /* eslint-disable max-len */
 import { GeneradorContrasena } from 'App/Dominio/GenerarContrasena/GenerarContrasena'
-import { EncriptadorAdonis } from 'App/Infraestructura/Encriptacion/EncriptadorAdonis'
-import { RepositorioUsuarioEmpresaDB } from 'App/Infraestructura/Implementacion/Lucid/RepositorioUsuarioEmpresaDB'
 import { ServicioUsuarioEmpresa } from './ServicioUsuarioEmpresa'
 import { ServicioUsuarioNovafianza } from './ServicioUsuarioNovafianza'
 import { ServicioAutenticacionJWT } from 'App/Dominio/Datos/Servicios/ServicioJWT'
@@ -96,6 +94,7 @@ export class ServicioAutenticacion {
         apellido: usuarioVerificado.apellido,
         telefono: usuarioVerificado.telefono,
         correo: usuarioVerificado.correo,
+        idEmpresa: usuarioVerificado instanceof UsuarioEmpresa ? usuarioVerificado.idEmpresa : undefined
       },
       token,
       rolUsuario,

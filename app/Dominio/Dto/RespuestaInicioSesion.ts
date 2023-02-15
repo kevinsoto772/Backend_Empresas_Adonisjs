@@ -10,7 +10,8 @@ export class RespuestaInicioSesion {
       nombre?: string,
       apellido?: string,
       telefono?: string,
-      correo?: string
+      correo?: string,
+      idEmpresa?: string
     },
     public readonly token: string,
     public readonly rol: Rol,
