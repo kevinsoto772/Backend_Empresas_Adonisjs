@@ -7,4 +7,5 @@ export class Empresa{
   nombre: string;
   estado: boolean;
   convenio: number;
+  logo: string;
 }
