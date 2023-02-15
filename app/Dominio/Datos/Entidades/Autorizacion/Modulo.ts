@@ -6,6 +6,7 @@ export class Modulo {
   constructor (
     private _id: string,
     private _nombre: string,
+    private _nombreMostrar: string,
     private _ruta: string,
     private _icono: string,
     private _estado: boolean = true,
@@ -23,6 +24,10 @@ export class Modulo {
 
   public get nombre (){
     return this._nombre
+  }
+
+  public get nombreMostrar (){
+    return this._nombreMostrar
   }
 
   public get ruta (){

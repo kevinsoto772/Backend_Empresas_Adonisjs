@@ -34,6 +34,7 @@ export class RepositorioAutorizacionDB implements RepositorioAutorizacion {
                 `${this.TABLA_AUTORIZACION}.rmf_modulo_id`,
                 `${this.TABLA_MODULOS}.mod_id`,
                 `${this.TABLA_MODULOS}.mod_nombre`,
+                `${this.TABLA_MODULOS}.mod_nombre_mostrar`,
                 `${this.TABLA_MODULOS}.mod_ruta`,
                 `${this.TABLA_MODULOS}.mod_icono`,
             )
@@ -41,6 +42,7 @@ export class RepositorioAutorizacionDB implements RepositorioAutorizacion {
             return new Modulo(
                 moduloDb.id,
                 moduloDb.nombre,
+                moduloDb.nombreMostrar,
                 moduloDb.ruta,
                 moduloDb.icono,
                 moduloDb.estado,

@@ -8,6 +8,7 @@ export default class extends BaseSeeder {
       {
         id: '001',
         nombre: 'usuarios',
+        nombreMostrar: 'Crear usuarios',
         estado: true,
         actualizacion: DateTime.now(),
         creacion: DateTime.now(),
@@ -15,6 +16,7 @@ export default class extends BaseSeeder {
       {
         id: '002',
         nombre: 'archivos',
+        nombreMostrar: 'Admin. servicios',
         estado: true,
         actualizacion: DateTime.now(),
         creacion: DateTime.now(),
