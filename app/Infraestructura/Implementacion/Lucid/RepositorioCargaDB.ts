@@ -50,10 +50,13 @@ export class RepositorioCargaDB implements RepositorioCarga {
       }
       const respuesta = await axios.post(`${Env.get('URL_CARGA')}/${tipoDeProceso?.tipo}/api/ValidarArchivo/ValidarCargarArchivo`, data, { headers })
 
+console.log(respuesta);
+
+
       this.validarRespuesta(respuesta.data, idDatosGuardados);
 
     } catch (error) {
-    //  console.log(error);
+     console.log(error);
 
     }
 
