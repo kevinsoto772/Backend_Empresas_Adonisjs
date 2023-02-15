@@ -1,11 +1,15 @@
 import { ApplicationContract } from '@ioc:Adonis/Core/Application'
 import { IocContract } from '@adonisjs/fold'
+import { RepositorioFicheroLocal } from 'App/Infraestructura/Ficheros/RepositorioFicheroLocal'
 
 export default class AppProvider {
   constructor (protected app: ApplicationContract, protected $container: IocContract) {
   }
 
   public register () {
+    this.app.container.bind('App/Dominio/Ficheros/RepositorioFichero', ()=>{
+      return new RepositorioFicheroLocal()
+    })
   }
 
   public async boot () {
