@@ -14,6 +14,8 @@ export default class ControladorPagos {
 
     public async consultar({request, response}:HttpContextContract){
         const peticion = await request.validate({schema: peticionConsultarDeudaValidador})
+        console.log({"peticion":peticion});
+        
         const respuesta = await this.servicioWompi.tieneDeuda(peticion.tipoDocumento, peticion.documento)
         response.status(201).send({
             deuda: respuesta
