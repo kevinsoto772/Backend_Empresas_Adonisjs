@@ -5,6 +5,8 @@ import { Rol } from 'App/Dominio/Datos/Entidades/Autorizacion/Rol'
 import { RepositorioRol } from 'App/Dominio/Repositorios/RepositorioRol'
 import TblModulos from 'App/Infraestructura/Datos/Entidad/Autorizacion/Modulo'
 import TblRoles from 'App/Infraestructura/Datos/Entidad/Autorizacion/Rol'
+import { Paginador } from '../../../Dominio/Paginador';
+import { MapeadorPaginacionDB } from './MapeadorPaginacionDB';
 
 export class RepositorioRolDB implements RepositorioRol {
   async obtenerRolporID (idRol: string): Promise<Rol> {
@@ -23,4 +25,15 @@ export class RepositorioRolDB implements RepositorioRol {
     })
     return rol
   }
+
+  async obtenerRols (params: any): Promise<{rols: Rol[], paginacion: Paginador}> {
+    const rols: Rol[] = []    
+    const rolesBD = await TblRoles.query().where('rol_root', false).orderBy('rol_nombre', 'desc').paginate(params.pagina, params.limite)
+    rolesBD.forEach(rolesBD => {
+      rols.push(rolesBD.obtenerRol())
+    })
+    const paginacion = MapeadorPaginacionDB.obtenerPaginacion(rolesBD)
+    return {rols , paginacion}
+  }
+
 }
