@@ -7,6 +7,7 @@ export class Rol {
   constructor (
     private _id: string,
     private _nombre: string,
+    private _root: boolean = false,
     private _estado:boolean = true,
     private _creacion:DateTime = DateTime.now(),
     private _actualizacion:DateTime = DateTime.now()
@@ -23,6 +24,10 @@ export class Rol {
 
   public get modulos (){
     return this._modulos
+  }
+
+  public get root (){
+    return this._root
   }
 
   public get estado (){
