@@ -84,7 +84,10 @@ export class ServicioAutenticacion {
     }
 
     const rolUsuario = await this.repositorioAutorizacion.obtenerRolConModulosYPermisos(usuarioVerificado.idRol)
-    const token = ServicioAutenticacionJWT.generarToken(usuario, contrasena)
+    const token = ServicioAutenticacionJWT.generarToken({
+      documento: usuarioVerificado.identificacion,
+      idRol: usuarioVerificado.idRol
+    })
 
     return new RespuestaInicioSesion(
       {
