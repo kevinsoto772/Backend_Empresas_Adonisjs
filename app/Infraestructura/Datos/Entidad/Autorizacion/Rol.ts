@@ -29,6 +29,7 @@ export default class TblRoles extends BaseModel {
       this.id,
       this.nombre,
       this.estado,
+      false,
       this.creacion,
       this.actualizacion
     )
