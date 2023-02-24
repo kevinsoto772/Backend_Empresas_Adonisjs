@@ -1,13 +1,15 @@
 /* eslint-disable max-len */
 import { DateTime } from 'luxon'
 import { BaseModel, column} from '@ioc:Adonis/Lucid/Orm'
-import { Modulo } from 'App/Dominio/Datos/Entidades/Autenticacion/Modulo'
+import { Modulo } from 'App/Dominio/Datos/Entidades/Autorizacion/Modulo'
 export default class TblModulos extends BaseModel {
   public static readonly table = 'tbl_modulos'
 
   @column({ isPrimary: true, columnName: 'mod_id' }) public id: string
 
   @column({ columnName: 'mod_nombre' }) public nombre: string
+
+  @column({ columnName: 'mod_nombre_mostrar' }) public nombreMostrar: string
 
   @column({ columnName: 'mod_estado' }) public estado: boolean
 
@@ -22,6 +24,7 @@ export default class TblModulos extends BaseModel {
   public establecerModuloDb (modulo:Modulo):void{
     this.id = modulo.id
     this.nombre = modulo.nombre
+    this.nombreMostrar = modulo.nombreMostrar
     this.ruta = modulo.ruta
     this.icono = modulo.icono
     this.estado = modulo.estado
@@ -33,6 +36,7 @@ export default class TblModulos extends BaseModel {
     return new Modulo(
       this.id,
       this.nombre,
+      this.nombreMostrar,
       this.ruta,
       this.icono,
       this.estado,

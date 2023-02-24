@@ -1,26 +1,23 @@
-/* eslint-disable max-len */
-/* eslint-disable @typescript-eslint/naming-convention */
-import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
+import { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 import { ServicioAutenticacion } from 'App/Dominio/Datos/Servicios/ServicioAutenticacion'
 import { ServicioAutenticacionJWT } from 'App/Dominio/Datos/Servicios/ServicioJWT'
-import { ServicioRol } from 'App/Dominio/Datos/Servicios/ServicioRol'
-import { ServicioUsuarioEmpresa } from 'App/Dominio/Datos/Servicios/ServicioUsuarioEmpresa'
-import { ServicioUsuarioNovafianza } from 'App/Dominio/Datos/Servicios/ServicioUsuarioNovafianza'
-import { GenerarContrasena } from 'App/Dominio/GenerarContrasena/GenerarContrasena'
+import { EnviadorEmailAdonis } from 'App/Infraestructura/Email/EnviadorEmailAdonis'
 import { EncriptadorAdonis } from 'App/Infraestructura/Encriptacion/EncriptadorAdonis'
+import { RepositorioAutorizacionDB } from 'App/Infraestructura/Implementacion/Lucid/RepositorioAutorizacionDB'
 import { RepositorioBloqueoUsuarioDB } from 'App/Infraestructura/Implementacion/Lucid/RepositorioBloqueoUsuarioDB'
-import { RepositorioRolDB } from 'App/Infraestructura/Implementacion/Lucid/RepositorioRolDB'
 import { RepositorioUsuarioEmpresaDB } from 'App/Infraestructura/Implementacion/Lucid/RepositorioUsuarioEmpresaDB'
 import { RepositorioUsuarioNovafianzaDB } from 'App/Infraestructura/Implementacion/Lucid/RepositorioUsuarioNovafianzaDB'
+
 export default class ControladorArchivoVariable {
   private service: ServicioAutenticacion
   constructor () {
     this.service = new ServicioAutenticacion(
-      new ServicioUsuarioEmpresa(new RepositorioUsuarioEmpresaDB(), new GenerarContrasena(), new EncriptadorAdonis()),
-      new ServicioUsuarioNovafianza(new RepositorioUsuarioNovafianzaDB(), new GenerarContrasena(), new EncriptadorAdonis()),
-      new ServicioRol(new RepositorioRolDB()), 
-      new EncriptadorAdonis(), 
-      new RepositorioBloqueoUsuarioDB()
+      new EncriptadorAdonis(),
+      new EnviadorEmailAdonis(),
+      new RepositorioBloqueoUsuarioDB(),
+      new RepositorioAutorizacionDB(),
+      new RepositorioUsuarioNovafianzaDB(),
+      new RepositorioUsuarioEmpresaDB()
     )
   }
 

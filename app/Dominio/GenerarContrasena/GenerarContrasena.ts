@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/semi */
 
-export class GenerarContrasena{
+export class GeneradorContrasena{
   constructor () { }
 
   public async generarClave (cadena: string, longitud: number): Promise<string> {
@@ -16,7 +16,7 @@ export class GenerarContrasena{
   public async generar (): Promise<string> {
     let base = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
     const numeros = '123456789';
-    const simbolos = '.?,;-_!¡¿*%#$/()[]{}|@<>~';
+    const simbolos = '.?-_!¡¿*%#$/()[]{}|@<>';
 
     let clave = await this.generarClave(`${base}${numeros}${simbolos}`, 12);
     return clave

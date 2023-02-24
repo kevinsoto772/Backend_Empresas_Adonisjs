@@ -8,6 +8,7 @@ export default class extends BaseSchema {
       table.string('rol_id', 5).primary()
       table.string('rol_nombre', 30)
       table.boolean('rol_estado')
+      table.boolean('rol_root').defaultTo(false)
       table.timestamp('rol_creado', { useTz: true }).defaultTo(this.now())
       table.timestamp('rol_actualizado', { useTz: true }).defaultTo(this.now())
     })

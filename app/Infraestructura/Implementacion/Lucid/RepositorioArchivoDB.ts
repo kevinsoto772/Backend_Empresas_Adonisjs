@@ -34,4 +34,17 @@ export class RepositorioArchivoDB implements RepositorioArchivo {
     await archivoRetorno.save()
     return archivoRetorno
   }
+
+  async buscar (params: string): Promise<{archivos: Archivo[], paginacion: Paginador}> {
+    const { frase, pagina, limite } = JSON.parse(params);
+    const archivos: Archivo[] = []
+    const archivosDB = await Tblarchivos.query().whereILike('arc_nombre', `%${ frase }%`)
+                                                .orWhereILike('arc_tipo', `%${ frase }%`)
+                                                .orderBy('arc_id', 'desc').paginate(pagina, limite)
+    archivosDB.forEach(archivosDB => {
+      archivos.push(archivosDB.obtenerArchivo())
+    })
+    const paginacion = MapeadorPaginacionDB.obtenerPaginacion(archivosDB)
+    return {archivos , paginacion}
+  }
 }

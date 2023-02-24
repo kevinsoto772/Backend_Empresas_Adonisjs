@@ -1,4 +1,4 @@
-import { Modulo } from 'App/Dominio/Datos/Entidades/Autenticacion/Modulo'
+import { Modulo } from 'App/Dominio/Datos/Entidades/Autorizacion/Modulo'
 import { DateTime } from 'luxon'
 
 export class RolDatos {

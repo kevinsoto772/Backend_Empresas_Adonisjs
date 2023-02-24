@@ -7,6 +7,7 @@ export default class extends BaseSchema {
     this.schema.createTable(this.tableName, (table) => {
       table.string('mod_id', 5).primary()
       table.string('mod_nombre', 30)
+      table.string('mod_nombre_mostrar', 30)
       table.string('mod_ruta', 100)
       table.string('mod_icono')
       table.boolean('mod_estado')

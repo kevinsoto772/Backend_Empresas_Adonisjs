@@ -2,7 +2,7 @@
 /* eslint-disable @typescript-eslint/semi */
 import { DateTime } from 'luxon';
 import { BaseModel, column} from '@ioc:Adonis/Lucid/Orm';
-import { Funcionalidad } from 'App/Dominio/Datos/Entidades/Autenticacion/Funcionalidad';
+import { Funcionalidad } from 'App/Dominio/Datos/Entidades/Autorizacion/Funcionalidad';
 export default class TblFuncionalidades extends BaseModel {
   public static readonly table = 'tbl_funcionalidades'
 

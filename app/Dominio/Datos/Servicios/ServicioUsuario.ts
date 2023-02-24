@@ -15,14 +15,14 @@ export class ServicioUsuario {
         let usuario = await this.obtenerUsuario(identificacion)
         usuario = this.actualizarInformacion(usuario, informacion)
         if(usuario instanceof UsuarioEmpresa){
-            await this.repositorioUsuariosEmpresas.actualizarUsuarioEmpresa(identificacion, usuario)
+            await this.repositorioUsuariosEmpresas.actualizarUsuarioEmpresa(usuario.id, usuario)
         }else{
             await this.repositorioUsuariosNovafianza.actualizarUsuarioNovafianza(usuario.id, usuario)
         }
         return usuario
     }
 
-    private async obtenerUsuario(identificacion: string):Promise<UsuarioEmpresa | UsuarioNovafianza>{
+    public async obtenerUsuario(identificacion: string):Promise<UsuarioEmpresa | UsuarioNovafianza>{
         let usuario: UsuarioEmpresa | UsuarioNovafianza | null = await this.repositorioUsuariosEmpresas.obtenerUsuarioEmpresaPorUsuario(identificacion)
         if(!usuario){
             usuario = await this.repositorioUsuariosNovafianza.obtenerUsuarioNovafianzaPorUsuario(identificacion)

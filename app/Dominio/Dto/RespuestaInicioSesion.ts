@@ -1,20 +1,20 @@
 /* eslint-disable @typescript-eslint/explicit-member-accessibility */
-import { Rol } from '../Datos/Entidades/Autenticacion/Rol'
+import { Rol } from '../Datos/Entidades/Autorizacion/Rol'
 
 export class RespuestaInicioSesion {
-  id: string
-  usuario: string
-  token: string
-  rol: Rol
-  nombre: string
-  claveTemporal: boolean
 
-  constructor (id: string, usuario: string, token: string, rol: Rol, nombre: string, claveTemporal: boolean) {
-    this.id = id
-    this.usuario = usuario
-    this.token = token
-    this.rol = rol
-    this.nombre = nombre
-    this.claveTemporal = claveTemporal
-  }
+  constructor(
+    public readonly usuario: {
+      id: string,
+      usuario: string,
+      nombre?: string,
+      apellido?: string,
+      telefono?: string,
+      correo?: string,
+      idEmpresa?: string
+    },
+    public readonly token: string,
+    public readonly rol: Rol,
+    public readonly claveTemporal: boolean
+  ) { }
 }
