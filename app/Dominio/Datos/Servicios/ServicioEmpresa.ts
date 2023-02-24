@@ -1,13 +1,14 @@
-/* eslint-disable @typescript-eslint/explicit-member-accessibility */
-/* eslint-disable @typescript-eslint/quotes */
-/* eslint-disable @typescript-eslint/semi */
 import { Paginador } from "App/Dominio/Paginador";
 import { RepositorioEmpresa } from "App/Dominio/Repositorios/RepositorioEmpresa";
 import { Empresa } from "../Entidades/Empresa";
 import { v4 as uuidv4 } from 'uuid'
+import { RepositorioFichero } from "App/Dominio/Ficheros/RepositorioFichero";
+import { Fichero } from "App/Dominio/Ficheros/Fichero";
+import { RUTAS_ARCHIVOS } from "App/Dominio/Ficheros/RutasFicheros";
+import Env from "@ioc:Adonis/Core/Env"
 
 export class ServicioEmpresa{
-  constructor (private repositorio: RepositorioEmpresa) { }
+  constructor (private repositorio: RepositorioEmpresa, private repositorioFichero: RepositorioFichero) { }
 
   async obtenerEmpresas (params: any): Promise<{ empresas: Empresa[], paginacion: Paginador }> {
     return this.repositorio.obtenerEmpresas(params);
@@ -17,8 +18,21 @@ export class ServicioEmpresa{
     return this.repositorio.obtenerEmpresaPorId(id);
   }
 
-  async guardarEmpresa (empresa: Empresa): Promise<Empresa>{
+  async guardarEmpresa (
+    {nombre, nit, convenio, logo}:
+    {nombre: string, nit: string, convenio?:number, logo?:Fichero}
+  ): Promise<Empresa>{
+    const empresa = new Empresa()
     empresa.id = uuidv4();
+    empresa.nombre = nombre
+    empresa.nit = nit
+    if(convenio) empresa.convenio = convenio;
+    if(logo){
+      this.repositorioFichero.guardarFichero(logo, RUTAS_ARCHIVOS.LOGOS_EMPRESAS, empresa.id, logo.extension)
+      empresa.logo = `${Env.get('HOSTING')}${Env.get('ENDPOINT_FICHEROS')}${RUTAS_ARCHIVOS.LOGOS_EMPRESAS}/${empresa.id}`
+      //Se agrega extensión al nombre del archivo si la tuviera.
+      if(logo.extension) empresa.logo+=`.${logo.extension}`;
+    };
     return this.repositorio.guardarEmpresa(empresa);
   }
 
@@ -31,4 +45,10 @@ export class ServicioEmpresa{
     empresa.estado = !empresa.estado
     return await this.repositorio.actualizarEmpresa(id, empresa);
   }
+
+  async  buscar (parametros: string): Promise<{}> {
+    return this.repositorio.buscar(parametros)
+  }
+
+
 }

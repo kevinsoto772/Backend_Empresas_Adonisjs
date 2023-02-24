@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 import Route from '@ioc:Adonis/Core/Route'
-const accion_path = '../../../app/Presentacion/VariableTransversal/ControladorVariableTransversal.ts'
+const accion_path = '../../../app/Presentacion/VariableTransversal/ControladorVariableTransversal'
 
 Route.group(() => {
   Route.post('/registro', accion_path + '.guardarVariableTransversal')

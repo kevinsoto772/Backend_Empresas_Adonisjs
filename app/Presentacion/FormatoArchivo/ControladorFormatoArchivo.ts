@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 import { ServicioFormatoArchivo } from 'App/Dominio/Datos/Servicios/ServicioFormatoArchivo'
-import { RepositorioFormatoArchivoDB } from '../../Infraestructura/Implementacion/BaseDatos/RepositorioFormatoArchivoDB'
+import { RepositorioFormatoArchivoDB } from '../../Infraestructura/Implementacion/Lucid/RepositorioFormatoArchivoDB'
 
 export default class ControladorFormatoArchivo {
   private service: ServicioFormatoArchivo

@@ -2,7 +2,7 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 import { ServicioVariableTransversal } from 'App/Dominio/Datos/Servicios/ServicioVariableTransversal'
-import { RepositorioVariableTransversalDB } from '../../Infraestructura/Implementacion/BaseDatos/RepositorioVariableTransversalDB'
+import { RepositorioVariableTransversalDB } from '../../Infraestructura/Implementacion/Lucid/RepositorioVariableTransversalDB'
 
 export default class ControladorVariableTransversal {
   private service: ServicioVariableTransversal

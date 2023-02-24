@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 import { ServicioMaestra } from 'App/Dominio/Datos/Servicios/ServicioMaestra'
-import { RepositorioMaestraDB } from 'App/Infraestructura/Implementacion/BaseDatos/RepositorioMaestraDB'
+import { RepositorioMaestraDB } from 'App/Infraestructura/Implementacion/Lucid/RepositorioMaestraDB'
 
 export default class ControladorMaestra {
   private service: ServicioMaestra

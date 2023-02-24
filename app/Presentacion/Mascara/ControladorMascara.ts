@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 import { ServicioMascara } from 'App/Dominio/Datos/Servicios/ServicioMascara'
-import { RepositorioMascaraDB } from 'App/Infraestructura/Implementacion/BaseDatos/RepositorioMascaraDB'
+import { RepositorioMascaraDB } from 'App/Infraestructura/Implementacion/Lucid/RepositorioMascaraDB'
 
 export default class ControladorMascara {
   private service: ServicioMascara

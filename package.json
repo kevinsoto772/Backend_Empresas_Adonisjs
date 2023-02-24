@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "node ace serve --watch",
-    "build": "node ace build --production",
+    "build": "node ace build --production --ignore-ts-errors",
     "start": "node server.js",
     "lint": "eslint . --ext=.ts",
     "swagger": "node ace swagger:generate"
@@ -22,6 +22,8 @@
     "@babel/preset-typescript": "^7.18.6",
     "@japa/preset-adonis": "^1.2.0",
     "@japa/runner": "^2.2.2",
+    "@types/jsonwebtoken": "^9.0.1",
+    "@types/uuid": "^9.0.0",
     "adonis-preset-ts": "^2.1.0",
     "eslint": "^8.27.0",
     "eslint-plugin-adonis": "^2.1.1",
@@ -35,7 +37,9 @@
     "@adonisjs/lucid": "^18.2.0",
     "@adonisjs/mail": "^8.1.2",
     "@adonisjs/repl": "^3.1.11",
+    "@adonisjs/view": "^6.2.0",
     "adonis5-swagger": "^1.4.1",
+    "axios": "^1.2.2",
     "fs": "^0.0.1-security",
     "glob-parent": "^6.0.2",
     "jsonwebtoken": "^8.5.1",

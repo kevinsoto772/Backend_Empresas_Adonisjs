@@ -7,5 +7,6 @@ export interface RepositorioEmpresa {
   obtenerEmpresaPorId(id: string): Promise<Empresa>
   guardarEmpresa(empresa: Empresa): Promise<Empresa>
   actualizarEmpresa(id: string, empresa: Empresa): Promise<Empresa>
+  buscar(parametros:string): Promise<{}>
 }
 

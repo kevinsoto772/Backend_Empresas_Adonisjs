@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 import Route from '@ioc:Adonis/Core/Route'
-const accion_path = '../../../app/Presentacion/VariableEspecifica/ControladorVariableEspecifica.ts'
+const accion_path = '../../../app/Presentacion/VariableEspecifica/ControladorVariableEspecifica'
 
 Route.group(() => {
   Route.post('/registro', accion_path + '.guardarVariableEspecifica')

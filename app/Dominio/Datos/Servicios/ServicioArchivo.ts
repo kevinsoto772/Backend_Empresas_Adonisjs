@@ -31,4 +31,9 @@ export class ServicioArchivo{
     archivo.estado = !archivo.estado
     return await this.repositorio.actualizarArchivo(id, archivo);
   }
+
+  async  buscar (parametros: string): Promise<{}> {
+    return this.repositorio.buscar(parametros)
+  }
+
 }

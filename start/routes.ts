@@ -1,16 +1,22 @@
 import Route from '@ioc:Adonis/Core/Route'
 import { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
-import { EnviadorEmailAdonis } from 'App/Infraestructura/Email/EnviadorEmailAdonis'
+import { extname } from 'path'
+import Drive from '@ioc:Adonis/Core/Drive'
 
-Route.get('/', async ({response}:HttpContextContract)=>{
+Route.get('/', async ({ response }: HttpContextContract) => {
   response.status(200).send('¡Bienvenido al API de Novafianza!')
 })
 
-Route.get('/prueba-email', async ({response}:HttpContextContract)=>{
-  const enviadorEmail = new EnviadorEmailAdonis()
-  // eslint-disable-next-line max-len
-  enviadorEmail.enviarEmail('Hola mundo!', 'Hola mundo desde smtp gmail - adonis', ['kosotosimanca@gmail.com'])
-  response.status(200).send({
-    mensaje: 'Correo enviado con éxito',
-  })
+Route.get('/recursos/*', async ({request, response}:HttpContextContract) => {
+  const ruta = request.param('*').join('/')
+  const path = `${ruta}`
+  try {
+      const { size } = await Drive.getStats(path)
+      response.type(extname(path))
+      response.header('content-length', size)
+      response.stream(await Drive.getStream(path))
+  } catch(e){
+      console.log(e)
+      response.status(404).send(undefined)
+  }
 })

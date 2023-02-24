@@ -7,5 +7,6 @@ export interface RepositorioArchivo {
   obtenerArchivoPorId(id: string): Promise<Archivo>
   guardarArchivo(archivo: Archivo): Promise<Archivo>
   actualizarArchivo(id: string, archivo: Archivo): Promise<Archivo>
+  buscar(parametros:string): Promise<{}>
 }
 

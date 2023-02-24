@@ -10,9 +10,13 @@ export default class TblEmpresas extends BaseModel {
 
   @column({ columnName: 'emp_nombre' }) public nombre: string
 
-  @column({ columnName: 'emp_nit' }) public nit: number
+  @column({ columnName: 'emp_nit' }) public nit: string
+
+  @column({ columnName: 'emp_logo' }) public logo: string
 
   @column({columnName: 'emp_estado'}) public estado: boolean
+
+  @column({columnName: 'emp_convenio'}) public convenio: number
 
   @column.dateTime({ autoCreate: true , columnName: 'emp_creacion'}) public createdAt: DateTime
 
@@ -22,12 +26,16 @@ export default class TblEmpresas extends BaseModel {
     this.id = empresa.id
     this.nombre = empresa.nombre
     this.nit = empresa.nit
+    this.logo = empresa.logo
+    this.convenio = empresa.convenio??1
     this.estado = empresa.estado
   }
 
   public establecerEmpresaConId (empresa: Empresa) {
     this.nombre = empresa.nombre
     this.nit = empresa.nit
+    this.convenio = empresa.convenio??1
+    this.logo = empresa.logo
     this.estado = empresa.estado
   }
 
@@ -36,8 +44,9 @@ export default class TblEmpresas extends BaseModel {
     empresa.id = this.id
     empresa.nombre = this.nombre
     empresa.nit = this.nit
+    empresa.logo = this.logo
     empresa.estado = this.estado
-
+    this.convenio = empresa.convenio
     return empresa
   }
 
