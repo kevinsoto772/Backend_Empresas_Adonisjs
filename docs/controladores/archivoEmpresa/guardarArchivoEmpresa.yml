@@ -1,4 +1,4 @@
-/api/v1/archivo_empresa/guardarArchivoEmpresa/{id}: 
+/api/v1/archivo_empresa/guardarArchivoEmpresa/{archivoEmpresa}: 
   post:
     tags:
       - ArchivoEmpresa
@@ -6,7 +6,7 @@
     parameters:
       - name: archivoEmpresa
         in:  path
-        type: ArchivoEmpresaring
+        type: ArchivoEmpresa
         required: true
         description: El archivo que pertenece a una empresa empresa
     produces:

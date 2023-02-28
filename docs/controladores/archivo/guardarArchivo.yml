@@ -1,5 +1,5 @@
 /api/v1/archivo/guardarrArchivo{archivo}:
-  put:
+  post:
     tags:
       - Archivo
     description: Guarda un archivo y los datos del archivo

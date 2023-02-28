@@ -2,13 +2,13 @@
   get:
     tags:
       - Maestra
-    description: #Actualizar un exito
+    description: Obtiene un listado de las Tablas Maestras
     parameters:
       - name: param
         in: path
         type: any
         required: true
-        description: #El id del exito que se desea actualizar
+        description: El listado de Las tablas maestras que se desea obtener
     produces:
       - application/json
     responses:

@@ -1,19 +1,14 @@
-/api/v1/maestra/actualizarMaestra/{id}/{maestra}: 
-  patch:
+api/v1/empresa/guardarEmpresa/{empresa}:
+  post:
     tags:
-      - Maestra
-    description: Actualizar Tabla Maestra
+      - Empresa
+    description: Guardar la información de una empresa
     parameters:
-      - name: id
-        in: path
-        type: string
+      - name: empresa
+        in:  path
+        type: Empresa
         required: true
-        description: El id de la Tabla Maestra que se desea actualizar
-      - name: maestra
-        in: path
-        type: Maestra
-        required: true
-        description: la Tabla Maestra que se desea actualizar
+        description: La información que se desa guardar de la empresa
     produces:
       - application/json
     responses:
@@ -36,4 +31,4 @@
                     "estado": true,
                     "created_at": "2022-11-09T16:24:06.247-05:00",
                     "updated_at": "2022-11-10T17:17:19.537-05:00"
-              } 
+              }
