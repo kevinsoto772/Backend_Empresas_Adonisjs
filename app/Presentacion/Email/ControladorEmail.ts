@@ -16,7 +16,11 @@ export default class ControladorEmpresa {
   constructor () {
     this.service = new ServicioEmail (
       new EnviadorEmailAdonis(), 
-      new ServicioUsuarioEmpresa(new RepositorioUsuarioEmpresaDB(), new GeneradorContrasena(), new EncriptadorAdonis()), 
+      new ServicioUsuarioEmpresa(
+        new RepositorioUsuarioEmpresaDB(), 
+        new GeneradorContrasena(), 
+        new EncriptadorAdonis(),
+        new EnviadorEmailAdonis()), 
       new GeneradorContrasena(), 
       new ServicioUsuarioNovafianza(
         new RepositorioUsuarioNovafianzaDB(),
@@ -29,7 +33,6 @@ export default class ControladorEmpresa {
   }
 
   public async EnviarEmail ({request, response}:HttpContextContract) {
-    
       const peticion = request.all()
       let usuario = peticion['usuario']
       let correo = peticion['correo']

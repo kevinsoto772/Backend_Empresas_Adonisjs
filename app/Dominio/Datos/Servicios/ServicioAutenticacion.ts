@@ -37,7 +37,8 @@ export class ServicioAutenticacion {
     this.servicioUsuarioEmpresa = new ServicioUsuarioEmpresa(
       this.repositorioUsuarioEmpresa, 
       new GeneradorContrasena(), 
-      this.encriptador
+      this.encriptador,
+      this.enviadorEmail
     )
   }
 

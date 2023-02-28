@@ -37,6 +37,7 @@ export default Env.rules({
   URL_SERVICIOS: Env.schema.string({format: 'url'}),
   URL_WOMPI: Env.schema.string({format: 'url'}),
   URL_CARGA: Env.schema.string({format: 'url'}),
+  URL_REDIRECCION_PAGO: Env.schema.string({format: 'url'}),
   KEY_PUBLICA_WOMPI: Env.schema.string(),
   RUTA_FICHEROS: Env.schema.string(),
   ENDPOINT_FICHEROS: Env.schema.string()

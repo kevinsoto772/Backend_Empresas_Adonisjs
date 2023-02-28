@@ -7,6 +7,7 @@ import { Exception } from "@adonisjs/core/build/standalone";
 
 export class ServicioPagos {
     private readonly KEY_PUBLICA = Env.get("KEY_PUBLICA_WOMPI")
+    private readonly URL_REDIRECCION = Env.get("URL_REDIRECCION_PAGO")
 
     public constructor(private repositorioNovafianza:RepositorioPagosNovafianza){}
 
@@ -28,7 +29,7 @@ export class ServicioPagos {
             referencia: uuidv4(),
             moneda: "COP",
             llavePublicaWompi: this.KEY_PUBLICA,
-            urlRedireccion: "http://localhost:4200/pago",
+            urlRedireccion: this.URL_REDIRECCION,
             valorEnCentavos: peticion.valor * 100,
             datosUsuarios: {
                 documento: peticion.documento,
