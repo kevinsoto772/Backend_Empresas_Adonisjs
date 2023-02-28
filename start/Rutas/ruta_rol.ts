@@ -9,4 +9,4 @@ Route.group(() => {
   /* Route.get('/:id', accion_path + '.obtenerRolPorId')
   Route.patch('/:id', accion_path + '.actualizarRol')
   Route.put('/estado/:id', accion_path + '.cambiarEstado') */
-}).prefix('api/v1/rol')
+}).prefix('api/v1/rol').middleware('autenticacionJwt')

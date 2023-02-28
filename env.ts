@@ -31,7 +31,10 @@ export default Env.rules({
   DRIVE_DISK: Env.schema.enum(['local'] as const),
   NODE_ENV: Env.schema.enum(['development', 'production', 'test'] as const),
 
+  JWT_SECRET_KEY: Env.schema.string(),
+
   URL_PAGOS_NOVAFIANZA: Env.schema.string({format: 'url'}),
+  URL_SERVICIOS: Env.schema.string({format: 'url'}),
   URL_WOMPI: Env.schema.string({format: 'url'}),
   URL_CARGA: Env.schema.string({format: 'url'}),
   KEY_PUBLICA_WOMPI: Env.schema.string(),
