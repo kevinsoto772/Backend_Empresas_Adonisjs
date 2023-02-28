@@ -1,16 +1,19 @@
-/* eslint-disable max-len */
-/* eslint-disable new-parens */
-/* eslint-disable @typescript-eslint/naming-convention */
-import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
+import { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 import { ServicioUsuarioEmpresa } from 'App/Dominio/Datos/Servicios/ServicioUsuarioEmpresa'
 import { GeneradorContrasena } from 'App/Dominio/GenerarContrasena/GenerarContrasena'
 import { EncriptadorAdonis } from 'App/Infraestructura/Encriptacion/EncriptadorAdonis'
 import { RepositorioUsuarioEmpresaDB } from '../../Infraestructura/Implementacion/Lucid/RepositorioUsuarioEmpresaDB'
+import { EnviadorEmailAdonis } from 'App/Infraestructura/Email/EnviadorEmailAdonis'
 
 export default class ControladorUsuarioEmpresa {
   private service: ServicioUsuarioEmpresa
   constructor () {
-    this.service = new ServicioUsuarioEmpresa(new RepositorioUsuarioEmpresaDB(), new GeneradorContrasena(), new EncriptadorAdonis())
+    this.service = new ServicioUsuarioEmpresa(
+      new RepositorioUsuarioEmpresaDB(), 
+      new GeneradorContrasena(), 
+      new EncriptadorAdonis(),
+      new EnviadorEmailAdonis()
+    )
   }
 
   public async listar ({ params }) {
