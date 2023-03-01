@@ -26,11 +26,13 @@ export default class ControladorCarga {
         return response.status(415).send({ mensaje: `Formato inválido: no se puede cargar el archivo seleccionado. Inténtalo nuevamnte, los tipos de archivos permitidos son ${formatos}` })
       }
       
-      const arrNombre = archivo.clientName.split('_');
-      const tipoDeProceso = await Tblarchivos.find(datos.tipoArchivo)
+      //const arrNombre = archivo.clientName.split('_');
+     /*  const tipoDeProceso = await Tblarchivos.find(datos.tipoArchivo)
     if( tipoDeProceso?.prefijoArchivo !== arrNombre[0]){
       return response.status(415).send({ mensaje: `Formato inválido: el tipo de archivo no coincide con el archivo cargado` })
-    }
+    } */
+
+    
 
       this.servicio.procesarArchivo(archivo, JSON.stringify(datos))
       return response.status(202).send({ mensaje: 'El archivo se esta procesado, puede consultar el resumen en el historial de carga' })
