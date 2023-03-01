@@ -14,7 +14,7 @@ export default class TblArchivosEmpresas extends BaseModel {
 
   @column({ columnName: 'are_empresa_id' }) public idEmpresa: string
 
-  @column({ columnName: 'are_tipo' }) public tipo: string
+  @column({ columnName: 'are_tipo' }) public tipo?: string
 
   @column({columnName: 'are_estado'}) public estado: boolean
 
@@ -41,7 +41,7 @@ export default class TblArchivosEmpresas extends BaseModel {
     const archivoEmpresa = new ArchivoEmpresa()
     archivoEmpresa.id = this.id
     archivoEmpresa.tipo = this.tipo
-    archivoEmpresa.idArchivo = this.idEmpresa
+    archivoEmpresa.idArchivo = this.idArchivo
     archivoEmpresa.idEmpresa = this.idEmpresa
     archivoEmpresa.estado = this.estado
 
