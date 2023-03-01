@@ -1,19 +1,14 @@
-/api/v1/maestra/actualizarMaestra/{id}/{maestra}: 
-  patch:
+/api/v1/archivo_variable/obtenerArchivoVariablePorId/{id}: 
+  get:
     tags:
-      - Maestra
-    description: Actualizar Tabla Maestra
+      - ArchivoVariable
+    description: Obtiene una lista de los archivos variables
     parameters:
       - name: id
-        in: path
+        in:  path
         type: string
         required: true
-        description: El id de la Tabla Maestra que se desea actualizar
-      - name: maestra
-        in: path
-        type: Maestra
-        required: true
-        description: la Tabla Maestra que se desea actualizar
+        description: El id del archivo variable
     produces:
       - application/json
     responses:

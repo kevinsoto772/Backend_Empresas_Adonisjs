@@ -2,13 +2,13 @@
   post:
     tags:
       - Maestra
-    description: #Actualizar un exito
+    description: Guardar una Tabla Maestra
     parameters:
       - name: maestra
         in: path
         type: Maestra
         required: true
-        description: #El id del exito que se desea actualizar
+        description: La información de la Tabla Maestra que se desea guardar
     produces:
       - application/json
     responses:
