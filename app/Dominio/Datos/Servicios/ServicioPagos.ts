@@ -26,7 +26,7 @@ export class ServicioPagos {
             throw new Exception(`El valor a pagar supera el monto total de la deuda.`, 400)
         }
         return {
-            referencia: uuidv4(),
+            referencia: peticion.documento, //uuidv4(),
             moneda: "COP",
             llavePublicaWompi: this.KEY_PUBLICA,
             urlRedireccion: this.URL_REDIRECCION,
