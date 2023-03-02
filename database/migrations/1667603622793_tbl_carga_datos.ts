@@ -18,6 +18,7 @@ export default class extends BaseSchema {
       table.boolean('car_estado').defaultTo(true)
       table.timestamp('car_creacion', { useTz: true })
       table.timestamp('car_actualizacion', { useTz: true })
+      table.string('car_empresa_id')
     })
   }
 

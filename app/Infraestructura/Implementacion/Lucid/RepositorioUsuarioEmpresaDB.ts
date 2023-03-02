@@ -45,4 +45,14 @@ export class RepositorioUsuarioEmpresaDB implements RepositorioUsuarioEmpresa {
     await usuarioEmpresaRetorno.save()
     return usuarioEmpresaRetorno
   }
+
+  async obtenerUsuariosEmpresaPorIdEmpresa (params: any): Promise<{usuariosEmpresa: UsuarioEmpresa[], paginacion: Paginador}> {
+    const usuariosEmpresa: UsuarioEmpresa[] = []
+    const usuariosEmpresaDB = await TblUsuariosEmpresas.query().where('use_empresa_id', params.idEmpresa).orderBy('id', 'desc').paginate(params.pagina, params.limite)
+    usuariosEmpresaDB.forEach(usuariosEmpresaDB => {
+      usuariosEmpresa.push(usuariosEmpresaDB.obtenerUsuarioEmpresa())
+    })
+    const paginacion = MapeadorPaginacionDB.obtenerPaginacion(usuariosEmpresaDB)
+    return {usuariosEmpresa , paginacion}
+  }
 }

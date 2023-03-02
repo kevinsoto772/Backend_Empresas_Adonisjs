@@ -39,7 +39,7 @@ export class ValidarEstructura {
       archivoTxt.on('data', (chunk) => {
 
         const archivoArreglo = chunk.split('\r\n')
-
+        
         this.validarFilas(archivoArreglo, campos);
 
       });
@@ -60,13 +60,13 @@ export class ValidarEstructura {
       const fila = (<string>filas).split('|');
     
       
-      //Validar longitud
-      
-      if (fila.length < campos.length) {  
+      //Validar longitud      
+      if (fila.length < campos.length) {          
+        
         const nombresCampo = campos.map(campo => {
           return campo.NombreCampo;
         })
-        throw new Error(`Los campos del archivo no corresponden , los campos necesarios son: ${nombresCampo}`,400);
+        throw new Error(`Los campos del archivo no corresponden , los campos necesarios son: ${nombresCampo}`);
       }
 
       for  (const key in fila) {

@@ -8,4 +8,5 @@ export interface RepositorioUsuarioEmpresa {
   guardarUsuarioEmpresa(usuarioEmpresa: UsuarioEmpresa): Promise<UsuarioEmpresa>
   actualizarUsuarioEmpresa(id: string, usuarioEmpresa: UsuarioEmpresa): Promise<UsuarioEmpresa>
   obtenerUsuarioEmpresaPorUsuario(nombreUsuario: string): Promise<UsuarioEmpresa | null>
+  obtenerUsuariosEmpresaPorIdEmpresa(param: any): Promise<{usuariosEmpresa: UsuarioEmpresa[], paginacion: Paginador}>
 }
