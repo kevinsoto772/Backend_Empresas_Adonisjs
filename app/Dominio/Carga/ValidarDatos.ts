@@ -1,18 +1,20 @@
+import { ColumnaArchivo } from '../Dto/ColumnaArchivo';
 export class ValidarDatos {
 
   datos = (columna: string, campo: any, ): boolean => {
     let errors: any[] = []
+    let issues: any[] = []
 let estado:boolean = false;
     switch (campo.TipoDato) {
       case "String":
-       // console.log({columna, campo});
+        console.log({columna, campo});
         
-         estado = this.validarString(columna, errors)
+         estado = this.validarString(columna, campo, errors, issues )
         break;
 
       case "Number":
         
-        estado = this.validarNumber(columna, errors)
+        estado = this.validarNumber(columna, campo, errors, issues)
         break;
 
     }
@@ -20,26 +22,35 @@ let estado:boolean = false;
     return estado
   }  
 
-  validarString = (columna: string, errors: any[]): boolean =>{
-    const info: string = columna;
+  validarString = (item: string, campo:ColumnaArchivo, errors: any[], issues: any[]) =>{    
+let valueInsert = ''
+         //TODO: VALIDAR MAX-MIN length
+         if (item.length == 0 && campo.Obligatorio == 'S') {
+          const error = {
+              'error': "El campo no puede ser vacío",
+              'datoOriginal': item,
+              'variable': campo.NombreCampo
 
-        //TODO '' NULL 
-        if (info.length == 0) {
-          errores.push({
-            "descripcion": descripcion[1],
-            "linea": nFila,
-            "variable": ""
-          })
-          
-        } else if (info.length == 0 && !var_obligatorio_excel) {
-            valueInsert = '';
-        }
-        return valueInsert;
+          }
+          errors.push(error);
+
+      }
+      //TODO: INVERTIR SIGNO < POR >
+      if (item.length == 0 && campo.Obligatorio == 'N') {
+          const alerta = {
+              'alerta': "El campo se encuentra vacío",
+              'datoOriginal': item,
+              'variable': campo.NombreCampo
+
+          }
+
+          issues.push(alerta);
+      }
     
   }
   
   
-  validarNumber =(columna: string, errors: any[]): boolean =>{
+  validarNumber =(item: string, campo:ColumnaArchivo, errors: any[], issues: any[]): boolean =>{
     
     
   }

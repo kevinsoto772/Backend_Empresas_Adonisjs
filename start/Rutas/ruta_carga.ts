@@ -6,4 +6,4 @@ Route.group(() => {
   Route.get('/', controlador+'.cargados')
   Route.get('/logs', controlador+'.logs')
   Route.get('/buscar', controlador+'.buscar')
-}).prefix('/api/v1/cargas')
+}).prefix('/api/v1/cargas').middleware('autenticacionJwt')

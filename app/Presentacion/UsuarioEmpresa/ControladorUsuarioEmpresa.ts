@@ -52,4 +52,9 @@ export default class ControladorUsuarioEmpresa {
       response.status(200).send(e)
     }
   }
+
+  public async obtenerUsuariosEmpresaPorIdEmpresa ({ params }) {
+    const usuariosEmpresa = await this.service.obtenerUsuariosEmpresaPorIdEmpresa(params)
+    return usuariosEmpresa
+  }
 }

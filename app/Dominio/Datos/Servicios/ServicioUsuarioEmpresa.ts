@@ -55,4 +55,9 @@ export class ServicioUsuarioEmpresa{
     usuarioEmpresa.estado = !usuarioEmpresa.estado
     return await this.repositorio.actualizarUsuarioEmpresa(id, usuarioEmpresa);
   }
+
+  async obtenerUsuariosEmpresaPorIdEmpresa (params: any): Promise<{ usuariosEmpresa: UsuarioEmpresa[], paginacion: Paginador }> {
+    return this.repositorio.obtenerUsuariosEmpresaPorIdEmpresa(params);
+  }
+
 }
