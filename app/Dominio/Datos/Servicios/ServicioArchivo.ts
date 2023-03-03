@@ -18,6 +18,8 @@ export class ServicioArchivo{
   }
 
   async guardarArchivo (archivo: Archivo): Promise<Archivo>{
+
+    //TODO guardar manual .pdf
     archivo.id = uuidv4();
     return this.repositorio.guardarArchivo(archivo);
   }

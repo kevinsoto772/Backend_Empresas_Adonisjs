@@ -1,4 +1,4 @@
-/api/v1/empresa/estado/{id}:
+/api/v1/empresa/cambiarEstado/{id}:
   put:
     tags:
       - Empresa

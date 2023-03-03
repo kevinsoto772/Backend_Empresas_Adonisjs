@@ -20,6 +20,7 @@ export default class TblCargaDatos extends BaseModel {
   @column({ columnName: 'car_estado_proceso_id' }) public estadoProceso: number
   @column({ columnName: 'car_registros_fallidos' }) public registrosFallidos: number
   @column({ columnName: 'car_registros_insertados' }) public registrosInsertados: number
+  @column({ columnName: 'car_empresa_id' }) public empresa: string
 
 
   @column.dateTime({ autoCreate: true, columnName: 'car_creacion' }) public createdAt: DateTime
@@ -40,7 +41,7 @@ export default class TblCargaDatos extends BaseModel {
     this.registrosFallidos = cargaArchivo.registrosFallidos ?? 0
     this.registrosInsertados = cargaArchivo.registrosInsertados ?? 0
     this.estado = cargaArchivo.estado ?? true
-
+    this.empresa = cargaArchivo.empresa ?? ''
   }
 
   public establecerCargaArcivoConId(cargaArchivo: CargaArchivo) {
@@ -54,6 +55,7 @@ export default class TblCargaDatos extends BaseModel {
     this.registrosFallidos = cargaArchivo.registrosFallidos ?? 0
     this.registrosInsertados = cargaArchivo.registrosInsertados ?? 0
     this.estado = cargaArchivo.estado ?? true
+    this.empresa = cargaArchivo.empresa ?? ''
   }
 
   public obtenerCargaArcivo(): CargaArchivo {
@@ -68,11 +70,11 @@ export default class TblCargaDatos extends BaseModel {
     cargaArchivo.registrosFallidos = this.registrosFallidos
     cargaArchivo.registrosInsertados = this.registrosInsertados
     cargaArchivo.estado = this.estado
-
+    cargaArchivo.empresa = this.empresa
     return cargaArchivo
   }
 
-  public actualizarCargaArchivoConId(estado: number) {   
+  public actualizarCargaArchivoConId(estado: number) {
     this.estadoProceso = estado
   }
 

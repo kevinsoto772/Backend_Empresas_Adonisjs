@@ -29,14 +29,14 @@ export default class ControladorArchivoVariable {
     return datos
   }
 
-  public async inicioSesionNovafianza ({ request, response }:HttpContextContract) {
+/*   public async inicioSesionNovafianza ({ request, response }:HttpContextContract) {
     const peticion = request.all()
     const usuario = peticion['usuario']
     const contrasena = peticion['contrasena']
     response.status(200).send({
       token: ServicioAutenticacionJWT.generarToken(usuario, contrasena),
     })
-  }
+  } */
 
   public async cambiarClave({request, response}:HttpContextContract){
     const peticion = await request.body()

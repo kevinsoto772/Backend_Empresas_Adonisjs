@@ -1,7 +1,3 @@
-/* eslint-disable @typescript-eslint/explicit-member-accessibility */
-/* eslint-disable @typescript-eslint/quotes */
-/* eslint-disable @typescript-eslint/semi */
-
 import { Paginador } from "App/Dominio/Paginador";
 import { v4 as uuidv4 } from 'uuid'
 import { RepositorioArchivoEmpresa } from "App/Dominio/Repositorios/RepositorioArchivoEmpresa";
@@ -18,9 +14,25 @@ export class ServicioArchivoEmpresa{
     return this.repositorio.obtenerArchivoEmpresaPorId(id);
   }
 
+  async obtenerArchivosPorEmpresa(idEmpresa: string): Promise<ArchivoEmpresa[]>{
+    return this.repositorio.obtenerArchivosPorEmpresa(idEmpresa)
+  }
+
   async guardarArchivoEmpresa (archivoEmpresa: ArchivoEmpresa): Promise<ArchivoEmpresa>{
     archivoEmpresa.id = uuidv4();
     return this.repositorio.guardarArchivoEmpresa(archivoEmpresa);
+  }
+
+  async guardarArchivosEmpresa(idArchivos: string[], idEmpresa: string){
+    const archivosExistentes = await this.repositorio.obtenerArchivosPorEmpresa(idEmpresa)
+    const idArchivosExistentes = archivosExistentes.map( archivoExistente => archivoExistente.idArchivo )
+    const idArchivosAGuardar = idArchivos.filter( idArchivo => idArchivosExistentes.includes(idArchivo) === false )
+    const archivosEmpresaAGuardar = idArchivosAGuardar.map( idArchivoAGuardar => {
+      return ArchivoEmpresa.crear(idEmpresa, idArchivoAGuardar, true)
+    })
+    const archivosAEliminar = idArchivosExistentes.filter(idArchivoExistente => idArchivos.includes(idArchivoExistente) === false)
+    await this.repositorio.eliminarArchivosEmpresa(idEmpresa, archivosAEliminar)
+    return this.repositorio.guardarArchivosEmpresa(archivosEmpresaAGuardar)
   }
 
   async actualizarArchivoEmpresa (id: string, archivoEmpresa: ArchivoEmpresa): Promise<ArchivoEmpresa> {

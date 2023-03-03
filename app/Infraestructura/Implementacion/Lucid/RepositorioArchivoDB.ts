@@ -22,6 +22,8 @@ export class RepositorioArchivoDB implements RepositorioArchivo {
   }
 
   async guardarArchivo (archivo: Archivo): Promise<Archivo> {
+    console.log(archivo);
+    
     let archivoDb = new Tblarchivos()
     archivoDb.establecerArchivoDb(archivo)
     await archivoDb.save()

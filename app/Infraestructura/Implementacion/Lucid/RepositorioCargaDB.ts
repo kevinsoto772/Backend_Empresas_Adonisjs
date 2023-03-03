@@ -14,26 +14,48 @@ import { UsuarioNovafianza } from '../../../Dominio/Datos/Entidades/UsuarioNovaf
 import { ServicioUsuario } from "App/Dominio/Datos/Servicios/ServicioUsuario";
 import { RepositorioUsuarioNovafianzaDB } from './RepositorioUsuarioNovafianzaDB';
 import { RepositorioUsuarioEmpresaDB } from './RepositorioUsuarioEmpresaDB';
+import { ValidarEstructura } from '../../../Dominio/Carga/ValidarEstructura';
 const fs = require('fs')
 export class RepositorioCargaDB implements RepositorioCarga {
   private servicioUsuario = new ServicioUsuario(new RepositorioUsuarioNovafianzaDB(), new RepositorioUsuarioEmpresaDB())
 
   async procesarArchivo(archivo: any, datos: string): Promise<void> {
+    //Validar estructura
+
+    
     // llamar a la funcion para guardar el estado de la carga
-    const idDatosGuardados = this.guardarCarga(datos, archivo.clientName);
+    const idDatosGuardados = await this.guardarCarga(datos, archivo.clientName);
+
+    console.log({idDatosGuardados});
+    
 
     const { usuario, ...datosCarga } = JSON.parse(datos);
     const tipoDeProceso = await Tblarchivos.find(datosCarga.tipoArchivo)
 
     const [entidad, convenio] = this.validarNombre(archivo.clientName, tipoDeProceso);
 
+    
+    
+    //Carga de archivo
     await archivo.moveToDisk('./', { name: archivo.clientName });
     const path = `./uploads/${archivo.clientName}`;
+  
+    /* //Validar estructura
+    const validatEstructura = new ValidarEstructura();
+const esCorreta = validatEstructura.validar('890914526', 'IA', path) */
+
+
+
+
+
     const archivoBase64 = fs.readFileSync(path, { encoding: "base64" });
     fs.unlinkSync(path);
 
+    
 
 
+
+    //Validacion de datos
 
     try {
       const data = {
@@ -48,15 +70,13 @@ export class RepositorioCargaDB implements RepositorioCarga {
       const headers = {
         'Content-Type': 'application/json'
       }
-      const respuesta = await axios.post(`${Env.get('URL_CARGA')}/${tipoDeProceso?.tipo}/api/ValidarArchivo/ValidarCargarArchivo`, data, { headers })
-
-console.log(respuesta);
+  /*     const respuesta = await axios.post(`${Env.get('URL_CARGA')}/${tipoDeProceso?.tipo}/api/ValidarArchivo/ValidarCargarArchivo`, data, { headers })
 
 
-      this.validarRespuesta(respuesta.data, idDatosGuardados);
+      this.validarRespuesta(respuesta.data, idDatosGuardados); */
 
     } catch (error) {
-     console.log(error);
+      console.log(error);
 
     }
 
@@ -67,9 +87,9 @@ console.log(respuesta);
     const re2 = /::/gi;
     const re = /: :/gi;
     let formateoArchivo = archivo.replace(re1, ': :')
-     formateoArchivo = formateoArchivo.replace(re2, ': :')
-     formateoArchivo = formateoArchivo.replace(re, '&&')
-    
+    formateoArchivo = formateoArchivo.replace(re2, ': :')
+    formateoArchivo = formateoArchivo.replace(re, '&&')
+
     formateoArchivo = formateoArchivo.replace(/[']/g, "");
 
     const filas = formateoArchivo.split('\n')
@@ -91,20 +111,20 @@ console.log(respuesta);
               "variable": ""
             })
           } else {
-          //  console.log(i, columnas[i]);
-            
+            //  console.log(i, columnas[i]);
+
             //const otrasColumnas = columnas[i].split(',')
             errores.push({
-              "descripcion": columnas[i]??'',
+              "descripcion": columnas[i] ?? '',
               "linea": nFila,
               "variable": ''
             })
 
-           /*  console.log({
-              "descripcion": otrasColumnas[1]??'',
-              "linea": nFila,
-              "variable": otrasColumnas[0]??''
-            }); */
+            /*  console.log({
+               "descripcion": otrasColumnas[1]??'',
+               "linea": nFila,
+               "variable": otrasColumnas[0]??''
+             }); */
           }
         }
 
@@ -123,10 +143,17 @@ console.log(respuesta);
   async archivosCargados(parametros: string): Promise<any> {
     let archivos = {};
     try {
+    
+      
 
-      const { usuario, pagina = 1, limite = 5 } = JSON.parse(parametros);
+      const { entidadId, usuario, pagina = 1, limite = 5 } = JSON.parse(parametros);
+    /*   console.log(usuario);
+      
+      const usuarioN = await this.servicioUsuario.obtenerUsuario(usuario)
+      console.log({usuarioN}); */
+      
       const archivosBd = await TblCargaDatos.query().preload('archivo').preload('estadoCarga')
-        .where('car_usuario_id', usuario).paginate(pagina, limite)
+        .where('car_empresa_id', entidadId).paginate(pagina, limite)
 
       let arrArchivos: any = []
       for (const sql of archivosBd) {
@@ -157,8 +184,13 @@ console.log(respuesta);
 
 
 
-  guardarCarga = (datos: string, nombre: string): string => {
+  guardarCarga = async (datos: string, nombre: string): Promise<string> => {
     const obtenerDatos = JSON.parse(datos);
+
+    let empresa = ''
+    const usuario = await this.servicioUsuario.obtenerUsuario(obtenerDatos.usuario)
+    empresa = (usuario['idEmpresa'])??''
+
     let datosGuardar = {
       id: uuidv4(),
       nombre,
@@ -166,8 +198,10 @@ console.log(respuesta);
       fechaFinal: obtenerDatos.fechaFinal,
       usuario: obtenerDatos.usuario,
       tipoArchivo: obtenerDatos.tipoArchivo,
+      empresa,
       estadoProceso: 1,
     }
+    
     let cargaArchivo = new TblCargaDatos();
     cargaArchivo.establecerCargaArcivoDb(datosGuardar)
     cargaArchivo.save()
@@ -212,7 +246,7 @@ console.log(respuesta);
       id: uuidv4(),
       error: JSON.stringify(errores),
       idCarga,
-      tipo: 'por nombre',
+      tipo: '1',
       estado: true
     }
     let guardarErr = new TblLogsErrores()
@@ -227,23 +261,23 @@ console.log(respuesta);
 
       const { id } = JSON.parse(parametros);
 
-      const archivoCargado = await TblCargaDatos.findBy('car_id',id)
-      const usuario_id = archivoCargado?.usuario??''
+      const archivoCargado = await TblCargaDatos.findBy('car_id', id)
+      const usuario_id = archivoCargado?.usuario ?? ''
 
-     const usuario = await this.servicioUsuario.obtenerUsuario(usuario_id)
+      const usuario = await this.servicioUsuario.obtenerUsuario(usuario_id)
 
-      
+
 
       const logsBd = await TblLogsErrores.query()
         .where('err_carga_datos_id', id)
 
-   
-        
+
+
       const formatearLogs = await generarJsonValidaciones(logsBd[0].error, [])
 
       const logs = {
         "nombreArchivo": archivoCargado?.nombre,
-        "cargadoPor": `${ usuario.nombre } ${ usuario.apellido }`,
+        "cargadoPor": `${usuario.nombre} ${usuario.apellido}`,
         "fechaYHora": archivoCargado?.createdAt,
         "fechaCorteFinal": archivoCargado?.fechaFinal,
         "fechaCorteInicial": archivoCargado?.fechaInicial,
@@ -267,9 +301,9 @@ console.log(respuesta);
 
       const { usuario, pagina = 1, limite = 5, frase } = JSON.parse(parametros);
 
-      
+
       const archivosBd = await TblCargaDatos.query().preload('archivo').preload('estadoCarga')
-        .where('car_usuario_id', usuario).whereILike('car_nombre', `%${ frase }%`).paginate(pagina, limite)
+        .where('car_usuario_id', usuario).whereILike('car_nombre', `%${frase}%`).paginate(pagina, limite)
 
       let arrArchivos: any = []
       for (const sql of archivosBd) {
@@ -291,7 +325,7 @@ console.log(respuesta);
 
 
     } catch (error) {
-       console.error(error);
+      console.error(error);
 
     }
 

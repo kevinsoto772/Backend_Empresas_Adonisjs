@@ -9,9 +9,15 @@ import { RepositorioUsuarioEmpresa } from "App/Dominio/Repositorios/RepositorioU
 import { UsuarioEmpresa } from "../Entidades/UsuarioEmpresa";
 import { GeneradorContrasena } from "App/Dominio/GenerarContrasena/GenerarContrasena";
 import { Encriptador } from "App/Dominio/Encriptacion/Encriptador";
+import { EnviadorEmail } from "App/Dominio/Email/EnviadorEmail";
 
 export class ServicioUsuarioEmpresa{
-  constructor (private repositorio: RepositorioUsuarioEmpresa, private generarContrasena: GeneradorContrasena, private encriptador: Encriptador) { }
+  constructor (
+    private repositorio: RepositorioUsuarioEmpresa, 
+    private generarContrasena: GeneradorContrasena, 
+    private encriptador: Encriptador,
+    private enviadorEmail: EnviadorEmail
+  ) { }
 
   async obtenerUsuariosEmpresa (params: any): Promise<{ usuariosEmpresa: UsuarioEmpresa[], paginacion: Paginador }> {
     return this.repositorio.obtenerUsuariosEmpresa(params);
@@ -26,7 +32,13 @@ export class ServicioUsuarioEmpresa{
     usuarioEmpresa.id = uuidv4();
     usuarioEmpresa.clave = await this.encriptador.encriptar(clave)
     usuarioEmpresa.usuario = usuarioEmpresa.identificacion.toString()
-    return this.repositorio.guardarUsuarioEmpresa(usuarioEmpresa);
+    const usuario = await this.repositorio.guardarUsuarioEmpresa(usuarioEmpresa);
+    await this.enviadorEmail.enviarEmail(
+      `Bienvenido ${usuario.nombre}`,
+      `Tu contraseña es: ${clave}`,
+      [usuario.correo]
+    )
+    return usuario
   }
 
   async actualizarUsuarioEmpresa (id: string, usuarioEmpresa: UsuarioEmpresa): Promise<UsuarioEmpresa> {
@@ -43,4 +55,9 @@ export class ServicioUsuarioEmpresa{
     usuarioEmpresa.estado = !usuarioEmpresa.estado
     return await this.repositorio.actualizarUsuarioEmpresa(id, usuarioEmpresa);
   }
+
+  async obtenerUsuariosEmpresaPorIdEmpresa (params: any): Promise<{ usuariosEmpresa: UsuarioEmpresa[], paginacion: Paginador }> {
+    return this.repositorio.obtenerUsuariosEmpresaPorIdEmpresa(params);
+  }
+
 }

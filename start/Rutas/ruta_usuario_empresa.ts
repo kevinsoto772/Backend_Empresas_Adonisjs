@@ -6,6 +6,7 @@ const accion_path = '../../../app/Presentacion/UsuarioEmpresa/ControladorUsuario
 Route.group(() => {
   Route.post('/registro', accion_path + '.guardarUsuarioEmpresa')
   Route.get('/listar/:pagina?/:limite?', accion_path + '.listar')
+  Route.get('/listar-entidad/:idEmpresa/:pagina?/:limite?', accion_path + '.obtenerUsuariosEmpresaPorIdEmpresa')
   Route.get('/:id', accion_path + '.obtenerUsuarioEmpresaPorId')
   Route.get('/usuario/:usuario', accion_path + '.obtenerUsuarioEmpresaPorUsuario')
   Route.patch('/:id', accion_path + '.actualizarUsuarioEmpresa')
