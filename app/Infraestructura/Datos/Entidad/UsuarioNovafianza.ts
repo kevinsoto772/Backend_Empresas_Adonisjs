@@ -62,8 +62,8 @@ export default class TblUsuariosNovafianzas extends BaseModel {
   public estableceUsuarioNovafianzaConId (usuarioNovafianza: UsuarioNovafianza) {
     this.nombre = usuarioNovafianza.nombre
     this.usuario = usuarioNovafianza.usuario
-    /* this.clave = usuarioNovafianza.clave
-    this.claveTemporal = usuarioNovafianza.claveTemporal */
+    this.clave = usuarioNovafianza.clave
+    this.claveTemporal = usuarioNovafianza.claveTemporal
     this.celular = usuarioNovafianza.celular
     this.telefono = usuarioNovafianza.telefono
     this.extension = usuarioNovafianza.extension
@@ -75,6 +75,7 @@ export default class TblUsuariosNovafianzas extends BaseModel {
     this.estado = usuarioNovafianza.estado
     this.idRol = usuarioNovafianza.idRol
   }
+  
 
   public obtenerUsuarioNovafianza (): UsuarioNovafianza {
     const usuarioNovafianza = new UsuarioNovafianza()
