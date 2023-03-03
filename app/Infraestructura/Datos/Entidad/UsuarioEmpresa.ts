@@ -66,7 +66,7 @@ export default class TblUsuariosEmpresas extends BaseModel {
 
   public estableceUsuarioEmpresaConId (usuarioEmpresa: UsuarioEmpresa) {
     this.nombre = usuarioEmpresa.nombre
-    /* this.clave = usuarioEmpresa.clave */
+    this.clave = usuarioEmpresa.clave
     this.estado = usuarioEmpresa.estado
     this.usuario = usuarioEmpresa.usuario
     this.idEmpresa = usuarioEmpresa.idEmpresa
@@ -78,7 +78,23 @@ export default class TblUsuariosEmpresas extends BaseModel {
     this.celular = usuarioEmpresa.celular
     this.telefono = usuarioEmpresa.telefono
     this.extension = usuarioEmpresa.extension
-    /* this.claveTemporal = usuarioEmpresa.claveTemporal */
+    this.claveTemporal = usuarioEmpresa.claveTemporal
+    this.idRol = usuarioEmpresa.idRol
+  }
+
+  public establecerUsuarioEmpresaConId (usuarioEmpresa: UsuarioEmpresa) {
+    this.nombre = usuarioEmpresa.nombre
+    this.estado = usuarioEmpresa.estado
+    this.usuario = usuarioEmpresa.usuario
+    this.idEmpresa = usuarioEmpresa.idEmpresa
+    this.identificacion = usuarioEmpresa.identificacion
+    this.apellido = usuarioEmpresa.apellido
+    this.cargo = usuarioEmpresa.cargo
+    this.fechaNacimiento = usuarioEmpresa.fechaNacimiento
+    this.correo = usuarioEmpresa.correo
+    this.celular = usuarioEmpresa.celular
+    this.telefono = usuarioEmpresa.telefono
+    this.extension = usuarioEmpresa.extension
     this.idRol = usuarioEmpresa.idRol
   }
 

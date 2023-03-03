@@ -33,7 +33,7 @@ export default class ControladorUsuarioEmpresa {
 
   public async actualizarUsuarioEmpresa ({ params, request }) {
     const dataUsuarioEmpresa = request.all()
-    const usuarioEmpresa = await this.service.actualizarUsuarioEmpresa(params.id, dataUsuarioEmpresa)
+    const usuarioEmpresa = await this.service.actualizaUsuarioEmpresa(params.id, dataUsuarioEmpresa)
     return usuarioEmpresa
   }
 
