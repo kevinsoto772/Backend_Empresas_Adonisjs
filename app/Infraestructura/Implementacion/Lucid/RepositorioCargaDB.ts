@@ -30,9 +30,13 @@ export class RepositorioCargaDB implements RepositorioCarga {
     
 
     const { usuario, ...datosCarga } = JSON.parse(datos);
-    const tipoDeProceso = await Tblarchivos.find(datosCarga.tipoArchivo)
-
-    const [entidad, convenio] = this.validarNombre(archivo.clientName, tipoDeProceso);
+    //const tipoDeProceso = await Tblarchivos.find(datosCarga.tipoArchivo)    
+    const tipoArchivo = await Tblarchivos.query().preload('tipoArchivo').first()
+    const tipoDeProceso = tipoArchivo?.tipoArchivo.map( (tipo)=>tipo.valor)[0]
+    
+    console.log(tipoDeProceso);
+    
+    const [entidad, convenio] = this.validarNombre(archivo.clientName, tipoArchivo);
 
     
     
@@ -63,14 +67,14 @@ const esCorreta = validatEstructura.validar('890914526', 'IA', path) */
         "pConvenio": convenio,
         "pFechaInicio": datosCarga.fechaInicial,
         "pFechaFin": datosCarga.fechaFinal,
-        "pTipoProceso": tipoDeProceso?.prefijo,
+        "pTipoProceso": tipoArchivo?.prefijo,
         "pRutaArchivo": "",
         "pArchivoBase64": archivoBase64
       }
       const headers = {
         'Content-Type': 'application/json'
       }
-  /*     const respuesta = await axios.post(`${Env.get('URL_CARGA')}/${tipoDeProceso?.tipo}/api/ValidarArchivo/ValidarCargarArchivo`, data, { headers })
+  /*     const respuesta = await axios.post(`${Env.get('URL_CARGA')}/${tipoDeProceso}/api/ValidarArchivo/ValidarCargarArchivo`, data, { headers })
 
 
       this.validarRespuesta(respuesta.data, idDatosGuardados); */

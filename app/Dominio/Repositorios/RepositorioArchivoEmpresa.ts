@@ -6,9 +6,9 @@ export interface RepositorioArchivoEmpresa {
   obtenerArchivosEmpresas(param: any): Promise<{archivosEmpresas: ArchivoEmpresa[], paginacion: Paginador}>
   obtenerArchivoEmpresaPorId(id: string): Promise<ArchivoEmpresa>
   obtenerArchivosPorEmpresa(idEmpresa: string): Promise<ArchivoEmpresa[]> 
-  guardarArchivoEmpresa(archivoEmpresa: ArchivoEmpresa): Promise<ArchivoEmpresa>
+  guardarArchivoEmpresa(archivoEmpresa: ArchivoEmpresa, manual: any): Promise<ArchivoEmpresa>
   guardarArchivosEmpresa(archivosEmpresa: ArchivoEmpresa[]): Promise<ArchivoEmpresa[]>
   eliminarArchivosEmpresa(idEmpresa: string, idArchivos: string[]): Promise<number> // regresa el numero de registros eliminados
-  actualizarArchivoEmpresa(id: string, archivoEmpresa: ArchivoEmpresa): Promise<ArchivoEmpresa>
+  actualizarArchivoEmpresa(id: string, archivoEmpresa: ArchivoEmpresa, manual: any): Promise<ArchivoEmpresa>
 }
 

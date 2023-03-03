@@ -15,3 +15,5 @@ Route.group(() => {
   /* Puts */
   Route.put('/estado/:id', accion_path + '.cambiarEstado')
 }).prefix('api/v1/archivo_empresa').middleware('autenticacionJwt')
+
+Route.get('/api/v1/archivo_empresa/manual/*', accion_path+'.manual')
