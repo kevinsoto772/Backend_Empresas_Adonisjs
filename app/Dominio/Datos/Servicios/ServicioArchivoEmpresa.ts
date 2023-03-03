@@ -18,9 +18,9 @@ export class ServicioArchivoEmpresa{
     return this.repositorio.obtenerArchivosPorEmpresa(idEmpresa)
   }
 
-  async guardarArchivoEmpresa (archivoEmpresa: ArchivoEmpresa): Promise<ArchivoEmpresa>{
+  async guardarArchivoEmpresa (archivoEmpresa: ArchivoEmpresa, manual: any): Promise<ArchivoEmpresa>{
     archivoEmpresa.id = uuidv4();
-    return this.repositorio.guardarArchivoEmpresa(archivoEmpresa);
+    return this.repositorio.guardarArchivoEmpresa(archivoEmpresa, manual);
   }
 
   async guardarArchivosEmpresa(idArchivos: string[], idEmpresa: string){
@@ -35,8 +35,8 @@ export class ServicioArchivoEmpresa{
     return this.repositorio.guardarArchivosEmpresa(archivosEmpresaAGuardar)
   }
 
-  async actualizarArchivoEmpresa (id: string, archivoEmpresa: ArchivoEmpresa): Promise<ArchivoEmpresa> {
-    return this.repositorio.actualizarArchivoEmpresa(id, archivoEmpresa);
+  async actualizarArchivoEmpresa (id: string, archivoEmpresa: ArchivoEmpresa, manual: any): Promise<ArchivoEmpresa> {
+    return this.repositorio.actualizarArchivoEmpresa(id, archivoEmpresa, manual);
   }
 
   async cambiarEstado (id:string):Promise<ArchivoEmpresa>{

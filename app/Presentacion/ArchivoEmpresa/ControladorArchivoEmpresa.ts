@@ -3,6 +3,9 @@ import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 import { ServicioArchivoEmpresa } from 'App/Dominio/Datos/Servicios/ServicioArchivoEmpresa'
 import { RepositorioArchivoEmpresaDB } from 'App/Infraestructura/Implementacion/Lucid/RepositorioArchivoEmpresaDB'
 import { validadorArchivosEmpresa } from './Validadores/ValidadorArchivosEmpresa'
+import { extname } from 'path';
+import Env from '@ioc:Adonis/Core/Env';
+import Drive from '@ioc:Adonis/Core/Drive';
 
 export default class ControladorArchivoEmpresa {
   private service: ServicioArchivoEmpresa
@@ -26,15 +29,29 @@ export default class ControladorArchivoEmpresa {
     return archivoEmpresa
   }
 
-  public async actualizarArchivoEmpresa ({ params, request }: HttpContextContract) {
+  public async actualizarArchivoEmpresa ({ params, request, response }: HttpContextContract) {
+    const manual = request.file('manual', {
+      extnames: ['pdf'],
+    })
+    
+    if (manual && !manual.isValid) {
+      return response.status(400).send({mensaje:'Formato incorrecto para el archivo'})
+    }
     const dataArchivoEmpresa = request.all() as any
-    const archivoEmpresa= await this.service.actualizarArchivoEmpresa(params.id, dataArchivoEmpresa)
+    const archivoEmpresa= await this.service.actualizarArchivoEmpresa(params.id, dataArchivoEmpresa, manual)
     return archivoEmpresa
   }
 
-  public async guardarArchivoEmpresa ({ request }) {
+  public async guardarArchivoEmpresa ({ request, response }) {
+    const manual = request.file('manual', {
+      extnames: ['pdf'],
+    })
+    
+    if (manual && !manual.isValid) {
+      return response.status(400).send({mensaje:'Formato incorrecto para el archivo'})
+    }
     const dataArchivoEmpresa = request.all()
-    const archivoEmpresa = await this.service.guardarArchivoEmpresa(dataArchivoEmpresa)
+    const archivoEmpresa = await this.service.guardarArchivoEmpresa(dataArchivoEmpresa, manual)
     return archivoEmpresa
   }
 
@@ -53,4 +70,22 @@ export default class ControladorArchivoEmpresa {
       response.status(200).send(e)
     }
   }
+
+  public async manual({ request, response }: HttpContextContract) {
+    const nombreArchivo = request.param('*').join('/')
+const ubicacion = `/manuales/${nombreArchivo}`
+    try {
+        const { size } = await Drive.getStats(ubicacion)
+        
+        response.type(extname(ubicacion))
+        response.header('content-length', size)
+        
+        return response.stream(await Drive.getStream(ubicacion))
+    } catch (error) {
+      console.log(error);
+      
+        response.status(400).send("Archivo no encontrado")
+    }
+
+}
 }

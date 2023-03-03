@@ -21,7 +21,11 @@ export default class TblUsuariosNovafianzas extends BaseModel {
 
   @column({ columnName: 'usn_clave_temporal' }) public claveTemporal: boolean
 
-  @column({ columnName: 'usn_telefono' }) public telefono: string
+  @column({ columnName: 'usn_celular' }) public celular?: string
+
+  @column({ columnName: 'usn_telefono' }) public telefono?: string
+
+  @column({ columnName: 'usn_extension' }) public extension?: string
 
   @column({ columnName: 'usn_correo' }) public correo: string
 
@@ -43,7 +47,9 @@ export default class TblUsuariosNovafianzas extends BaseModel {
     this.usuario = usuarioNovafianza.usuario
     this.clave = usuarioNovafianza.clave
     this.claveTemporal = usuarioNovafianza.claveTemporal
+    this.celular = usuarioNovafianza.celular
     this.telefono = usuarioNovafianza.telefono
+    this.extension = usuarioNovafianza.extension
     this.correo = usuarioNovafianza.correo
     this.fechaNacimiento = usuarioNovafianza.fechaNacimiento
     this.cargo = usuarioNovafianza.cargo
@@ -58,7 +64,9 @@ export default class TblUsuariosNovafianzas extends BaseModel {
     this.usuario = usuarioNovafianza.usuario
     this.clave = usuarioNovafianza.clave
     this.claveTemporal = usuarioNovafianza.claveTemporal
+    this.celular = usuarioNovafianza.celular
     this.telefono = usuarioNovafianza.telefono
+    this.extension = usuarioNovafianza.extension
     this.correo = usuarioNovafianza.correo
     this.fechaNacimiento = usuarioNovafianza.fechaNacimiento
     this.cargo = usuarioNovafianza.cargo
@@ -81,7 +89,9 @@ export default class TblUsuariosNovafianzas extends BaseModel {
     usuarioNovafianza.claveTemporal = this.claveTemporal
     usuarioNovafianza.correo = this.correo
     usuarioNovafianza.fechaNacimiento = this.fechaNacimiento
+    usuarioNovafianza.celular = this.celular
     usuarioNovafianza.telefono = this.telefono
+    usuarioNovafianza.extension = this.extension
     usuarioNovafianza.idRol = this.idRol
 
     return usuarioNovafianza

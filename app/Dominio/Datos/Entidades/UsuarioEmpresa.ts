@@ -11,7 +11,9 @@ export class UsuarioEmpresa{
   fechaNacimiento: DateTime;
   cargo: string;
   correo: string;
-  telefono: string;
+  celular?: string;
+  telefono?: string;
+  extension?: string;
   estado: boolean;
   clave: string;
   idEmpresa: string;

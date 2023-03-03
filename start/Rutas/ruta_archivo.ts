@@ -10,4 +10,3 @@ Route.group(() => {
   Route.patch('/:id', accion_path + '.actualizarArchivo')
   Route.put('/estado/:id', accion_path + '.cambiarEstado')
 }).prefix('api/v1/archivo').middleware('autenticacionJwt')
-Route.get('api/v1/servicio/manual/*', accion_path+'.manual').middleware('autenticacionJwt')

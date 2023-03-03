@@ -16,6 +16,8 @@ export default class TblArchivosEmpresas extends BaseModel {
 
   @column({ columnName: 'are_tipo' }) public tipo?: string
 
+  @column({ columnName: 'are_manual' }) public manual?: string
+
   @column({columnName: 'are_estado'}) public estado: boolean
 
   @column.dateTime({ autoCreate: true , columnName: 'are_creacion'}) public createdAt: DateTime
@@ -25,6 +27,7 @@ export default class TblArchivosEmpresas extends BaseModel {
   public establecerArchivoEmpresaDb (archivoEmpresa: ArchivoEmpresa) {
     this.id = archivoEmpresa.id
     this.tipo = archivoEmpresa.tipo
+    this.manual = archivoEmpresa.manual
     this.idArchivo = archivoEmpresa.idArchivo
     this.idEmpresa = archivoEmpresa.idEmpresa
     this.estado = archivoEmpresa.estado
@@ -32,6 +35,7 @@ export default class TblArchivosEmpresas extends BaseModel {
 
   public establecerArchivoEmpresaConId (archivoEmpresa: ArchivoEmpresa) {
     this.tipo = archivoEmpresa.tipo
+    this.manual = archivoEmpresa.manual
     this.idArchivo = archivoEmpresa.idArchivo
     this.idEmpresa = archivoEmpresa.idEmpresa
     this.estado = archivoEmpresa.estado
@@ -41,6 +45,7 @@ export default class TblArchivosEmpresas extends BaseModel {
     const archivoEmpresa = new ArchivoEmpresa()
     archivoEmpresa.id = this.id
     archivoEmpresa.tipo = this.tipo
+    archivoEmpresa.manual = this.manual
     archivoEmpresa.idArchivo = this.idArchivo
     archivoEmpresa.idEmpresa = this.idEmpresa
     archivoEmpresa.estado = this.estado
