@@ -8,6 +8,7 @@ import { RepositorioArchivoEmpresa } from 'App/Dominio/Repositorios/RepositorioA
 import { ArchivoEmpresa } from 'App/Dominio/Datos/Entidades/ArchivoEmpresa';
 import TblArchivoEmpresa from '../../Datos/Entidad/ArchivoEmpresa';
 import Env from '@ioc:Adonis/Core/Env';
+import Drive from '@ioc:Adonis/Core/Drive';
 
 export class RepositorioArchivoEmpresaDB implements RepositorioArchivoEmpresa {
 
@@ -53,34 +54,29 @@ export class RepositorioArchivoEmpresaDB implements RepositorioArchivoEmpresa {
   }
 
   async guardarArchivoEmpresa(archivoEmpresa: ArchivoEmpresa, manual: any): Promise<ArchivoEmpresa> {
-    let rutaManual = '';
     if (manual) {
-      const nombreArchivo = manual.clientName.replace(/\s+/g, '_');
+      manual.clientName.replace(/\s+/g, '_');
       await manual.moveToDisk('manuales', {
-        name: `${nombreArchivo}`
+        name: `${archivoEmpresa.id}.${manual.extname}`
       });
-      rutaManual = `${nombreArchivo}`
     }
     let archivoEmpresaDB = new TblArchivoEmpresa()
-    archivoEmpresa.manual = rutaManual;
+    archivoEmpresa.manual = `${archivoEmpresa.id}.${manual.extname}`;
     archivoEmpresaDB.establecerArchivoEmpresaDb(archivoEmpresa)
     await archivoEmpresaDB.save()
     return archivoEmpresaDB
   }
 
-  async actualizarArchivoEmpresa(id: string, archivoEmpresa: ArchivoEmpresa, manual:any): Promise<ArchivoEmpresa> {
-    let rutaManual = '';
+  async actualizarArchivoEmpresa(id: string, archivoEmpresa: ArchivoEmpresa, manual: any): Promise<ArchivoEmpresa> {
+let archivoEmpresaRetorno = await TblArchivoEmpresa.findOrFail(id)
     if (manual) {
-      const nombreArchivo = manual.clientName.replace(/\s+/g, '_');
-      await manual.moveToDisk('manuales', {
-        name: `${nombreArchivo}`
-      });
-      rutaManual = `${nombreArchivo}`
+      const contents = await Drive.get(manual.tmpPath)
+      console.log(`manuales/${archivoEmpresaRetorno.id}.${manual.extname}`);
+      
+      await Drive.put(`manuales/${archivoEmpresaRetorno.id}.${manual.extname}`, contents)
     }
-    let archivoEmpresaRetorno = await TblArchivoEmpresa.findOrFail(id)
-    archivoEmpresaRetorno.manual = rutaManual;
+    archivoEmpresa.manual = `${archivoEmpresaRetorno.id}.${manual.extname}`
     archivoEmpresaRetorno.establecerArchivoEmpresaConId(archivoEmpresa)
     await archivoEmpresaRetorno.save()
-    return archivoEmpresaRetorno
   }
 }
