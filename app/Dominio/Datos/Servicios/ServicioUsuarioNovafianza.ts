@@ -49,6 +49,11 @@ export class ServicioUsuarioNovafianza {
     return this.repositorio.actualizarUsuarioNovafianza(id, usuarioNovafianza);
   }
 
+  async actualizaUsuarioNovafianza(id: string, usuarioNovafianza: UsuarioNovafianza): Promise<UsuarioNovafianza> {
+    return this.repositorio.actualizaUsuarioNovafianza(id, usuarioNovafianza);
+  }
+
+
   async cambiarEstado(id: string): Promise<UsuarioNovafianza> {
     let usuarioNovafianza = await this.repositorio.obtenerUsuarioNovafianzaPorId(id)
     usuarioNovafianza.estado = !usuarioNovafianza.estado

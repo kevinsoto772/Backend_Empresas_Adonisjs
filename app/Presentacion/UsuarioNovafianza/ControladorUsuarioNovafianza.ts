@@ -35,7 +35,7 @@ export default class ControladorUsuarioNovafianza {
 
   public async actualizarUsuarioNovafianza ({ params, request }) {
     const dataUsuarioNovafianza = request.all()
-    const usuarioNovafianza = await this.service.actualizarUsuarioNovafianza(params.id, dataUsuarioNovafianza)
+    const usuarioNovafianza = await this.service.actualizaUsuarioNovafianza(params.id, dataUsuarioNovafianza)
     return usuarioNovafianza
   }
 

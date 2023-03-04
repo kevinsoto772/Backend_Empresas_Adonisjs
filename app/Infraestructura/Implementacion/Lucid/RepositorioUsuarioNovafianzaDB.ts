@@ -45,4 +45,11 @@ export class RepositorioUsuarioNovafianzaDB implements RepositorioUsuarioNovafia
     await usuarioNovafianzaRetorno.save()
     return usuarioNovafianzaRetorno
   }
+
+  async actualizaUsuarioNovafianza (id: string, usuarioNovafianza: UsuarioNovafianza): Promise<UsuarioNovafianza> {
+    let usuarioNovafianzaRetorno = await TblUsuariosNovafianzas.findOrFail(id)
+    usuarioNovafianzaRetorno.establecerUsuarioNovafianzaConId(usuarioNovafianza)
+    await usuarioNovafianzaRetorno.save()
+    return usuarioNovafianzaRetorno
+  }
 }

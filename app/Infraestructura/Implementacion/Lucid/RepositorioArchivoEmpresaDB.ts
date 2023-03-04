@@ -68,15 +68,24 @@ export class RepositorioArchivoEmpresaDB implements RepositorioArchivoEmpresa {
   }
 
   async actualizarArchivoEmpresa(id: string, archivoEmpresa: ArchivoEmpresa, manual: any): Promise<ArchivoEmpresa> {
-let archivoEmpresaRetorno = await TblArchivoEmpresa.findOrFail(id)
-    if (manual) {
-      const contents = await Drive.get(manual.tmpPath)
-      console.log(`manuales/${archivoEmpresaRetorno.id}.${manual.extname}`);
+    try {
+
+      let archivoEmpresaRetorno = await TblArchivoEmpresa.findOrFail(id)
+      if (manual) {
+        await manual.moveToDisk('tmp', { name: manual.clientName });
+        const path = `./tmp/${manual.clientName}`;
+        const contents = await Drive.get(path)
+        await Drive.put(`/manuales/${archivoEmpresaRetorno.id}.${manual.extname}`, contents)
+        await Drive.delete(path)
+      }
+      archivoEmpresa.manual = `${archivoEmpresaRetorno.id}.${manual.extname}`
+      archivoEmpresaRetorno.establecerArchivoEmpresaConId(archivoEmpresa)
       
-      await Drive.put(`manuales/${archivoEmpresaRetorno.id}.${manual.extname}`, contents)
+      await archivoEmpresaRetorno.save()
+      return archivoEmpresaRetorno
+    } catch (error) {
+      console.log(error);
+
     }
-    archivoEmpresa.manual = `${archivoEmpresaRetorno.id}.${manual.extname}`
-    archivoEmpresaRetorno.establecerArchivoEmpresaConId(archivoEmpresa)
-    await archivoEmpresaRetorno.save()
   }
 }

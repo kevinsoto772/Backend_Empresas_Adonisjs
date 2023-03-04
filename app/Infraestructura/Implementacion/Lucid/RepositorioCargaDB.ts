@@ -23,10 +23,6 @@ export class RepositorioCargaDB implements RepositorioCarga {
     //Validar estructura
 
     
-    // llamar a la funcion para guardar el estado de la carga
-    const idDatosGuardados = await this.guardarCarga(datos, archivo.clientName);
-
-    console.log({idDatosGuardados});
     
 
     const { usuario, ...datosCarga } = JSON.parse(datos);
@@ -38,29 +34,27 @@ export class RepositorioCargaDB implements RepositorioCarga {
     
     const [entidad, convenio] = this.validarNombre(archivo.clientName, tipoArchivo);
 
-    
+
+
+
+     // llamar a la funcion para guardar el estado de la carga
+     const idDatosGuardados = await this.guardarCarga(datos, archivo.clientName);
     
     //Carga de archivo
     await archivo.moveToDisk('./', { name: archivo.clientName });
     const path = `./uploads/${archivo.clientName}`;
   
-    /* //Validar estructura
-    const validatEstructura = new ValidarEstructura();
+    //Validar estructura
+   /*  const validatEstructura = new ValidarEstructura();
 const esCorreta = validatEstructura.validar('890914526', 'IA', path) */
 
 
-
+//si pasa la validacion de estructura
 
 
     const archivoBase64 = fs.readFileSync(path, { encoding: "base64" });
-    fs.unlinkSync(path);
-
     
-
-
-
     //Validacion de datos
-
     try {
       const data = {
         "pEntidad": entidad,
@@ -74,10 +68,10 @@ const esCorreta = validatEstructura.validar('890914526', 'IA', path) */
       const headers = {
         'Content-Type': 'application/json'
       }
-  /*     const respuesta = await axios.post(`${Env.get('URL_CARGA')}/${tipoDeProceso}/api/ValidarArchivo/ValidarCargarArchivo`, data, { headers })
+      const respuesta = await axios.post(`${Env.get('URL_CARGA')}/${tipoDeProceso}/api/ValidarArchivo/ValidarCargarArchivo`, data, { headers })
 
 
-      this.validarRespuesta(respuesta.data, idDatosGuardados); */
+      this.validarRespuesta(respuesta.data, idDatosGuardados);
 
     } catch (error) {
       console.log(error);
