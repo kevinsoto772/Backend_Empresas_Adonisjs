@@ -8,4 +8,6 @@ export class Archivo{
   prefijo: string;
   prefijoArchivo: string;
   estado: boolean;
+  descripcion?:string;
+  formatoId:string;
 }

@@ -17,6 +17,10 @@ export default class TblArchivos extends BaseModel {
 
   @column({ columnName: 'arc_prefijo_archivo' }) public prefijoArchivo: string
 
+  @column({ columnName: 'arc_formato_id' }) public formatoId: string
+
+  @column({ columnName: 'arc_descripcion' }) public descripcion?: string
+
   @column.dateTime({ autoCreate: true, columnName: 'arc_creacion' }) public createdAt: DateTime
 
   @column.dateTime({ autoCreate: true, autoUpdate: true, columnName: 'arc_actualizacion' }) public updatedAt: DateTime
@@ -28,6 +32,8 @@ export default class TblArchivos extends BaseModel {
     this.prefijo = archivo.prefijo
     this.prefijoArchivo = archivo.prefijoArchivo
     this.estado = archivo.estado
+    this.formatoId = archivo.formatoId
+    this.descripcion = archivo.descripcion
   }
 
   public establecerArchivoConId (archivo: Archivo) {
@@ -36,6 +42,8 @@ export default class TblArchivos extends BaseModel {
     this.prefijo = archivo.prefijo
     this.prefijoArchivo = archivo.prefijoArchivo
     this.estado = archivo.estado
+    this.formatoId = archivo.formatoId
+    this.descripcion = archivo.descripcion
   }
 
   public obtenerArchivo (): Archivo {
@@ -46,6 +54,8 @@ export default class TblArchivos extends BaseModel {
     archivo.prefijo = this.prefijo
     archivo.prefijoArchivo = this.prefijoArchivo
     archivo.estado = this.estado
+    archivo.formatoId = this.formatoId
+    archivo.descripcion = this.descripcion
     return archivo
   }
 
