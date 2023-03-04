@@ -6,6 +6,7 @@ import { esquemaEmpresa } from './Validadores/ValidadorEmpresa'
 import { readFile } from 'fs/promises'
 import { RepositorioFicheroLocal } from 'App/Infraestructura/Ficheros/RepositorioFicheroLocal'
 import { MapeadorFicheroAdonis } from '../Mapeadores/MapeadorFicheroAdonis'
+import { esquemaActualizarEmpresa } from './Validadores/ValidadorActualizarEmpresa'
 export default class ControladorEmpresa {
 
   static get inject(){
@@ -27,9 +28,17 @@ export default class ControladorEmpresa {
     return empresa
   }
 
-  public async actualizarEmpresa ({ params, request }) {
-    const dataEmpresa = request.all()
-    const empresa = await this.service.actualizarEmpresa(params.id, dataEmpresa)
+  public async actualizarEmpresa ({ params, request }:HttpContextContract) {
+    const peticion = await request.validate({
+      schema: esquemaActualizarEmpresa
+    })
+    const logo = peticion.logo ? await MapeadorFicheroAdonis.obtenerFichero(peticion.logo) : undefined
+    const empresa = await this.service.actualizarEmpresa(params.id, {
+      convenio: peticion.convenio,
+      nit: peticion.nit,
+      nombre: peticion.nombre,
+      logo
+    })
     return empresa
   }
 
