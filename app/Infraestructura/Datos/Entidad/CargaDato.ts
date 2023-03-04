@@ -18,6 +18,7 @@ export default class TblCargaDatos extends BaseModel {
   @column({ columnName: 'car_archivo_id' }) public tipoArchivo: string
   @column({ columnName: 'car_registros_encontrados' }) public registrosEncontrados: number
   @column({ columnName: 'car_estado_proceso_id' }) public estadoProceso: number
+  @column({ columnName: 'car_estado_estructura_id' }) public estadoEstructura: number
   @column({ columnName: 'car_registros_fallidos' }) public registrosFallidos: number
   @column({ columnName: 'car_registros_insertados' }) public registrosInsertados: number
   @column({ columnName: 'car_empresa_id' }) public empresa: string
@@ -28,15 +29,13 @@ export default class TblCargaDatos extends BaseModel {
   @column.dateTime({ autoCreate: true, autoUpdate: true, columnName: 'car_actualizacion' }) public updatedAt: DateTime
 
   public establecerCargaArcivoDb(cargaArchivo: CargaArchivo) {
-
-
-    this.id = cargaArchivo.id
     this.nombre = cargaArchivo.nombre
     this.fechaInicial = cargaArchivo.fechaInicial
     this.fechaFinal = cargaArchivo.fechaFinal
     this.usuario = cargaArchivo.usuario
     this.tipoArchivo = cargaArchivo.tipoArchivo
     this.estadoProceso = cargaArchivo.estadoProceso
+    this.estadoEstructura = cargaArchivo.estadoEstructura
     this.registrosEncontrados = cargaArchivo.registrosEncontrados ?? 0
     this.registrosFallidos = cargaArchivo.registrosFallidos ?? 0
     this.registrosInsertados = cargaArchivo.registrosInsertados ?? 0
@@ -51,6 +50,7 @@ export default class TblCargaDatos extends BaseModel {
     this.usuario = cargaArchivo.usuario
     this.tipoArchivo = cargaArchivo.tipoArchivo
     this.estadoProceso = cargaArchivo.estadoProceso
+    this.estadoEstructura = cargaArchivo.estadoEstructura
     this.registrosEncontrados = cargaArchivo.registrosEncontrados ?? 0
     this.registrosFallidos = cargaArchivo.registrosFallidos ?? 0
     this.registrosInsertados = cargaArchivo.registrosInsertados ?? 0
@@ -66,6 +66,7 @@ export default class TblCargaDatos extends BaseModel {
     cargaArchivo.usuario = this.usuario
     cargaArchivo.tipoArchivo = this.tipoArchivo
     cargaArchivo.estadoProceso = this.estadoProceso
+    cargaArchivo.estadoEstructura = this.estadoEstructura
     cargaArchivo.registrosEncontrados = this.registrosEncontrados
     cargaArchivo.registrosFallidos = this.registrosFallidos
     cargaArchivo.registrosInsertados = this.registrosInsertados
@@ -74,8 +75,12 @@ export default class TblCargaDatos extends BaseModel {
     return cargaArchivo
   }
 
-  public actualizarCargaArchivoConId(estado: number) {
+  public actualizarEstadoCargaEstructura(estado: number) {
     this.estadoProceso = estado
+  }
+
+  public actualizarEstadoCargaService(estado: number) {
+    this.estadoEstructura = estado
   }
 
   @belongsTo(() => Tblarchivos, {
@@ -87,11 +92,15 @@ export default class TblCargaDatos extends BaseModel {
 
   @belongsTo(() => TblEstadoCargas, {
     localKey: 'id',
+    foreignKey: 'estadoEstructura'
+  })
+  public estadoCargaEstructura: BelongsTo<typeof TblEstadoCargas>
+
+  @belongsTo(() => TblEstadoCargas, {
+    localKey: 'id',
     foreignKey: 'estadoProceso'
   })
-  public estadoCarga: BelongsTo<typeof TblEstadoCargas>
-
-
+  public estadoCargaProceso: BelongsTo<typeof TblEstadoCargas>
 
 
 }
