@@ -20,7 +20,7 @@ export class ServicioEmpresa{
 
   async guardarEmpresa (
     {nombre, nit, convenio, logo}:
-    {nombre: string, nit: string, convenio?:number, logo?:Fichero}
+    {nombre: string, nit: string, convenio: string, logo?:Fichero}
   ): Promise<Empresa>{
     const empresa = new Empresa()
     empresa.id = uuidv4();
