@@ -29,6 +29,7 @@ export default class TblCargaDatos extends BaseModel {
   @column.dateTime({ autoCreate: true, autoUpdate: true, columnName: 'car_actualizacion' }) public updatedAt: DateTime
 
   public establecerCargaArcivoDb(cargaArchivo: CargaArchivo) {
+    this.id = cargaArchivo.id
     this.nombre = cargaArchivo.nombre
     this.fechaInicial = cargaArchivo.fechaInicial
     this.fechaFinal = cargaArchivo.fechaFinal
