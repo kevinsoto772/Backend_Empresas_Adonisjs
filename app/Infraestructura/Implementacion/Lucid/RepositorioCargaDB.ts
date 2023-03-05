@@ -30,8 +30,6 @@ export class RepositorioCargaDB implements RepositorioCarga {
     const tipoArchivo = await Tblarchivos.query().preload('tipoArchivo').first()
     const tipoDeProceso = tipoArchivo?.tipoArchivo.map( (tipo)=>tipo.valor)[0]
     
-    console.log(tipoDeProceso);
-    
     const [entidad, convenio] = this.validarNombre(archivo.clientName, tipoArchivo);
 
 
@@ -80,7 +78,7 @@ const esCorreta = validatEstructura.validar('890914526', 'IA', path) */
 
   }
 
-  formatearRespuesta = (archivo: string, id: string) => {
+  formatearRespuesta = async (archivo: string, id: string) => {
     const re1 = /:  :/gi;
     const re2 = /::/gi;
     const re = /: :/gi;
@@ -92,22 +90,27 @@ const esCorreta = validatEstructura.validar('890914526', 'IA', path) */
 
     const filas = formateoArchivo.split('\n')
 
+
     let errores: any = [];
 
-    for (const fila of filas) {
+   
+    for await (const fila of filas) {
       const columnas = fila.split('&&')
       let nFila: string = '';
-      for (let i = 0; i < columnas.length; i++) {
-        if (columnas[i] !== '') {
+      let i = 0;
+      for await (const columna of columnas) {
+        if (columna !== '') {
           if (i == 0) {
-            const primerColumna = columnas[i].split('|');
+            const primerColumna = columna.split('|');
             nFila = primerColumna[0];
-            const descripcion = primerColumna[2].split(':')
+           // const descripcion = primerColumna[2].split(':')
+           const descripcion = primerColumna[(primerColumna.length-1)].split(':')           
             errores.push({
               "descripcion": descripcion[1],
               "linea": nFila,
               "variable": ""
             })
+            i++;
           } else {
             //  console.log(i, columnas[i]);
 
@@ -141,16 +144,13 @@ const esCorreta = validatEstructura.validar('890914526', 'IA', path) */
   async archivosCargados(parametros: string): Promise<any> {
     let archivos = {};
     try {
-    
-      
-
       const { entidadId, usuario, pagina = 1, limite = 5 } = JSON.parse(parametros);
     /*   console.log(usuario);
       
       const usuarioN = await this.servicioUsuario.obtenerUsuario(usuario)
       console.log({usuarioN}); */
       
-      const archivosBd = await TblCargaDatos.query().preload('archivo').preload('estadoCarga')
+      const archivosBd = await TblCargaDatos.query().preload('archivo').preload('estadoCargaEstructura').preload('estadoCargaProceso')
         .where('car_empresa_id', entidadId).paginate(pagina, limite)
 
       let arrArchivos: any = []
@@ -160,7 +160,7 @@ const esCorreta = validatEstructura.validar('890914526', 'IA', path) */
           fechaYHora: sql.createdAt,
           nombreArchivo: sql.nombre,
           nombreTipoArchivo: sql.archivo.nombre,
-          estadoValidacion: sql.estadoCarga.nombre
+          estadoValidacion: sql.estadoCargaProceso.nombre
         })
 
       }
@@ -198,9 +198,11 @@ const esCorreta = validatEstructura.validar('890914526', 'IA', path) */
       tipoArchivo: obtenerDatos.tipoArchivo,
       empresa,
       estadoProceso: 1,
+      estadoEstructura:2
     }
     
     let cargaArchivo = new TblCargaDatos();
+    
     cargaArchivo.establecerCargaArcivoDb(datosGuardar)
     cargaArchivo.save()
 
@@ -210,7 +212,7 @@ const esCorreta = validatEstructura.validar('890914526', 'IA', path) */
 
   actualizarEstadoCarga = async (id: string, estado: number) => {
     let cargaEspecifica = await TblCargaDatos.findOrFail(id)
-    cargaEspecifica.actualizarCargaArchivoConId(estado)
+    cargaEspecifica.actualizarEstadoCargaEstructura(estado)
     await cargaEspecifica.save()
   }
 
@@ -249,6 +251,8 @@ const esCorreta = validatEstructura.validar('890914526', 'IA', path) */
     }
     let guardarErr = new TblLogsErrores()
     guardarErr.establecerLogErroresDb(datosGuardar)
+    console.log(guardarErr);
+    
     await guardarErr.save()
     return this.actualizarEstadoCarga(idCarga, 3)
   }
@@ -300,7 +304,7 @@ const esCorreta = validatEstructura.validar('890914526', 'IA', path) */
       const { usuario, pagina = 1, limite = 5, frase } = JSON.parse(parametros);
 
 
-      const archivosBd = await TblCargaDatos.query().preload('archivo').preload('estadoCarga')
+      const archivosBd = await TblCargaDatos.query().preload('archivo').preload('estadoCargaEstructura').preload('estadoCargaProceso')
         .where('car_usuario_id', usuario).whereILike('car_nombre', `%${frase}%`).paginate(pagina, limite)
 
       let arrArchivos: any = []
@@ -310,7 +314,7 @@ const esCorreta = validatEstructura.validar('890914526', 'IA', path) */
           fechaYHora: sql.createdAt,
           nombreArchivo: sql.nombre,
           nombreTipoArchivo: sql.archivo.nombre,
-          estadoValidacion: sql.estadoCarga.nombre
+          estadoValidacion: sql.estadoCargaProceso.nombre
         })
 
       }
