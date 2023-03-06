@@ -11,6 +11,7 @@ export default class extends BaseSchema {
       table.string('are_tipo',100)
       table.string('are_manual',200)
       table.boolean('are_estado').defaultTo(true)
+      table.json('are_estructura')
       table.timestamp('are_creacion', { useTz: true })
       table.timestamp('are_actualizacion', { useTz: true })
     })

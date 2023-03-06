@@ -35,6 +35,7 @@ export default class ControladorCarga {
       let token = request.header('Authorization').split(' ')[1]
       const {documento} = ServicioAutenticacionJWT.obtenerPayload(token)
       datos['usuario'] = documento
+     // const empresa = 
       //const arrNombre = archivo.clientName.split('_');
      /*  const tipoDeProceso = await Tblarchivos.find(datos.tipoArchivo)
     if( tipoDeProceso?.prefijoArchivo !== arrNombre[0]){
