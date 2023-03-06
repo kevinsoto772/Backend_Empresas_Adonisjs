@@ -1,6 +1,5 @@
 /* eslint-disable @typescript-eslint/explicit-member-accessibility */
 import { RepositorioCarga } from 'App/Dominio/Repositorios/RepositorioCarga'
-/* import { validador } from '../../Utils/ValidadorArchivo' */
 import Env from "@ioc:Adonis/Core/Env"
 import axios from 'axios';
 import TblCargaDatos from '../../Datos/Entidad/CargaDato';
@@ -9,72 +8,131 @@ import Tblarchivos from 'App/Infraestructura/Datos/Entidad/Archivo';
 import TblLogsErrores from '../../Datos/Entidad/LogErrores';
 import { LogErrores } from '../../../Dominio/Datos/Entidades/LogErrores';
 import { generarJsonValidaciones } from 'App/Infraestructura/Utils/GenerarJsonValidaciones';
-/* import { UsuarioEmpresa } from 'App/Dominio/Datos/Entidades/UsuarioEmpresa';
-import { UsuarioNovafianza } from '../../../Dominio/Datos/Entidades/UsuarioNovafianza'; */
 import { ServicioUsuario } from "App/Dominio/Datos/Servicios/ServicioUsuario";
 import { RepositorioUsuarioNovafianzaDB } from './RepositorioUsuarioNovafianzaDB';
 import { RepositorioUsuarioEmpresaDB } from './RepositorioUsuarioEmpresaDB';
 import { ValidarEstructura } from '../../../Dominio/Carga/ValidarEstructura';
+import TblEmpresas from '../../Datos/Entidad/Empresa';
+import TblArchivosEmpresas from '../../Datos/Entidad/ArchivoEmpresa';
 const fs = require('fs')
 export class RepositorioCargaDB implements RepositorioCarga {
   private servicioUsuario = new ServicioUsuario(new RepositorioUsuarioNovafianzaDB(), new RepositorioUsuarioEmpresaDB())
 
   async procesarArchivo(archivo: any, datos: string): Promise<void> {
-    //Validar estructura
-
-    
-    
-
+    let errores: any = [];
+    let issues: any[] = [];
     const { usuario, ...datosCarga } = JSON.parse(datos);
-    //const tipoDeProceso = await Tblarchivos.find(datosCarga.tipoArchivo)    
-    const tipoArchivo = await Tblarchivos.query().preload('tipoArchivo').first()
-    const tipoDeProceso = tipoArchivo?.tipoArchivo.map( (tipo)=>tipo.valor)[0]
-    
-    const [entidad, convenio] = this.validarNombre(archivo.clientName, tipoArchivo);
+
+    // llamar a la funcion para guardar el estado de la carga
+    const idDatosGuardados = await this.guardarCarga(datos, archivo.clientName);
+
+    const tipoArchivo = await Tblarchivos.query().preload('tipoArchivo').where('arc_id',datosCarga.tipoArchivo ).first()
+    if(!tipoArchivo){
+      errores.push({
+        "descripcion": 'El archivo no existe en la base de datos',
+        "linea": 0,
+        "variable": ''
+      })
+      this.guardarErrores(idDatosGuardados, errores, '1')
+      throw new Error("guardar error");      
+    }
+
+    const [entidad, convenio] = this.validarNombre(archivo.clientName, tipoArchivo);     
+
+    const empresa = await TblEmpresas.findBy('emp_nit', entidad)
+    if(!empresa){
+      errores.push({
+        "descripcion": 'El archivo no existe en la base de datos',
+        "linea": 0,
+        "variable": ''
+      })
+      this.guardarErrores(idDatosGuardados, errores, '1')
+      throw new Error("guardar error");
+    }
 
 
-
-
-     // llamar a la funcion para guardar el estado de la carga
-     const idDatosGuardados = await this.guardarCarga(datos, archivo.clientName);
+    const tipoDeProceso = tipoArchivo.tipoArchivo.map( (tipo)=>tipo.valor)[0]
     
     //Carga de archivo
     await archivo.moveToDisk('./', { name: archivo.clientName });
     const path = `./uploads/${archivo.clientName}`;
   
     //Validar estructura
-   /*  const validatEstructura = new ValidarEstructura();
-const esCorreta = validatEstructura.validar('890914526', 'IA', path) */
+    const validatEstructura = new ValidarEstructura();
+   // const  {esCorrecta}  = await validatEstructura.validar(entidad, tipoArchivo, path, empresa.id, idDatosGuardados)
+
+
+    const archivosEmpresa = await TblArchivosEmpresas.query().where({ 'are_archivo_id': tipoArchivo.id, 'are_empresa_id': empresa.id }).first()
+
+    if (!archivosEmpresa) {
+      errores.push({
+        "descripcion": 'El archivo no existe en la base de datos',
+        "linea": 0,
+        "variable": ''
+      })
+      this.guardarErrores(idDatosGuardados, errores, '1')
+      throw new Error("guardar error");
+    }
+
+    const estructuraJson = (archivosEmpresa.json) ?? {};
+    if (Object.keys(estructuraJson).length == 0) {
+      errores.push({
+        "descripcion": 'No existe una estructura de validacion para este archivo',
+        "linea": 0,
+        "variable": ''
+      })
+      this.guardarErrores(idDatosGuardados, errores, '1')
+      throw new Error("guardar error");
+    }
+
+    const campos = estructuraJson['Campos']
+
+    const archivoTxt = await fs.createReadStream(path, "utf8")
+    await archivoTxt.on('data', async (chunk) => {
+
+      const archivoArreglo = chunk.split('\r\n')
+
+      await validatEstructura.validarFilas(archivoArreglo, campos, errores, issues);
+      
+      if (errores.length != 0) {
+        this.guardarErrores(idDatosGuardados, errores, '1')      
+        
+      }
+      if (errores.length == 0) {
+        const archivoBase64 = fs.readFileSync(path, { encoding: "base64" });
+    
+        //Validacion de datos
+        try {
+          const data = {
+            "pEntidad": entidad,
+            "pConvenio": convenio,
+            "pFechaInicio": datosCarga.fechaInicial,
+            "pFechaFin": datosCarga.fechaFinal,
+            "pTipoProceso": tipoArchivo.prefijo,
+            "pRutaArchivo": "",
+            "pArchivoBase64": archivoBase64
+          }
+          const headers = {
+            'Content-Type': 'application/json'
+          }
+          const respuesta = await axios.post(`${Env.get('URL_CARGA')}/${tipoDeProceso}/api/ValidarArchivo/ValidarCargarArchivo`, data, { headers })
+    
+    
+          this.validarRespuesta(respuesta.data, idDatosGuardados);
+    
+        } catch (error) {
+          console.log(error);
+    
+        }
+      }
+
+
+    });      
+
 
 
 //si pasa la validacion de estructura
 
-
-    const archivoBase64 = fs.readFileSync(path, { encoding: "base64" });
-    
-    //Validacion de datos
-    try {
-      const data = {
-        "pEntidad": entidad,
-        "pConvenio": convenio,
-        "pFechaInicio": datosCarga.fechaInicial,
-        "pFechaFin": datosCarga.fechaFinal,
-        "pTipoProceso": tipoArchivo?.prefijo,
-        "pRutaArchivo": "",
-        "pArchivoBase64": archivoBase64
-      }
-      const headers = {
-        'Content-Type': 'application/json'
-      }
-      const respuesta = await axios.post(`${Env.get('URL_CARGA')}/${tipoDeProceso}/api/ValidarArchivo/ValidarCargarArchivo`, data, { headers })
-
-
-      this.validarRespuesta(respuesta.data, idDatosGuardados);
-
-    } catch (error) {
-      console.log(error);
-
-    }
 
   }
 
@@ -134,7 +192,7 @@ const esCorreta = validatEstructura.validar('890914526', 'IA', path) */
     }
 
 
-    this.guardarErrores(id, errores)
+    this.guardarErrores(id, errores, '2')
 
 
 
@@ -197,8 +255,8 @@ const esCorreta = validatEstructura.validar('890914526', 'IA', path) */
       usuario: obtenerDatos.usuario,
       tipoArchivo: obtenerDatos.tipoArchivo,
       empresa,
-      estadoProceso: 1,
-      estadoEstructura:2
+      estadoProceso: 0,
+      estadoEstructura:1
     }
     
     let cargaArchivo = new TblCargaDatos();
@@ -212,7 +270,7 @@ const esCorreta = validatEstructura.validar('890914526', 'IA', path) */
 
   actualizarEstadoCarga = async (id: string, estado: number) => {
     let cargaEspecifica = await TblCargaDatos.findOrFail(id)
-    cargaEspecifica.actualizarEstadoCargaEstructura(estado)
+    cargaEspecifica.actualizarEstadoCargaService(estado)
     await cargaEspecifica.save()
   }
 
@@ -241,12 +299,12 @@ const esCorreta = validatEstructura.validar('890914526', 'IA', path) */
 
   }
 
-  guardarErrores = async (idCarga: string, errores: []) => {
+  guardarErrores = async (idCarga: string, errores: [], tipo : string) => {
     let datosGuardar: LogErrores = {
       id: uuidv4(),
       error: JSON.stringify(errores),
       idCarga,
-      tipo: '1',
+      tipo: tipo,
       estado: true
     }
     let guardarErr = new TblLogsErrores()

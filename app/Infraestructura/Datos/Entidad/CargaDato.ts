@@ -77,11 +77,11 @@ export default class TblCargaDatos extends BaseModel {
   }
 
   public actualizarEstadoCargaEstructura(estado: number) {
-    this.estadoProceso = estado
+    this.estadoEstructura = estado
   }
 
   public actualizarEstadoCargaService(estado: number) {
-    this.estadoEstructura = estado
+    this.estadoProceso = estado
   }
 
   @belongsTo(() => Tblarchivos, {
