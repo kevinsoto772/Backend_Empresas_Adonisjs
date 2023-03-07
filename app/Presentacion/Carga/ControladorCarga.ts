@@ -57,14 +57,14 @@ export default class ControladorCarga {
     let token: any = request.header('Authorization')?.split(' ')[1]
     const {documento} = ServicioAutenticacionJWT.obtenerPayload(token)
     datos['usuario'] = documento
-        
+      
     const usuario = await this.servicioUsuario.obtenerUsuario(datos.usuario)
+    if(!datos.entidadId && usuario['idEmpresa']) datos.entidadId = usuario['idEmpresa'] 
+
     if(usuario['idEmpresa'] && datos.entidadId != usuario['idEmpresa']){
       return response.status(400).send({ mensaje: 'No tiene autorizacion para realizar esta consulta' })
     }
     
-
-
     const archivos = await this.servicio.archivosCargados(JSON.stringify(datos))
     if (Object.keys(archivos).length !== 0) {
       response.status(202).send(archivos)
