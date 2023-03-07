@@ -129,7 +129,7 @@ export class RepositorioCargaDB implements RepositorioCarga {
           const respuesta = await axios.post(`${Env.get('URL_CARGA')}/${tipoDeProceso}/api/ValidarArchivo/ValidarCargarArchivo`, data, { headers })
 
 
-          this.validarRespuesta(respuesta.data, idDatosGuardados);
+          this.validarRespuesta(respuesta.data, idDatosGuardados, data, tipoDeProceso);
 
         } catch (error) {
           console.log(error);
@@ -295,11 +295,21 @@ export class RepositorioCargaDB implements RepositorioCarga {
     return [entidad, convenio];
   }
 
-  validarRespuesta = (respuestaAxio: any, idCarga: string) => {
+  validarRespuesta = async(respuestaAxio: any, idCarga: string, data:any, tipoDeProceso:string) => {
     const idRetorno = respuestaAxio.RespuestaMetodo.IdRetorno;
     const archivoLog = respuestaAxio.ArchivoLog;
     if (idRetorno === 0) {
       if (archivoLog === '') {
+        try {
+          const headers = {
+            'Content-Type': 'application/json'
+          }
+          await axios.post(`${Env.get('URL_CARGA')}/${tipoDeProceso}/api/SubirCertificados/SubirCertificados`, data, { headers })
+          
+        } catch (error) {
+          console.log(error);          
+        }
+
         return this.actualizarEstadoCarga(idCarga, 2)
       } else if (archivoLog !== '') {
         const archivoRecibido = Buffer.from(archivoLog, "base64")
