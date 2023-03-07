@@ -3,7 +3,7 @@ import { DateTime } from 'luxon';
 import { BaseModel, column, belongsTo, BelongsTo, hasMany, HasMany } from '@ioc:Adonis/Lucid/Orm';
 import { Archivo } from 'App/Dominio/Datos/Entidades/Archivo';
 import TblTipoArchivos from './TipoArchivo';
-export class TblArchivos extends BaseModel {
+export default class TblArchivos extends BaseModel {
   @column({ isPrimary: true, columnName: 'arc_id' })
   public id: string
 
