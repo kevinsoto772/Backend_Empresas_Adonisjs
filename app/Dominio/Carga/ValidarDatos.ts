@@ -21,7 +21,7 @@ export class ValidarDatos {
         this.validarDate(columna, campo, errors, issus)
         break;
 
-    }
+    }    
 
     return { errors, issus }
   }
@@ -57,6 +57,7 @@ export class ValidarDatos {
 
   validarNumber = (item: string, campo: ColumnaArchivo, errors: any[], issus: any[]) => {
 
+
     if (!this.isNumber(item)) {
       if (campo.Obligatorio == 'S') {
 
@@ -69,7 +70,7 @@ export class ValidarDatos {
         errors.push(error);
 
       }
-      if (campo.Obligatorio == 'N') {
+      if (campo.Obligatorio == 'N') {        
         const alerta = {
           'alerta': "El campo no es un número o está vacío",
           'datoOriginal': item,

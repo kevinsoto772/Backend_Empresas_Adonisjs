@@ -3,7 +3,7 @@
 
 export class LogAdvertencia{
   id: string;
-  advertencia: JSON;
+  advertencia: string;
   idCarga: string;
   estado: boolean;
   almacenado: boolean;

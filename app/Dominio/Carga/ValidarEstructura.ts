@@ -110,9 +110,7 @@ export class ValidarEstructura {
 
   }
 
-  guardarErrores = async (idCarga: string, errores: []) => {
-    console.log(errores);
-
+/*   guardarErrores = async (idCarga: string, errores: []) => {
     let datosGuardar: LogErrores = {
       id: uuidv4(),
       error: JSON.stringify(errores),
@@ -131,6 +129,6 @@ export class ValidarEstructura {
     cargaEspecifica.actualizarEstadoCargaEstructura(estado)
     await cargaEspecifica.save()
   }
-
+ */
 
 }
