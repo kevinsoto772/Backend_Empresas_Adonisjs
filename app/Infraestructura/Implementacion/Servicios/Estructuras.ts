@@ -5,8 +5,8 @@ export class Estructura {
   renderizar = async () => {
     const { ArchivoEmpresa } = await import('App/Dominio/Datos/Entidades/ArchivoEmpresa');
     const { TblArchivosEmpresas } = await import('App/Infraestructura/Datos/Entidad/ArchivoEmpresa')
-    const { TblEmpresas } = await import('App/Infraestructura/Datos/Entidad/Empresa')
-    const { TblArchivos } = await import('App/Infraestructura/Datos/Entidad/Archivo')
+    const  TblEmpresas  = (await import('App/Infraestructura/Datos/Entidad/Empresa')).default
+    const  TblArchivos  = (await import('App/Infraestructura/Datos/Entidad/Archivo')).default
     const archivosEmpresas: Array<InstanceType<typeof ArchivoEmpresa>> = await TblArchivosEmpresas.query()
 
     if (archivosEmpresas.length >= 1) {

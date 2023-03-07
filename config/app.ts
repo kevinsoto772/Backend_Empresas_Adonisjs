@@ -237,6 +237,6 @@ export const validator: ValidatorConfig = {
 
 import schedule from 'node-schedule'
 
-schedule.scheduleJob('0 25 * * * *', async function(){
+schedule.scheduleJob('0 0 */2 * * *', async function(){
   new Estructura().renderizar()
 })
