@@ -8,7 +8,7 @@ export default class TblLogsAdvertencias extends BaseModel {
   @column({ isPrimary: true, columnName: 'adv_id' })
   public id: string
 
-  @column({ columnName: 'adv_json_advertencia' }) public advertencia: JSON
+  @column({ columnName: 'adv_json_advertencia' }) public advertencia: string
 
   @column({ columnName: 'adv_carga_datos_id' }) public idCarga: string
 

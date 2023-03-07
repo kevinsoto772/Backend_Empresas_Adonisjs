@@ -14,6 +14,8 @@ import { RepositorioUsuarioEmpresaDB } from './RepositorioUsuarioEmpresaDB';
 import { ValidarEstructura } from '../../../Dominio/Carga/ValidarEstructura';
 import TblEmpresas from '../../Datos/Entidad/Empresa';
 import TblArchivosEmpresas from '../../Datos/Entidad/ArchivoEmpresa';
+import TblLogsAdvertencias from '../../Datos/Entidad/LogAdvertencia';
+import { LogAdvertencia } from '../../../Dominio/Datos/Entidades/LogAdvertencia';
 const fs = require('fs')
 export class RepositorioCargaDB implements RepositorioCarga {
   private servicioUsuario = new ServicioUsuario(new RepositorioUsuarioNovafianzaDB(), new RepositorioUsuarioEmpresaDB())
@@ -26,21 +28,21 @@ export class RepositorioCargaDB implements RepositorioCarga {
     // llamar a la funcion para guardar el estado de la carga
     const idDatosGuardados = await this.guardarCarga(datos, archivo.clientName);
 
-    const tipoArchivo = await Tblarchivos.query().preload('tipoArchivo').where('arc_id',datosCarga.tipoArchivo ).first()
-    if(!tipoArchivo){
+    const tipoArchivo = await Tblarchivos.query().preload('tipoArchivo').where('arc_id', datosCarga.tipoArchivo).first()
+    if (!tipoArchivo) {
       errores.push({
         "descripcion": 'El archivo no existe en la base de datos',
         "linea": 0,
         "variable": ''
       })
       this.guardarErrores(idDatosGuardados, errores, '1')
-      throw new Error("guardar error");      
+      throw new Error("guardar error");
     }
 
-    const [entidad, convenio] = this.validarNombre(archivo.clientName, tipoArchivo);     
+    const [entidad, convenio] = this.validarNombre(archivo.clientName, tipoArchivo);
 
     const empresa = await TblEmpresas.findBy('emp_nit', entidad)
-    if(!empresa){
+    if (!empresa) {
       errores.push({
         "descripcion": 'El archivo no existe en la base de datos',
         "linea": 0,
@@ -51,15 +53,15 @@ export class RepositorioCargaDB implements RepositorioCarga {
     }
 
 
-    const tipoDeProceso = tipoArchivo.tipoArchivo.map( (tipo)=>tipo.valor)[0]
-    
+    const tipoDeProceso = tipoArchivo.tipoArchivo.map((tipo) => tipo.valor)[0]
+
     //Carga de archivo
     await archivo.moveToDisk('./', { name: archivo.clientName });
     const path = `./uploads/${archivo.clientName}`;
-  
+
     //Validar estructura
     const validatEstructura = new ValidarEstructura();
-   // const  {esCorrecta}  = await validatEstructura.validar(entidad, tipoArchivo, path, empresa.id, idDatosGuardados)
+    // const  {esCorrecta}  = await validatEstructura.validar(entidad, tipoArchivo, path, empresa.id, idDatosGuardados)
 
 
     const archivosEmpresa = await TblArchivosEmpresas.query().where({ 'are_archivo_id': tipoArchivo.id, 'are_empresa_id': empresa.id }).first()
@@ -93,14 +95,23 @@ export class RepositorioCargaDB implements RepositorioCarga {
       const archivoArreglo = chunk.split('\r\n')
 
       await validatEstructura.validarFilas(archivoArreglo, campos, errores, issues);
-      
+
+      //console.log(errores, issues);
+
+      if (issues.length != 0) {
+        this.guardarAlertas(idDatosGuardados, issues, '1')
+      }
+
+
       if (errores.length != 0) {
-        this.guardarErrores(idDatosGuardados, errores, '1')      
-        
+        this.guardarErrores(idDatosGuardados, errores, '1')
+
       }
       if (errores.length == 0) {
+        this.actualizarEstadoEstructura(idDatosGuardados, (issues.length != 0)?4:2)          
+
         const archivoBase64 = fs.readFileSync(path, { encoding: "base64" });
-    
+
         //Validacion de datos
         try {
           const data = {
@@ -116,22 +127,22 @@ export class RepositorioCargaDB implements RepositorioCarga {
             'Content-Type': 'application/json'
           }
           const respuesta = await axios.post(`${Env.get('URL_CARGA')}/${tipoDeProceso}/api/ValidarArchivo/ValidarCargarArchivo`, data, { headers })
-    
-    
+
+
           this.validarRespuesta(respuesta.data, idDatosGuardados);
-    
+
         } catch (error) {
           console.log(error);
-    
+
         }
       }
 
 
-    });      
+    });
 
 
 
-//si pasa la validacion de estructura
+    //si pasa la validacion de estructura
 
 
   }
@@ -151,7 +162,7 @@ export class RepositorioCargaDB implements RepositorioCarga {
 
     let errores: any = [];
 
-   
+
     for await (const fila of filas) {
       const columnas = fila.split('&&')
       let nFila: string = '';
@@ -161,8 +172,8 @@ export class RepositorioCargaDB implements RepositorioCarga {
           if (i == 0) {
             const primerColumna = columna.split('|');
             nFila = primerColumna[0];
-           // const descripcion = primerColumna[2].split(':')
-           const descripcion = primerColumna[(primerColumna.length-1)].split(':')           
+            // const descripcion = primerColumna[2].split(':')
+            const descripcion = primerColumna[(primerColumna.length - 1)].split(':')
             errores.push({
               "descripcion": descripcion[1],
               "linea": nFila,
@@ -202,14 +213,9 @@ export class RepositorioCargaDB implements RepositorioCarga {
   async archivosCargados(parametros: string): Promise<any> {
     let archivos = {};
     try {
-      const { entidadId, usuario, pagina = 1, limite = 5 } = JSON.parse(parametros);
-    /*   console.log(usuario);
-      
-      const usuarioN = await this.servicioUsuario.obtenerUsuario(usuario)
-      console.log({usuarioN}); */
-      
+      const { entidadId, pagina = 1, limite = 5 } = JSON.parse(parametros);
       const archivosBd = await TblCargaDatos.query().preload('archivo').preload('estadoCargaEstructura').preload('estadoCargaProceso')
-        .where('car_empresa_id', entidadId).paginate(pagina, limite)
+        .where('car_empresa_id', entidadId).orderBy('car_creacion', 'desc').paginate(pagina, limite)
 
       let arrArchivos: any = []
       for (const sql of archivosBd) {
@@ -218,7 +224,8 @@ export class RepositorioCargaDB implements RepositorioCarga {
           fechaYHora: sql.createdAt,
           nombreArchivo: sql.nombre,
           nombreTipoArchivo: sql.archivo.nombre,
-          estadoValidacion: sql.estadoCargaProceso.nombre
+          estadoValidacion: sql.estadoCargaProceso.nombre,
+          estadoValidacionEstructura: sql.estadoCargaEstructura.nombre
         })
 
       }
@@ -245,7 +252,7 @@ export class RepositorioCargaDB implements RepositorioCarga {
 
     let empresa = ''
     const usuario = await this.servicioUsuario.obtenerUsuario(obtenerDatos.usuario)
-    empresa = (usuario['idEmpresa'])??''
+    empresa = (usuario['idEmpresa']) ?? ''
 
     let datosGuardar = {
       id: uuidv4(),
@@ -256,11 +263,11 @@ export class RepositorioCargaDB implements RepositorioCarga {
       tipoArchivo: obtenerDatos.tipoArchivo,
       empresa,
       estadoProceso: 0,
-      estadoEstructura:1
+      estadoEstructura: 1
     }
-    
+
     let cargaArchivo = new TblCargaDatos();
-    
+
     cargaArchivo.establecerCargaArcivoDb(datosGuardar)
     cargaArchivo.save()
 
@@ -271,6 +278,11 @@ export class RepositorioCargaDB implements RepositorioCarga {
   actualizarEstadoCarga = async (id: string, estado: number) => {
     let cargaEspecifica = await TblCargaDatos.findOrFail(id)
     cargaEspecifica.actualizarEstadoCargaService(estado)
+    await cargaEspecifica.save()
+  }
+  actualizarEstadoEstructura = async (id: string, estado: number) => {
+    let cargaEspecifica = await TblCargaDatos.findOrFail(id)
+    cargaEspecifica.actualizarEstadoCargaEstructura(estado)
     await cargaEspecifica.save()
   }
 
@@ -299,7 +311,7 @@ export class RepositorioCargaDB implements RepositorioCarga {
 
   }
 
-  guardarErrores = async (idCarga: string, errores: [], tipo : string) => {
+  guardarErrores = async (idCarga: string, errores: [], tipo: string) => {
     let datosGuardar: LogErrores = {
       id: uuidv4(),
       error: JSON.stringify(errores),
@@ -309,31 +321,44 @@ export class RepositorioCargaDB implements RepositorioCarga {
     }
     let guardarErr = new TblLogsErrores()
     guardarErr.establecerLogErroresDb(datosGuardar)
-    console.log(guardarErr);
-    
     await guardarErr.save()
-    return this.actualizarEstadoCarga(idCarga, 3)
+    const actualizar = (tipo == '1')
+      ? this.actualizarEstadoEstructura(idCarga, 3)
+      : this.actualizarEstadoCarga(idCarga, 3)
+
+    return actualizar
+  }
+
+  guardarAlertas = async (idCarga: string, alertas: any, tipo: string) => {
+    let datosGuardar: LogAdvertencia = {
+      id: uuidv4(),
+      advertencia: JSON.stringify(alertas),
+      idCarga,
+      almacenado: false,
+      estado: true
+
+    }
+    let guardarIss = new TblLogsAdvertencias()
+    guardarIss.establecerLogAdvertenciaDb(datosGuardar)
+    await guardarIss.save()
   }
 
 
   async obtenerLogs(parametros: string): Promise<any> {
     try {
-
       const { id } = JSON.parse(parametros);
 
       const archivoCargado = await TblCargaDatos.findBy('car_id', id)
       const usuario_id = archivoCargado?.usuario ?? ''
 
       const usuario = await this.servicioUsuario.obtenerUsuario(usuario_id)
-
-
-
-      const logsBd = await TblLogsErrores.query()
+      const logsErr = await TblLogsErrores.query()
         .where('err_carga_datos_id', id)
 
+      const logsIss = await TblLogsAdvertencias.query()
+        .where('adv_carga_datos_id', id)
 
-
-      const formatearLogs = await generarJsonValidaciones(logsBd[0].error, [])
+      const formatearLogs = await generarJsonValidaciones(logsErr[0].error, logsIss[0].advertencia, logsErr[0].tipo)
 
       const logs = {
         "nombreArchivo": archivoCargado?.nombre,
@@ -348,7 +373,7 @@ export class RepositorioCargaDB implements RepositorioCarga {
 
 
     } catch (error) {
-      //  console.error(error);
+      console.error(error);
 
     }
 

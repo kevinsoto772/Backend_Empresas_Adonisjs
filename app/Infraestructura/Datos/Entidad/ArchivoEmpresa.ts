@@ -6,7 +6,7 @@ import { ArchivoEmpresa } from 'App/Dominio/Datos/Entidades/ArchivoEmpresa';
 import TblArchivos from './Archivo';
 import TblEmpresas from './Empresa';
 
-export default class TblArchivosEmpresas extends BaseModel {
+export class TblArchivosEmpresas extends BaseModel {
   @column({ isPrimary: true, columnName: 'are_id' })
   public id: string
 
