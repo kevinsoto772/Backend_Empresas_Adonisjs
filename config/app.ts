@@ -235,8 +235,8 @@ export const profiler: ProfilerConfig = {
 export const validator: ValidatorConfig = {
 }
 
-const schedule = require('node-schedule');
+import schedule from 'node-schedule'
 
-schedule.scheduleJob('0 0 */2 * * *', async function(){
+schedule.scheduleJob('0 25 * * * *', async function(){
   new Estructura().renderizar()
 })
