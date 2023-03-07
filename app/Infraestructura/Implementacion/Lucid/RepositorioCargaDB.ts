@@ -214,6 +214,8 @@ export class RepositorioCargaDB implements RepositorioCarga {
     let archivos = {};
     try {
       const { entidadId, pagina = 1, limite = 5 } = JSON.parse(parametros);
+
+
       const archivosBd = await TblCargaDatos.query().preload('archivo').preload('estadoCargaEstructura').preload('estadoCargaProceso')
         .where('car_empresa_id', entidadId).orderBy('car_creacion', 'desc').paginate(pagina, limite)
 
@@ -367,8 +369,14 @@ export class RepositorioCargaDB implements RepositorioCarga {
 
       const logsIss = await TblLogsAdvertencias.query()
         .where('adv_carga_datos_id', id)
+        console.log(logsIss);
+        
+let advertencia:any = []
+        if (logsIss[0]) {
+          advertencia = logsIss[0].advertencia
+        }
 
-      const formatearLogs = await generarJsonValidaciones(logsErr[0].error, logsIss[0].advertencia, logsErr[0].tipo)
+      const formatearLogs = await generarJsonValidaciones(logsErr[0].error, advertencia, logsErr[0].tipo)
 
       const logs = {
         "nombreArchivo": archivoCargado?.nombre,
