@@ -28,6 +28,15 @@ export class RepositorioCargaDB implements RepositorioCarga {
     // llamar a la funcion para guardar el estado de la carga
     const idDatosGuardados = await this.guardarCarga(datos, archivo.clientName);
 
+    this.inicioValidaciones(idDatosGuardados, datosCarga, usuario, archivo, datos);
+    //si pasa la validacion de estructura
+
+
+  }
+
+  inicioValidaciones = async(idDatosGuardados, datosCarga, usuario, archivo, datos) =>{
+    let errores: any = [];
+    let issues: any[] = [];
     const tipoArchivo = await Tblarchivos.query().preload('tipoArchivo').where('arc_id', datosCarga.tipoArchivo).first()
     if (!tipoArchivo) {
       errores.push({
@@ -139,12 +148,6 @@ export class RepositorioCargaDB implements RepositorioCarga {
 
 
     });
-
-
-
-    //si pasa la validacion de estructura
-
-
   }
 
   formatearRespuesta = async (archivo: string, id: string) => {
