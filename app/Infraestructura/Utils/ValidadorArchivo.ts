@@ -1,5 +1,5 @@
 /* eslint-disable no-array-constructor */
-const fs = require('fs')
+import fs from "fs";
 const validador = async (path: string) => {
   const archivo = fs.readFileSync(path).toString()
   const lineaDatos = archivo.split('\r\n')

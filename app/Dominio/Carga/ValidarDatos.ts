@@ -2,23 +2,23 @@ import { ColumnaArchivo } from '../Dto/ColumnaArchivo';
 import moment from 'moment';
 export class ValidarDatos {
 
-  datos = async (columna: string, campo: any) => {
+  datos = async (columna: string, campo: any, linea: number) => {
     let errors: any[] = []
     let issus: any[] = []
 
     switch (campo.TipoDato) {
       case "String":
-        this.validarString(columna, campo, errors, issus)
+        this.validarString(columna, campo, errors, issus, linea)
         break;
 
       case "Number":
 
-        this.validarNumber(columna, campo, errors, issus)
+        this.validarNumber(columna, campo, errors, issus, linea)
         break;
 
       case "Date":
 
-        this.validarDate(columna, campo, errors, issus)
+        this.validarDate(columna, campo, errors, issus, linea)
         break;
 
     }    
@@ -26,13 +26,15 @@ export class ValidarDatos {
     return { errors, issus }
   }
 
-  validarString = (item: string, campo: ColumnaArchivo, errors: any[], issus: any[]) => {
+  validarString = (item: string, campo: ColumnaArchivo, errors: any[], issus: any[], linea:number) => {
     //TODO: VALIDAR MAX-MIN length
     if (item.length == 0 && campo.Obligatorio == 'S') {
       const error = {
-        'error': "El campo no puede ser vacío",
+        'descripcion': "El campo no puede ser vacío",
         'datoOriginal': item,
-        'variable': campo.NombreCampo
+        'variable': campo.NombreCampo,
+        "linea": linea,
+        
 
       }
       errors.push(error);
@@ -43,7 +45,8 @@ export class ValidarDatos {
       const alerta = {
         'alerta': "El campo se encuentra vacío",
         'datoOriginal': item,
-        'variable': campo.NombreCampo
+        'variable': campo.NombreCampo,
+        "linea": linea,
       }
 
       issus.push(alerta);
@@ -55,16 +58,17 @@ export class ValidarDatos {
   isNumber = (n: string | number): boolean =>
     !isNaN(parseFloat(String(n))) && isFinite(Number(n));
 
-  validarNumber = (item: string, campo: ColumnaArchivo, errors: any[], issus: any[]) => {
+  validarNumber = (item: string, campo: ColumnaArchivo, errors: any[], issus: any[], linea:number) => {
 
 
     if (!this.isNumber(item)) {
       if (campo.Obligatorio == 'S') {
 
         const error = {
-          'error': "El campo no es un número o está vacío",
+          'descripcion': "El campo no es un número o está vacío",
           'datoOriginal': item,
-          'variable': campo.NombreCampo
+          'variable': campo.NombreCampo,
+          "linea": linea,
 
         }
         errors.push(error);
@@ -74,7 +78,8 @@ export class ValidarDatos {
         const alerta = {
           'alerta': "El campo no es un número o está vacío",
           'datoOriginal': item,
-          'variable': campo.NombreCampo
+          'variable': campo.NombreCampo,
+          "linea": linea,
 
         }
 
@@ -87,17 +92,18 @@ export class ValidarDatos {
 
   }
 
-  validarDate = (item: string, campo: ColumnaArchivo, errors: any[], issus: any[]) => {
+  validarDate = (item: string, campo: ColumnaArchivo, errors: any[], issus: any[], linea:number) => {
     const formats = [campo.FormatoFecha];
     const dateMomentIsValid = moment(item, formats, true).isValid();
 
     if (!dateMomentIsValid) {
       if (campo.Obligatorio == 'S') {
         const error = {
-          'error': "El dato debe ser una fecha",
+          'descripcion': "El dato debe ser una fecha",
           'datoOriginal': item,
           'formatosPermitidos': campo.FormatoFecha,
-          'variable': campo.NombreCampo
+          'variable': campo.NombreCampo,
+          "linea": linea,
 
         }
         errors.push(error);
@@ -106,11 +112,11 @@ export class ValidarDatos {
 
       if (campo.Obligatorio == 'N') {
         const alerta = {
-          'error': "El dato debe ser una fecha",
+          'descripcion': "El dato debe ser una fecha",
           'datoOriginal': item,
           'formatosPermitidos': campo.FormatoFecha,
-          'variable': campo.NombreCampo
-
+          'variable': campo.NombreCampo,
+          "linea": linea,
         }
         issus.push(alerta);
 
