@@ -16,10 +16,16 @@ import TblEmpresas from '../../Datos/Entidad/Empresa';
 import TblArchivosEmpresas from '../../Datos/Entidad/ArchivoEmpresa';
 import TblLogsAdvertencias from '../../Datos/Entidad/LogAdvertencia';
 import { LogAdvertencia } from '../../../Dominio/Datos/Entidades/LogAdvertencia';
+import { EnviadorEmail } from 'App/Dominio/Email/EnviadorEmail';
+import { EmailNotificarCargaArchivo } from 'App/Dominio/Email/Emails/EmailNotificarCargaArchivo';
+import { DateTime } from 'luxon';
+import { EnviadorEmailAdonis } from '../../Email/EnviadorEmailAdonis';
+import { readFile } from 'fs/promises';
 const fs = require('fs')
 export class RepositorioCargaDB implements RepositorioCarga {
   private servicioUsuario = new ServicioUsuario(new RepositorioUsuarioNovafianzaDB(), new RepositorioUsuarioEmpresaDB())
-
+  private enviadorEmail: EnviadorEmail
+  private enviadorEmail2: EnviadorEmail
   async procesarArchivo(archivo: any, datos: string): Promise<void> {
     let errores: any = [];
     let issues: any[] = [];
@@ -34,9 +40,10 @@ export class RepositorioCargaDB implements RepositorioCarga {
 
   }
 
-  inicioValidaciones = async(idDatosGuardados, datosCarga, usuario, archivo, datos) =>{
+  inicioValidaciones = async (idDatosGuardados, datosCarga, usuario, archivo, datos) => {
     let errores: any = [];
     let issues: any[] = [];
+    const usuarioDB = await this.servicioUsuario.obtenerUsuario(usuario)
     const tipoArchivo = await Tblarchivos.query().preload('tipoArchivo').where('arc_id', datosCarga.tipoArchivo).first()
     if (!tipoArchivo) {
       errores.push({
@@ -98,56 +105,88 @@ export class RepositorioCargaDB implements RepositorioCarga {
 
     const campos = estructuraJson['Campos']
 
-    const archivoTxt = await fs.createReadStream(path, "utf8")
-    await archivoTxt.on('data', async (chunk) => {
 
-      const archivoArreglo = chunk.split('\r\n')
-
-      await validatEstructura.validarFilas(archivoArreglo, campos, errores, issues);
-
-      //console.log(errores, issues);
-
-      if (issues.length != 0) {
-        this.guardarAlertas(idDatosGuardados, issues, '1')
-      }
+    /*  const archivoTxt = await fs.createReadStream(path, "utf8")
+     await archivoTxt.on('data', async (chunk) => { */
 
 
-      if (errores.length != 0) {
-        this.guardarErrores(idDatosGuardados, errores, '1')
+    await fs.readFile(path, "utf8", async (err, data) => {
+      if (err) {
+        console.log('error: ', err);
+      } else {
+        const archivoArreglo = data.split('\r\n')
 
-      }
-      if (errores.length == 0) {
-        this.actualizarEstadoEstructura(idDatosGuardados, (issues.length != 0)?4:2)          
+        await validatEstructura.validarFilas(archivoArreglo, campos, errores, issues);
 
-        const archivoBase64 = fs.readFileSync(path, { encoding: "base64" });
+        //console.log(errores, issues);
 
-        //Validacion de datos
-        try {
-          const data = {
-            "pEntidad": entidad,
-            "pConvenio": convenio,
-            "pFechaInicio": datosCarga.fechaInicial,
-            "pFechaFin": datosCarga.fechaFinal,
-            "pTipoProceso": tipoArchivo.prefijo,
-            "pRutaArchivo": "",
-            "pArchivoBase64": archivoBase64
-          }
-          const headers = {
-            'Content-Type': 'application/json'
-          }
-          const respuesta = await axios.post(`${Env.get('URL_CARGA')}/${tipoDeProceso}/api/ValidarArchivo/ValidarCargarArchivo`, data, { headers })
+        if (issues.length != 0) {
+          this.guardarAlertas(idDatosGuardados, issues, '1')
+        }
 
 
-          this.validarRespuesta(respuesta.data, idDatosGuardados, data, tipoDeProceso);
+        if (errores.length != 0) {
+          this.guardarErrores(idDatosGuardados, errores, '1')
 
-        } catch (error) {
-          console.log(error);
+          this.enviadorEmail = new EnviadorEmailAdonis()
+          this.enviadorEmail.enviarTemplate({
+            asunto: 'Archivo Rechazado',
+            de: Env.get('SMTP_USERNAME'),
+            destinatarios: Env.get('EMAIL_TO'),
+            copias: Env.get('EMAIL_CO'),
+            alias: Env.get('EMAIL_ALIAS')
+
+          }, new EmailNotificarCargaArchivo({
+            titulo: 'estructura',
+            fechaCargue: DateTime.now(),
+            nombre: `${usuarioDB.nombre} ${usuarioDB.apellido}`,
+            nombreArchivo: archivo.clientName,
+            numeroRadicado: idDatosGuardados,
+            resultado: 'Falló',
+            tipoArchivo: tipoArchivo.nombre,
+            url: `${Env.get('HOSTING')}/Front-novafianza/dist/admin`
+          }))
+
 
         }
+        if (errores.length == 0) {
+          this.actualizarEstadoEstructura(idDatosGuardados, (issues.length != 0) ? 4 : 2)
+
+          const archivoBase64 = fs.readFileSync(path, { encoding: "base64" });
+
+          //Validacion de datos
+          try {
+            const data = {
+              "pEntidad": entidad,
+              "pConvenio": convenio,
+              "pFechaInicio": datosCarga.fechaInicial,
+              "pFechaFin": datosCarga.fechaFinal,
+              "pTipoProceso": tipoArchivo.prefijo,
+              "pRutaArchivo": "",
+              "pArchivoBase64": archivoBase64
+            }
+            const headers = {
+              'Content-Type': 'application/json'
+            }
+            const respuesta = await axios.post(`${Env.get('URL_CARGA')}/${tipoDeProceso}/api/ValidarArchivo/ValidarCargarArchivo`, data, { headers })
+
+            const datosAdicionales = {
+              tipoArchivo: tipoArchivo.nombre,
+              usuario: `${usuarioDB.nombre} ${usuarioDB.apellido}`,
+              nombreArchivo: archivo.clientName
+            }
+
+            this.validarRespuesta(respuesta.data, idDatosGuardados, data, tipoDeProceso, datosAdicionales);
+
+          } catch (error) {
+            console.log(error);
+
+          }
+        }
       }
+    })
 
-
-    });
+    // });
   }
 
   formatearRespuesta = async (archivo: string, id: string) => {
@@ -300,26 +339,58 @@ export class RepositorioCargaDB implements RepositorioCarga {
     return [entidad, convenio];
   }
 
-  validarRespuesta = async(respuestaAxio: any, idCarga: string, data:any, tipoDeProceso:string) => {
+  validarRespuesta = async (respuestaAxio: any, idCarga: string, data: any, tipoDeProceso: string, datosAdicionales: any) => {
     const idRetorno = respuestaAxio.RespuestaMetodo.IdRetorno;
     const archivoLog = respuestaAxio.ArchivoLog;
+
     if (idRetorno === 0) {
+      let asunto = '';
+      let mensaje = '';
       if (archivoLog === '') {
+        //Enviar correo
+        asunto = 'Archivo Aprobado'
+        mensaje = 'Exitoso'
         try {
           const headers = {
             'Content-Type': 'application/json'
           }
           await axios.post(`${Env.get('URL_CARGA')}/${tipoDeProceso}/api/SubirCertificados/SubirCertificados`, data, { headers })
-          
+
         } catch (error) {
-          console.log(error);          
+          console.log(error);
         }
 
         return this.actualizarEstadoCarga(idCarga, 2)
-      } else if (archivoLog !== '') {
+      }
+
+      if (archivoLog !== '') {
+        asunto = 'Archivo Rechazado'
+        mensaje = 'Falló'
         const archivoRecibido = Buffer.from(archivoLog, "base64")
         this.formatearRespuesta(archivoRecibido.toString(), idCarga)
       }
+
+
+      this.enviadorEmail = new EnviadorEmailAdonis()
+      // this.enviadorEmail.enviarEmail(asunto,mensaje, [Env.get('EMAIL_TO')])
+      this.enviadorEmail.enviarTemplate({
+        asunto: asunto,
+        de: Env.get('SMTP_USERNAME'),
+        destinatarios: Env.get('EMAIL_TO'),
+        copias: Env.get('EMAIL_CO'),
+        alias: Env.get('EMAIL_ALIAS')
+
+      }, new EmailNotificarCargaArchivo({
+        fechaCargue: DateTime.now(),
+        titulo: 'datos',
+        nombre: datosAdicionales.usuario,
+        nombreArchivo: datosAdicionales.nombreArchivo,
+        numeroRadicado: idCarga,
+        resultado: mensaje,
+        tipoArchivo: datosAdicionales.tipoArchivo,
+        url: `${Env.get('HOSTING')}/Front-novafianza/dist/admin`
+      }))
+
     } else {
       return this.actualizarEstadoCarga(idCarga, 3)
     }
@@ -370,16 +441,22 @@ export class RepositorioCargaDB implements RepositorioCarga {
       const logsErr = await TblLogsErrores.query()
         .where('err_carga_datos_id', id)
 
+      let tipo = '1'
+      let errores: any = []
+      if (logsErr[0]) {
+        errores = logsErr[0].error
+        tipo = logsErr[0].tipo
+      }
+
       const logsIss = await TblLogsAdvertencias.query()
         .where('adv_carga_datos_id', id)
-        console.log(logsIss);
-        
-let advertencia:any = []
-        if (logsIss[0]) {
-          advertencia = logsIss[0].advertencia
-        }
 
-      const formatearLogs = await generarJsonValidaciones(logsErr[0].error, advertencia, logsErr[0].tipo)
+      let advertencia: any = []
+      if (logsIss[0]) {
+        advertencia = logsIss[0].advertencia
+      }
+
+      const formatearLogs = await generarJsonValidaciones(errores, advertencia, tipo)
 
       const logs = {
         "nombreArchivo": archivoCargado?.nombre,

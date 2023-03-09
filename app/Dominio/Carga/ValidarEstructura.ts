@@ -8,7 +8,7 @@ import { LogErrores } from '../Datos/Entidades/LogErrores';
 import TblLogsErrores from '../../Infraestructura/Datos/Entidad/LogErrores';
 import TblCargaDatos from '../../Infraestructura/Datos/Entidad/CargaDato';
 import { v4 as uuidv4 } from 'uuid';
-const fs = require("fs");
+import fs from "fs";
 
 export class ValidarEstructura {
   validar = async (entidad: string, tipoArchivo: any, archivo: string, entidadId: string, cargaId: string) => {
@@ -16,70 +16,16 @@ export class ValidarEstructura {
     let issues: any[] = [];
     const prefijo = tipoArchivo.prefijo
     let esCorrecta = false;
-    /* try {
-
-      const archivosEmpresa = await TblArchivosEmpresas.query().where({ 'are_archivo_id': tipoArchivo.id, 'are_empresa_id': entidadId }).first()
-
-      if (!archivosEmpresa) {
-        errores.push({
-          "descripcion": 'El archivo no existe en la base de datos',
-          "linea": 0,
-          "variable": ''
-        })
-        this.guardarErrores(cargaId, errores)
-        throw new Error("guardar error");
-      }
-
-      const estructuraJson = (archivosEmpresa.json) ?? {};
-      if (Object.keys(estructuraJson).length == 0) {
-        errores.push({
-          "descripcion": 'No existe una estructura de validacion para este archivo',
-          "linea": 0,
-          "variable": ''
-        })
-        this.guardarErrores(cargaId, errores)
-        throw new Error("guardar error");
-      }
-
-      const campos = estructuraJson['Campos']
-
-      const archivoTxt = await fs.createReadStream(archivo, "utf8")
-      await archivoTxt.on('data', async (chunk) => {
-
-        const archivoArreglo = chunk.split('\r\n')
-
-        await this.validarFilas(archivoArreglo, campos, errores, issues);
-        
-        if (errores.length != 0) {
-          this.guardarErrores(cargaId, errores)
-          esCorrecta = false;
-          
-        }
-        if (errores.length == 0) {
-
-          esCorrecta = true;
-          console.log(esCorrecta);
-          
-        }
-
-
-      });      
-
-      
-
-
-    } catch (error) {
-    }
-
-    return { esCorrecta} */
+   
 
   }
 
   validarFilas = async (archivoArreglo: [], campos: any, errores: any, issues: any) => {
     const validarDatos = new ValidarDatos()
-
+let i = 0
     for await (const filas of archivoArreglo) {
       if (!filas) break
+      i++;
       const fila = (<string>filas).split('|');
 
       //Validar longitud      
@@ -98,7 +44,7 @@ export class ValidarEstructura {
 
       for (const key in fila) {
         const columna = campos.find(campo => campo.Posicion == parseInt(key) + 1)
-        const { errors, issus } = await validarDatos.datos(fila[key], columna)
+        const { errors, issus } = await validarDatos.datos(fila[key], columna, i)
 
         errores.push(...errors)
         issues.push(...issus)
