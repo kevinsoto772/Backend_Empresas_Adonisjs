@@ -4,15 +4,21 @@ import { GeneradorContrasena } from 'App/Dominio/GenerarContrasena/GenerarContra
 import { EncriptadorAdonis } from 'App/Infraestructura/Encriptacion/EncriptadorAdonis'
 import { RepositorioUsuarioEmpresaDB } from '../../Infraestructura/Implementacion/Lucid/RepositorioUsuarioEmpresaDB'
 import { EnviadorEmailAdonis } from 'App/Infraestructura/Email/EnviadorEmailAdonis'
+import { ServicioAutenticacionJWT } from '../../Dominio/Datos/Servicios/ServicioJWT';
+import { RepositorioUsuarioNovafianzaDB } from '../../Infraestructura/Implementacion/Lucid/RepositorioUsuarioNovafianzaDB';
+import { ServicioUsuario } from '../../Dominio/Datos/Servicios/ServicioUsuario';
+
 
 export default class ControladorUsuarioEmpresa {
   private service: ServicioUsuarioEmpresa
+  private servicioUsuario: ServicioUsuario;
   constructor () {
     this.service = new ServicioUsuarioEmpresa(
       new RepositorioUsuarioEmpresaDB(), 
       new GeneradorContrasena(), 
       new EncriptadorAdonis(),
-      new EnviadorEmailAdonis()
+      new EnviadorEmailAdonis(),
+      this.servicioUsuario =  new ServicioUsuario(new RepositorioUsuarioNovafianzaDB(), new RepositorioUsuarioEmpresaDB())
     )
   }
 
@@ -57,4 +63,29 @@ export default class ControladorUsuarioEmpresa {
     const usuariosEmpresa = await this.service.obtenerUsuariosEmpresaPorIdEmpresa(params)
     return usuariosEmpresa
   }
+
+  public async buscar({ request, response }: HttpContextContract) {
+    const datos = request.all();
+    let token: any = request.header('Authorization')?.split(' ')[1]
+    const {documento} = ServicioAutenticacionJWT.obtenerPayload(token)
+    datos['usuario'] = documento
+      
+    const usuario = await this.servicioUsuario.obtenerUsuario(datos.usuario)
+    if(!datos.entidadId && usuario['idEmpresa']) datos.entidadId = usuario['idEmpresa'] 
+
+
+    if(usuario['idEmpresa'] && datos.entidadId != usuario['idEmpresa']){
+      return response.status(400).send({ mensaje: 'No tiene autorizacion para realizar esta consulta' })
+    }
+    
+    const archivos = await this.service.buscar(JSON.stringify(datos))
+
+    if (Object.keys(archivos).length !== 0) {
+      response.status(202).send(archivos)
+    } else {
+      response.status(400).send({ mensaje: 'Se presento un error al consultar los archivos' })
+    }
+  }
+
+
 }

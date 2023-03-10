@@ -62,4 +62,25 @@ export class RepositorioUsuarioEmpresaDB implements RepositorioUsuarioEmpresa {
     const paginacion = MapeadorPaginacionDB.obtenerPaginacion(usuariosEmpresaDB)
     return {usuariosEmpresa , paginacion}
   }
+
+  async buscar (params: string): Promise<{usuarioEmpresa: UsuarioEmpresa[], paginacion: Paginador}> {
+    const { entidadId, pagina = 1, limite = 5, frase } = JSON.parse(params);
+
+    const usuarioEmpresa: UsuarioEmpresa[] = []
+    const usuariosEmpresaDB = await TblUsuariosEmpresas.query()
+        .where('use_empresa_id', entidadId)
+        .whereILike('use_nombre', `%${frase}%`)
+        .orWhereILike('use_apellido', `%${frase}%`)
+        .orWhereILike('use_identificacion', `%${frase}%`)
+        .orWhereILike('use_correo', `%${frase}%`)
+        .paginate(pagina, limite)
+
+  
+        usuariosEmpresaDB.forEach(usuarioEmpresaDB => {
+          usuarioEmpresa.push(usuarioEmpresaDB.obtenerUsuarioEmpresa())
+    })
+    const paginacion = MapeadorPaginacionDB.obtenerPaginacion(usuariosEmpresaDB)
+    return {usuarioEmpresa , paginacion}
+  }
+
 }

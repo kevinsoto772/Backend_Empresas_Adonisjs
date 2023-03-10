@@ -64,4 +64,9 @@ export class ServicioUsuarioEmpresa{
     return this.repositorio.obtenerUsuariosEmpresaPorIdEmpresa(params);
   }
 
+  async  buscar (parametros: string): Promise<{}> {
+    return this.repositorio.buscar(parametros)
+  }
+
+
 }

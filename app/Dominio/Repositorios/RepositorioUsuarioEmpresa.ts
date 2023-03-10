@@ -10,4 +10,5 @@ export interface RepositorioUsuarioEmpresa {
   actualizaUsuarioEmpresa(id: string, usuarioEmpresa: UsuarioEmpresa): Promise<UsuarioEmpresa>
   obtenerUsuarioEmpresaPorUsuario(nombreUsuario: string): Promise<UsuarioEmpresa | null>
   obtenerUsuariosEmpresaPorIdEmpresa(param: any): Promise<{usuariosEmpresa: UsuarioEmpresa[], paginacion: Paginador}>
+  buscar(parametros:string): Promise<{}>
 }

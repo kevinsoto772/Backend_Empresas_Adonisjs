@@ -480,13 +480,15 @@ export class RepositorioCargaDB implements RepositorioCarga {
 
   async buscarCargados(parametros: string): Promise<any> {
     let archivos = {};
+    
     try {
 
-      const { usuario, pagina = 1, limite = 5, frase } = JSON.parse(parametros);
-
+      const { entidadId, pagina = 1, limite = 5, frase } = JSON.parse(parametros);
 
       const archivosBd = await TblCargaDatos.query().preload('archivo').preload('estadoCargaEstructura').preload('estadoCargaProceso')
-        .where('car_usuario_id', usuario).whereILike('car_nombre', `%${frase}%`).paginate(pagina, limite)
+        .where('car_empresa_id', entidadId)
+        .whereILike('car_nombre', `%${frase}%`)
+        .paginate(pagina, limite)
 
       let arrArchivos: any = []
       for (const sql of archivosBd) {
