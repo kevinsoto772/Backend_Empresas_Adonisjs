@@ -41,8 +41,10 @@ export class RepositorioArchivoDB implements RepositorioArchivo {
     const { frase, pagina, limite } = JSON.parse(params);
     const archivos: Archivo[] = []
     const archivosDB = await Tblarchivos.query().whereILike('arc_nombre', `%${ frase }%`)
-                                                .orWhereILike('arc_tipo', `%${ frase }%`)
+                                                .orWhereILike('arc_descripcion', `%${ frase }%`)
                                                 .orderBy('arc_id', 'desc').paginate(pagina, limite)
+
+  
     archivosDB.forEach(archivosDB => {
       archivos.push(archivosDB.obtenerArchivo())
     })
