@@ -2,9 +2,6 @@
 import { ServicioCarga } from 'App/Dominio/Datos/Servicios/ServicioCarga'
 import { RepositorioCargaDB } from '../../Infraestructura/Implementacion/Lucid/RepositorioCargaDB'
 import { HttpContextContract } from '@ioc:Adonis/Core/HttpContext';
-import Tblarchivos from 'App/Infraestructura/Datos/Entidad/Archivo';
-import { EnviadorEmailAdonis } from '../../Infraestructura/Email/EnviadorEmailAdonis';
-import { ClienteHttpAxios } from '../../Infraestructura/ClientesHttp/ClienteHttpAxios';
 import { ServicioAutenticacionJWT } from '../../Dominio/Datos/Servicios/ServicioJWT';
 import { ServicioUsuario } from "App/Dominio/Datos/Servicios/ServicioUsuario";
 import { RepositorioUsuarioNovafianzaDB } from '../../Infraestructura/Implementacion/Lucid/RepositorioUsuarioNovafianzaDB';
@@ -13,7 +10,7 @@ export default class ControladorCarga {
   private servicioUsuario: ServicioUsuario;
   private servicio: ServicioCarga;
   constructor() {
-    this.servicio = new ServicioCarga(new RepositorioCargaDB(), new EnviadorEmailAdonis(), new ClienteHttpAxios())
+    this.servicio = new ServicioCarga(new RepositorioCargaDB())
     this.servicioUsuario =  new ServicioUsuario(new RepositorioUsuarioNovafianzaDB(), new RepositorioUsuarioEmpresaDB())
   }
 

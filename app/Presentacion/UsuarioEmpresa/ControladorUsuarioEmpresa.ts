@@ -17,9 +17,9 @@ export default class ControladorUsuarioEmpresa {
       new RepositorioUsuarioEmpresaDB(), 
       new GeneradorContrasena(), 
       new EncriptadorAdonis(),
-      new EnviadorEmailAdonis(),
-      this.servicioUsuario =  new ServicioUsuario(new RepositorioUsuarioNovafianzaDB(), new RepositorioUsuarioEmpresaDB())
+      new EnviadorEmailAdonis()      
     )
+    this.servicioUsuario =  new ServicioUsuario(new RepositorioUsuarioNovafianzaDB(), new RepositorioUsuarioEmpresaDB())
   }
 
   public async listar ({ params }) {

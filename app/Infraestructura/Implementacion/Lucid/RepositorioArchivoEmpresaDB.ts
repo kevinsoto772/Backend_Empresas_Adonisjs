@@ -67,7 +67,7 @@ export class RepositorioArchivoEmpresaDB implements RepositorioArchivoEmpresa {
     return archivoEmpresaDB
   }
 
-  async actualizarArchivoEmpresa(id: string, archivoEmpresa: ArchivoEmpresa, manual: any): Promise<ArchivoEmpresa> {
+  async actualizarArchivoEmpresa(id: string, archivoEmpresa: ArchivoEmpresa, manual?: any): Promise<any> {
     try {
 
       let archivoEmpresaRetorno = await TblArchivoEmpresa.findOrFail(id)
