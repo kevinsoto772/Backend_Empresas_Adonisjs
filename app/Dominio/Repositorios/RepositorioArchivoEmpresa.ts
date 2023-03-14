@@ -9,6 +9,6 @@ export interface RepositorioArchivoEmpresa {
   guardarArchivoEmpresa(archivoEmpresa: ArchivoEmpresa, manual: any): Promise<ArchivoEmpresa>
   guardarArchivosEmpresa(archivosEmpresa: ArchivoEmpresa[]): Promise<ArchivoEmpresa[]>
   eliminarArchivosEmpresa(idEmpresa: string, idArchivos: string[]): Promise<number> // regresa el numero de registros eliminados
-  actualizarArchivoEmpresa(id: string, archivoEmpresa: ArchivoEmpresa, manual: any): Promise<ArchivoEmpresa>
+  actualizarArchivoEmpresa(id: string, archivoEmpresa: ArchivoEmpresa, manual?: any): Promise<ArchivoEmpresa>
 }
 

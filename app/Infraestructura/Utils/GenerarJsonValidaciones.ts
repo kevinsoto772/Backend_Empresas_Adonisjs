@@ -3,11 +3,22 @@ const generarJsonValidaciones = async (errores: string, alertas: string, tipoErr
     let arrRegistros: any = [];
     arrRegistros['registros'] = errores;
 
+    let arrRegistrosAlertas: any = [];
+    arrRegistrosAlertas['registros'] = alertas;
+
     let arrCategorias: any = [];
     arrCategorias['categorias'] = [
         {
             "nombre": "Registros obligatorios",
             "registros": arrRegistros['registros']
+        }
+    ];
+
+    let arrCategoriasAlertas: any = [];
+    arrCategoriasAlertas['categorias'] = [
+        {
+            "nombre": "Registros obligatorios",
+            "registros": arrRegistrosAlertas['registros']
         }
     ];
 
@@ -19,7 +30,7 @@ const generarJsonValidaciones = async (errores: string, alertas: string, tipoErr
         },
         {
             "nombre": "Alertas",
-            "registros": alertas
+            "categorias": arrCategoriasAlertas['categorias']
         }
     ];
 
