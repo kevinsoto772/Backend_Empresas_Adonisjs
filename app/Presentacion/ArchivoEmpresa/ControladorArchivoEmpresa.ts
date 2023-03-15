@@ -67,7 +67,7 @@ export default class ControladorArchivoEmpresa {
       await this.service.cambiarEstado(id)
       response.status(200).send('Cambio realizado correctamente')
     } catch (e) {
-      response.status(200).send(e)
+      response.status(404).send(e)
     }
   }
 
@@ -75,7 +75,7 @@ export default class ControladorArchivoEmpresa {
     const { idEmpresa, idArchivo } = request.all()
     const archivosEmpresa = await this.service.obtenerVariables(idEmpresa, idArchivo)    
     if(!archivosEmpresa){      
-      return response.status(400).send('No se encontro una estructura asociada a este archivo')
+      return response.status(404).send('No se encontro una estructura asociada a este archivo')
     }
      return response.status(200).send(archivosEmpresa)
   }

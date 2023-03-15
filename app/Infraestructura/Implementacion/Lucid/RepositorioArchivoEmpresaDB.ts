@@ -21,7 +21,7 @@ export class RepositorioArchivoEmpresaDB implements RepositorioArchivoEmpresa {
   }
 
   async obtenerArchivosPorEmpresa(idEmpresa: string): Promise<ArchivoEmpresa[]> {
-    const archivosEmpresaDb = await TblArchivoEmpresa.query().where('idEmpresa', idEmpresa)
+    const archivosEmpresaDb = await TblArchivoEmpresa.query().where({'idEmpresa': idEmpresa, 'estado':true})
     return archivosEmpresaDb.map(archivoEmpresaDb => {
       return archivoEmpresaDb.obtenerArchivoEmpresa()
     })
