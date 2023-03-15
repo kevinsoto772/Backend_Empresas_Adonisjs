@@ -71,6 +71,15 @@ export default class ControladorArchivoEmpresa {
     }
   }
 
+  public async obtenerVariables({ request, response }: HttpContextContract) {
+    const { idEmpresa, idArchivo } = request.all()
+    const archivosEmpresa = await this.service.obtenerVariables(idEmpresa, idArchivo)    
+    if(!archivosEmpresa){      
+      return response.status(400).send('No se encontro una estructura asociada a este archivo')
+    }
+     return response.status(200).send(archivosEmpresa)
+  }
+
   public async manual({ request, response }: HttpContextContract) {
     const nombreArchivo = request.param('*').join('/')
     const ubicacion = `/manuales/${nombreArchivo}`

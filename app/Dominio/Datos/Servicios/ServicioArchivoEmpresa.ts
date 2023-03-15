@@ -1,7 +1,13 @@
 import { Paginador } from "App/Dominio/Paginador";
 import { v4 as uuidv4 } from 'uuid'
 import { RepositorioArchivoEmpresa } from "App/Dominio/Repositorios/RepositorioArchivoEmpresa";
-import { ArchivoEmpresa } from "../Entidades/ArchivoEmpresa";
+import { ArchivoEmpresa } from '../Entidades/ArchivoEmpresa';
+import TblEmpresas from "App/Infraestructura/Datos/Entidad/Empresa";
+import { Empresa } from '../Entidades/Empresa';
+import { Estructura } from "App/Infraestructura/Implementacion/Servicios/Estructuras";
+import { Archivo } from 'App/Dominio/Datos/Entidades/Archivo';
+import Tblarchivos from 'App/Infraestructura/Datos/Entidad/Archivo';
+import TblArchivosEmpresas from '../../../Infraestructura/Datos/Entidad/ArchivoEmpresa';
 
 export class ServicioArchivoEmpresa{
   constructor (private repositorio: RepositorioArchivoEmpresa) { }
@@ -43,5 +49,17 @@ export class ServicioArchivoEmpresa{
     let archivoEmpresa = await this.repositorio.obtenerArchivoEmpresaPorId(id)
     archivoEmpresa.estado = !archivoEmpresa.estado
     return await this.repositorio.actualizarArchivoEmpresa(id, archivoEmpresa);
+  }
+
+  async obtenerVariables(idEmpresa: string, idArchivos: string){
+    const empresa: Empresa = await TblEmpresas.findOrFail(idEmpresa)
+    const archivo: Archivo = await Tblarchivos.findOrFail(idArchivos)
+    const archivoEmpresa: any = await TblArchivosEmpresas.query().where({'are_empresa_id':idEmpresa, 'are_archivo_id':idArchivos}).first()
+    
+    if(archivoEmpresa){
+      const estructura = new Estructura()
+      return estructura.actualizar(empresa.nit, archivo.prefijo, archivoEmpresa)
+      
+    }
   }
 }
