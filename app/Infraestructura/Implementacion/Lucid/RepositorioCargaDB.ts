@@ -21,6 +21,7 @@ import { EmailNotificarCargaArchivo } from 'App/Dominio/Email/Emails/EmailNotifi
 import { DateTime } from 'luxon';
 import { EnviadorEmailAdonis } from '../../Email/EnviadorEmailAdonis';
 import { readFile } from 'fs/promises';
+import { generarExcelValidaciones } from 'App/Infraestructura/Utils/GenerarExcelValidaciones';
 const fs = require('fs')
 export class RepositorioCargaDB implements RepositorioCarga {
   private servicioUsuario = new ServicioUsuario(new RepositorioUsuarioNovafianzaDB(), new RepositorioUsuarioEmpresaDB())
@@ -476,6 +477,30 @@ export class RepositorioCargaDB implements RepositorioCarga {
     }
 
 
+  }
+
+  async obtenerExcel(idArchivoCargado: string) {
+    try {
+      console.log(idArchivoCargado)
+      const logsErr = await TblLogsErrores.query()
+        .where('err_carga_datos_id', idArchivoCargado)
+      let tipo = '1'
+      let errores: any = []
+      if (logsErr[0]) {
+        errores = logsErr[0].error
+        tipo = logsErr[0].tipo
+      }
+      const logsIss = await TblLogsAdvertencias.query()
+        .where('adv_carga_datos_id', idArchivoCargado)
+
+      let advertencia: any = []
+      if (logsIss[0]) {
+        advertencia = logsIss[0].advertencia
+      }
+      return generarExcelValidaciones(errores, advertencia, tipo)
+    } catch (error) {
+      console.error(error);
+    }
   }
 
   async buscarCargados(parametros: string): Promise<any> {
