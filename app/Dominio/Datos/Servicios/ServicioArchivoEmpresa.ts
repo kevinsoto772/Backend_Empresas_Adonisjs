@@ -58,8 +58,18 @@ export class ServicioArchivoEmpresa{
     
     if(archivoEmpresa){
       const estructura = new Estructura()
-      return estructura.actualizar(empresa.nit, archivo.prefijo, archivoEmpresa)
+      const estructuraArchivo = await estructura.actualizar(empresa.nit, archivo.prefijo, archivoEmpresa, false)
+     
       
+      if(!estructuraArchivo ){
+          return { estructura: archivoEmpresa.json, estado: 503 }
+      }
+
+      return {estructura: estructuraArchivo, estado : 200 }
+
+      
+    }else {
+      return { estructura:'', estado: 404 }
     }
   }
 }
