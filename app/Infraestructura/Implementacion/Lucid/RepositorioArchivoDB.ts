@@ -8,7 +8,7 @@ import { MapeadorPaginacionDB } from './MapeadorPaginacionDB'
 export class RepositorioArchivoDB implements RepositorioArchivo {
   async obtenerArchivos (params: any): Promise<{archivos: Archivo[], paginacion: Paginador}> {
     const archivos: Archivo[] = []
-    const archivosDB = await Tblarchivos.query().orderBy('id', 'desc').paginate(params.pagina, params.limite)
+    const archivosDB = await Tblarchivos.query().where('arc_estado',true).orderBy('id', 'desc').paginate(params.pagina, params.limite)
     archivosDB.forEach(archivosDB => {
       archivos.push(archivosDB.obtenerArchivo())
     })
