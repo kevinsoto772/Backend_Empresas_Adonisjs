@@ -22,7 +22,9 @@ export default class TblCargaDatos extends BaseModel {
   @column({ columnName: 'car_registros_fallidos' }) public registrosFallidos: number
   @column({ columnName: 'car_registros_insertados' }) public registrosInsertados: number
   @column({ columnName: 'car_empresa_id' }) public empresa: string
-
+  @column({ columnName: 'car_registros_fallidos_safix' }) public registrosFallidosSafix: number
+  @column({ columnName: 'car_registros_aprobados_safix' }) public registrosAprobadosSafix: number
+  
 
   @column.dateTime({ autoCreate: true, columnName: 'car_creacion' }) public createdAt: DateTime
 
@@ -42,6 +44,8 @@ export default class TblCargaDatos extends BaseModel {
     this.registrosInsertados = cargaArchivo.registrosInsertados ?? 0
     this.estado = cargaArchivo.estado ?? true
     this.empresa = cargaArchivo.empresa ?? ''
+    this.registrosFallidosSafix = cargaArchivo.registrosFallidosSafix ?? 0
+    this.registrosAprobadosSafix = cargaArchivo.registrosAprobadosSafix ?? 0
   }
 
   public establecerCargaArcivoConId(cargaArchivo: CargaArchivo) {
@@ -57,6 +61,8 @@ export default class TblCargaDatos extends BaseModel {
     this.registrosInsertados = cargaArchivo.registrosInsertados ?? 0
     this.estado = cargaArchivo.estado ?? true
     this.empresa = cargaArchivo.empresa ?? ''
+    this.registrosFallidosSafix = cargaArchivo.registrosFallidosSafix ?? 0
+    this.registrosAprobadosSafix = cargaArchivo.registrosAprobadosSafix ?? 0
   }
 
   public obtenerCargaArcivo(): CargaArchivo {
@@ -73,15 +79,27 @@ export default class TblCargaDatos extends BaseModel {
     cargaArchivo.registrosInsertados = this.registrosInsertados
     cargaArchivo.estado = this.estado
     cargaArchivo.empresa = this.empresa
+    cargaArchivo.registrosFallidosSafix = this.registrosFallidosSafix
+    cargaArchivo.registrosAprobadosSafix = this.registrosAprobadosSafix
     return cargaArchivo
   }
 
-  public actualizarEstadoCargaEstructura(estado: number) {
+  public actualizarEstadoCargaEstructura(estado: number, encontrados?:number,fallidos?:number) {
     this.estadoEstructura = estado
-  }
+    if(encontrados){
+    this.registrosEncontrados= encontrados?? 0
+    this.registrosFallidos = fallidos?? 0  
+    this.registrosInsertados = this.registrosEncontrados - this.registrosFallidos
+    }
+   }
 
-  public actualizarEstadoCargaService(estado: number) {
+  public actualizarEstadoCargaService(estado: number, encontrados?:number,fallidos?:number) {
     this.estadoProceso = estado
+    if(encontrados){
+      this.registrosEncontrados= encontrados?? 0
+      this.registrosFallidosSafix = fallidos?? 0  
+      this.registrosAprobadosSafix = this.registrosEncontrados - this.registrosFallidos
+      }
   }
 
   @belongsTo(() => Tblarchivos, {

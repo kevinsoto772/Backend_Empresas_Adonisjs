@@ -20,32 +20,31 @@ import { EnviadorEmail } from 'App/Dominio/Email/EnviadorEmail';
 import { EmailNotificarCargaArchivo } from 'App/Dominio/Email/Emails/EmailNotificarCargaArchivo';
 import { DateTime } from 'luxon';
 import { EnviadorEmailAdonis } from '../../Email/EnviadorEmailAdonis';
-import { readFile } from 'fs/promises';
 import { generarExcelValidaciones } from 'App/Infraestructura/Utils/GenerarExcelValidaciones';
+import TblFormatoArchivo from 'App/Infraestructura/Datos/Entidad/FormatoArchivo';
+import { extname } from 'path';
 const fs = require('fs')
 export class RepositorioCargaDB implements RepositorioCarga {
   private servicioUsuario = new ServicioUsuario(new RepositorioUsuarioNovafianzaDB(), new RepositorioUsuarioEmpresaDB())
   private enviadorEmail: EnviadorEmail
   private enviadorEmail2: EnviadorEmail
   async procesarArchivo(archivo: any, datos: string): Promise<void> {
-    let errores: any = [];
-    let issues: any[] = [];
     const { usuario, ...datosCarga } = JSON.parse(datos);
 
     // llamar a la funcion para guardar el estado de la carga
     const idDatosGuardados = await this.guardarCarga(datos, archivo.clientName);
 
     this.inicioValidaciones(idDatosGuardados, datosCarga, usuario, archivo, datos);
-    //si pasa la validacion de estructura
-
 
   }
 
   inicioValidaciones = async (idDatosGuardados, datosCarga, usuario, archivo, datos) => {
     let errores: any = [];
     let issues: any[] = [];
-    const usuarioDB = await this.servicioUsuario.obtenerUsuario(usuario)
-    const tipoArchivo = await Tblarchivos.query().preload('tipoArchivo').where('arc_id', datosCarga.tipoArchivo).first()
+
+    // const archivoBd = await Tblarchivos.findBy('arc_id', datosCarga.tipoArchivo)
+    const tipoArchivo = await Tblarchivos.query().preload('tipoArchivo').preload('formato').where('arc_id', datosCarga.tipoArchivo).first()
+ 
     if (!tipoArchivo) {
       errores.push({
         "descripcion": 'El archivo no existe en la base de datos',
@@ -53,21 +52,74 @@ export class RepositorioCargaDB implements RepositorioCarga {
         "variable": ''
       })
       this.guardarErrores(idDatosGuardados, errores, '1')
-      throw new Error("guardar error");
+      return
     }
 
-    const [entidad, convenio] = this.validarNombre(archivo.clientName, tipoArchivo);
 
-    const empresa = await TblEmpresas.findBy('emp_nit', entidad)
-    if (!empresa) {
+
+    if (tipoArchivo?.formato[0].formato != archivo.extname) {
+
       errores.push({
-        "descripcion": 'El archivo no existe en la base de datos',
+        "descripcion": 'El formato de archivo no corresponde',
         "linea": 0,
         "variable": ''
       })
       this.guardarErrores(idDatosGuardados, errores, '1')
-      throw new Error("guardar error");
+      return
     }
+    const usuarioDB:any = await this.servicioUsuario.obtenerUsuario(usuario)
+    
+    if (archivo.extname == 'pdf') {
+      const entidadUsuario = await TblEmpresas.query().where('emp_id',usuarioDB.idEmpresa).first()
+      
+      await archivo.moveToDisk('./', { name: archivo.clientName });
+      const path = `./uploads/${archivo.clientName}`;
+
+      const archivoBase64 = fs.readFileSync(path, { encoding: "base64" });
+
+
+      const data = {
+        "pEntidad": entidadUsuario?.nit,
+        "pFechaInicio": datosCarga.fechaInicial,
+        "pFechaFin": datosCarga.fechaFinal,
+        "pNombreArchivo": archivo.clientName,
+        "pArchivoBase64": archivoBase64
+      }
+      this.enviarPdf(data, false, idDatosGuardados);
+      return
+    }
+
+
+
+    const [entidad, convenio, prefijo] = this.validarNombre(archivo.clientName, tipoArchivo);
+
+
+
+    //TODO cargar archivo pdf
+
+
+    if (!prefijo) {
+      errores.push({
+        "descripcion": 'El nombre del archivo no es correcto',
+        "linea": 0,
+        "variable": ''
+      })
+      this.guardarErrores(idDatosGuardados, errores, '1')
+      return
+    }
+
+    const empresa = await TblEmpresas.findBy('emp_nit', entidad)
+    if (!empresa) {
+      errores.push({
+        "descripcion": 'La empresa no existe en la base de datos',
+        "linea": 0,
+        "variable": ''
+      })
+      this.guardarErrores(idDatosGuardados, errores, '1')
+      return
+    }
+
+
 
 
     const tipoDeProceso = tipoArchivo.tipoArchivo.map((tipo) => tipo.valor)[0]
@@ -90,7 +142,7 @@ export class RepositorioCargaDB implements RepositorioCarga {
         "variable": ''
       })
       this.guardarErrores(idDatosGuardados, errores, '1')
-      throw new Error("guardar error");
+      return
     }
 
     const estructuraJson = (archivosEmpresa.json) ?? {};
@@ -101,7 +153,7 @@ export class RepositorioCargaDB implements RepositorioCarga {
         "variable": ''
       })
       this.guardarErrores(idDatosGuardados, errores, '1')
-      throw new Error("guardar error");
+      return
     }
 
     const campos = estructuraJson['Campos']
@@ -127,7 +179,7 @@ export class RepositorioCargaDB implements RepositorioCarga {
 
 
         if (errores.length != 0) {
-          this.guardarErrores(idDatosGuardados, errores, '1')
+          this.guardarErrores(idDatosGuardados, errores, '1', archivoArreglo.length, errores.length)
 
           this.enviadorEmail = new EnviadorEmailAdonis()
           this.enviadorEmail.enviarTemplate({
@@ -151,7 +203,7 @@ export class RepositorioCargaDB implements RepositorioCarga {
 
         }
         if (errores.length == 0) {
-          this.actualizarEstadoEstructura(idDatosGuardados, (issues.length != 0) ? 4 : 2)
+          this.actualizarEstadoEstructura(idDatosGuardados, (issues.length != 0) ? 4 : 2, archivoArreglo.length)
 
           const archivoBase64 = fs.readFileSync(path, { encoding: "base64" });
 
@@ -164,6 +216,7 @@ export class RepositorioCargaDB implements RepositorioCarga {
               "pFechaFin": datosCarga.fechaFinal,
               "pTipoProceso": tipoArchivo.prefijo,
               "pRutaArchivo": "",
+              "pNombreArchivo": archivo.clientName,
               "pArchivoBase64": archivoBase64
             }
             const headers = {
@@ -177,7 +230,7 @@ export class RepositorioCargaDB implements RepositorioCarga {
               nombreArchivo: archivo.clientName
             }
 
-            this.validarRespuesta(respuesta.data, idDatosGuardados, data, tipoDeProceso, datosAdicionales);
+            this.validarRespuesta(respuesta.data, idDatosGuardados, data, tipoDeProceso, datosAdicionales, archivoArreglo.length);
 
           } catch (error) {
             console.log(error);
@@ -190,7 +243,7 @@ export class RepositorioCargaDB implements RepositorioCarga {
     // });
   }
 
-  formatearRespuesta = async (archivo: string, id: string) => {
+  formatearRespuesta = async (archivo: string, id: string, registros: number) => {
     const re1 = /:  :/gi;
     const re2 = /::/gi;
     const re = /: :/gi;
@@ -228,7 +281,8 @@ export class RepositorioCargaDB implements RepositorioCarga {
 
             //const otrasColumnas = columnas[i].split(',')
             errores.push({
-              "descripcion": columnas[i] ?? '',
+              //"descripcion": columnas[i] ?? '',
+              "descripcion": columna ?? '',
               "linea": nFila,
               "variable": ''
             })
@@ -246,7 +300,7 @@ export class RepositorioCargaDB implements RepositorioCarga {
     }
 
 
-    this.guardarErrores(id, errores, '2')
+    this.guardarErrores(id, errores, '2', registros, errores.length)
 
 
 
@@ -320,29 +374,33 @@ export class RepositorioCargaDB implements RepositorioCarga {
 
   }
 
-  actualizarEstadoCarga = async (id: string, estado: number) => {
+  actualizarEstadoCarga = async (id: string, estado: number, encontrados?: number, fallidos?: number) => {
     let cargaEspecifica = await TblCargaDatos.findOrFail(id)
-    cargaEspecifica.actualizarEstadoCargaService(estado)
+    cargaEspecifica.actualizarEstadoCargaService(estado, encontrados, fallidos)
     await cargaEspecifica.save()
   }
-  actualizarEstadoEstructura = async (id: string, estado: number) => {
+  actualizarEstadoEstructura = async (id: string, estado: number, encontrados?: number, fallidos?: number) => {
     let cargaEspecifica = await TblCargaDatos.findOrFail(id)
-    cargaEspecifica.actualizarEstadoCargaEstructura(estado)
+    cargaEspecifica.actualizarEstadoCargaEstructura(estado, encontrados, fallidos)
     await cargaEspecifica.save()
   }
 
-  validarNombre = (nombreArchivo: string, tipoDeProceso: any): [string, number] => {
+  validarNombre = (nombreArchivo: string, tipoDeProceso: any): [string, number, boolean] => {
     const arrNombre = nombreArchivo.split('_');
     const entidad = arrNombre[1];
     const convenio = parseInt(arrNombre[2]);
+    const prefijo = (tipoDeProceso?.prefijoArchivo !== arrNombre[0]) ? false : true;
 
     //TODO: validar entidad(empresa)
-    return [entidad, convenio];
+    return [entidad, convenio, prefijo];
   }
 
-  validarRespuesta = async (respuestaAxio: any, idCarga: string, data: any, tipoDeProceso: string, datosAdicionales: any) => {
+  validarRespuesta = async (respuestaAxio: any, idCarga: string, data: any, tipoDeProceso: string, datosAdicionales: any, registros: number) => {
     const idRetorno = respuestaAxio.RespuestaMetodo.IdRetorno;
     const archivoLog = respuestaAxio.ArchivoLog;
+
+    console.log(archivoLog);
+
 
     if (idRetorno === 0) {
       let asunto = '';
@@ -351,24 +409,17 @@ export class RepositorioCargaDB implements RepositorioCarga {
         //Enviar correo
         asunto = 'Archivo Aprobado'
         mensaje = 'Exitoso'
-        try {
-          const headers = {
-            'Content-Type': 'application/json'
-          }
-          await axios.post(`${Env.get('URL_CARGA')}/${tipoDeProceso}/api/SubirCertificados/SubirCertificados`, data, { headers })
 
-        } catch (error) {
-          console.log(error);
-        }
+        this.enviarPdf(data, false, idCarga);
 
-        return this.actualizarEstadoCarga(idCarga, 2)
+        this.actualizarEstadoCarga(idCarga, 2)
       }
 
       if (archivoLog !== '') {
         asunto = 'Archivo Rechazado'
         mensaje = 'Falló'
         const archivoRecibido = Buffer.from(archivoLog, "base64")
-        this.formatearRespuesta(archivoRecibido.toString(), idCarga)
+        this.formatearRespuesta(archivoRecibido.toString(), idCarga, registros)
       }
 
 
@@ -398,7 +449,7 @@ export class RepositorioCargaDB implements RepositorioCarga {
 
   }
 
-  guardarErrores = async (idCarga: string, errores: [], tipo: string) => {
+  guardarErrores = async (idCarga: string, errores: [], tipo: string, encontrados?: number, fallidos?: number) => {
     let datosGuardar: LogErrores = {
       id: uuidv4(),
       error: JSON.stringify(errores),
@@ -408,7 +459,7 @@ export class RepositorioCargaDB implements RepositorioCarga {
     }
     let guardarErr = new TblLogsErrores()
     guardarErr.establecerLogErroresDb(datosGuardar)
-    await guardarErr.save()
+    await guardarErr.save()    
     const actualizar = (tipo == '1')
       ? this.actualizarEstadoEstructura(idCarga, 3)
       : this.actualizarEstadoCarga(idCarga, 3)
@@ -465,6 +516,12 @@ export class RepositorioCargaDB implements RepositorioCarga {
         "fechaYHora": archivoCargado?.createdAt,
         "fechaCorteFinal": archivoCargado?.fechaFinal,
         "fechaCorteInicial": archivoCargado?.fechaInicial,
+        "totalEstructura":archivoCargado?.registrosEncontrados,
+        "aprobadosEstructura":archivoCargado?.registrosInsertados,
+        "novedadesEstructura":archivoCargado?.registrosFallidos,
+        "totalSafix": archivoCargado?.registrosEncontrados,
+        "aprobadosSafix":archivoCargado?.registrosAprobadosSafix,
+        "novedadesSafix":archivoCargado?.registrosFallidosSafix,
         "validaciones": formatearLogs.validaciones
       }
 
@@ -505,7 +562,7 @@ export class RepositorioCargaDB implements RepositorioCarga {
 
   async buscarCargados(parametros: string): Promise<any> {
     let archivos = {};
-    
+
     try {
 
       const { entidadId, pagina = 1, limite = 5, frase } = JSON.parse(parametros);
@@ -540,5 +597,20 @@ export class RepositorioCargaDB implements RepositorioCarga {
     }
 
     return archivos;
+  }
+
+  enviarPdf = async (data: any, esPdf: boolean, idCarga: string) => {
+    try {
+      const headers = {
+        'Content-Type': 'application/json'
+      }
+      await axios.post(`${Env.get('URL_CARGA')}/WebApiCertificacionFia/api/SubirCertificados/SubirCertificados`, data, { headers })
+      if (esPdf) {
+        this.actualizarEstadoEstructura(idCarga, 2)
+      }
+
+    } catch (error) {
+      console.log(error);
+    }
   }
 }

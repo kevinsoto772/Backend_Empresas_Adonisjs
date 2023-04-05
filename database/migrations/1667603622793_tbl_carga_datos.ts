@@ -20,6 +20,9 @@ export default class extends BaseSchema {
       table.timestamp('car_creacion', { useTz: true })
       table.timestamp('car_actualizacion', { useTz: true })
       table.string('car_empresa_id')
+      table.integer('car_registros_fallidos_safix')
+      table.integer('car_registros_aprobados_safix')
+      
     })
   }
 
