@@ -298,9 +298,11 @@ export class RepositorioCargaDB implements RepositorioCarga {
       }
 
     }
+    console.log(filas.length);
+    
 
 
-    this.guardarErrores(id, errores, '2', registros, errores.length)
+    this.guardarErrores(id, errores, '2', registros, filas.length)
 
 
 
@@ -459,10 +461,10 @@ export class RepositorioCargaDB implements RepositorioCarga {
     }
     let guardarErr = new TblLogsErrores()
     guardarErr.establecerLogErroresDb(datosGuardar)
-    await guardarErr.save()    
+    await guardarErr.save()
     const actualizar = (tipo == '1')
       ? this.actualizarEstadoEstructura(idCarga, 3)
-      : this.actualizarEstadoCarga(idCarga, 3)
+      : this.actualizarEstadoCarga(idCarga, 3, encontrados, fallidos)
 
     return actualizar
   }
