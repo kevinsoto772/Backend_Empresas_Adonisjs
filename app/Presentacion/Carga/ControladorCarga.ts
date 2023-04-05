@@ -16,10 +16,10 @@ export default class ControladorCarga {
 
   public async cargar({ request, response }) {
     try {
-      const formatos: string[] = ['txt', 'csv']
+      const formatos: string[] = ['txt', 'csv', 'pdf']
       const datos = request.all();
       const archivo = request.file('archivo', {
-        extnames: ['txt', 'csv'],
+        extnames: ['txt', 'csv', 'pdf'],
       })
       if (!archivo) {
         return response.status(400).send({ mensaje: 'No se encontro archivo' })
@@ -32,6 +32,7 @@ export default class ControladorCarga {
       let token = request.header('Authorization').split(' ')[1]
       const {documento} = ServicioAutenticacionJWT.obtenerPayload(token)
       datos['usuario'] = documento
+
      // const empresa = 
       //const arrNombre = archivo.clientName.split('_');
      /*  const tipoDeProceso = await Tblarchivos.find(datos.tipoArchivo)

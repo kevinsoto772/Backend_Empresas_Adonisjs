@@ -14,4 +14,6 @@ export class CargaArchivo{
   registrosInsertados?: number;
   estado?: boolean;
   empresa?:string;
+  registrosFallidosSafix?: number
+  registrosAprobadosSafix?: number
 }

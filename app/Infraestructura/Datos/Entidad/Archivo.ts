@@ -3,6 +3,7 @@ import { DateTime } from 'luxon';
 import { BaseModel, column, belongsTo, BelongsTo, hasMany, HasMany } from '@ioc:Adonis/Lucid/Orm';
 import { Archivo } from 'App/Dominio/Datos/Entidades/Archivo';
 import TblTipoArchivos from './TipoArchivo';
+import TblFormatoArchivo from './FormatoArchivo';
 export default class TblArchivos extends BaseModel {
   @column({ isPrimary: true, columnName: 'arc_id' })
   public id: string
@@ -64,5 +65,11 @@ export default class TblArchivos extends BaseModel {
     foreignKey: 'id',
   })
   public tipoArchivo: HasMany<typeof TblTipoArchivos>
+
+  @hasMany(() => TblFormatoArchivo, {
+    localKey: 'formatoId',
+    foreignKey: 'id',
+  })
+  public formato: HasMany<typeof TblFormatoArchivo>
 
 }
