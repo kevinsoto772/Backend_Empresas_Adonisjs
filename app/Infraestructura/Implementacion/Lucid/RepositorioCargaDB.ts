@@ -427,7 +427,7 @@ export class RepositorioCargaDB implements RepositorioCarga {
       }
 
 
-   /*    this.enviadorEmail = new EnviadorEmailAdonis()
+      this.enviadorEmail = new EnviadorEmailAdonis()
       this.enviadorEmail.enviarTemplate({
         asunto: asunto,
         de: Env.get('SMTP_USERNAME'),
@@ -444,7 +444,7 @@ export class RepositorioCargaDB implements RepositorioCarga {
         resultado: mensaje,
         tipoArchivo: datosAdicionales.tipoArchivo,
         url: `${Env.get('HOSTING')}/Front-novafianza/dist/admin`
-      })) */
+      }))
 
     } else {
       return this.actualizarEstadoCarga(idCarga, 3)
@@ -490,6 +490,9 @@ export class RepositorioCargaDB implements RepositorioCarga {
       const { id } = JSON.parse(parametros);
 
       const archivoCargado = await TblCargaDatos.findBy('car_id', id)
+      if(!archivoCargado){
+        return {mensaje: 'no se encontro el registro de errores'}
+      }
       const usuario_id = archivoCargado?.usuario ?? ''
 
       const usuario = await this.servicioUsuario.obtenerUsuario(usuario_id)
@@ -513,18 +516,22 @@ export class RepositorioCargaDB implements RepositorioCarga {
 
       const formatearLogs = await generarJsonValidaciones(errores, advertencia, tipo)
 
+      const aprobadosEstructura = archivoCargado.registrosEncontrados - archivoCargado.registrosFallidos
+
+      const aprobadosServicio = archivoCargado.registrosEncontrados - archivoCargado.registrosFallidosSafix
+
       const logs = {
         "nombreArchivo": archivoCargado?.nombre,
         "cargadoPor": `${usuario.nombre} ${usuario.apellido}`,
-        "fechaYHora": archivoCargado?.createdAt,
-        "fechaCorteFinal": archivoCargado?.fechaFinal,
-        "fechaCorteInicial": archivoCargado?.fechaInicial,
-        "totalEstructura":archivoCargado?.registrosEncontrados,
-        "aprobadosEstructura":archivoCargado?.registrosInsertados,
-        "novedadesEstructura":archivoCargado?.registrosFallidos,
-        "totalSafix": archivoCargado?.registrosEncontrados,
-        "aprobadosSafix":archivoCargado?.registrosAprobadosSafix,
-        "novedadesSafix":archivoCargado?.registrosFallidosSafix,
+        "fechaYHora": archivoCargado.createdAt,
+        "fechaCorteFinal": archivoCargado.fechaFinal,
+        "fechaCorteInicial": archivoCargado.fechaInicial,
+        "totalEstructura":archivoCargado.registrosEncontrados,
+        "aprobadosEstructura":aprobadosEstructura,
+        "novedadesEstructura":archivoCargado.registrosFallidos,
+        "totalSafix": archivoCargado.registrosEncontrados,
+        "aprobadosSafix":aprobadosServicio,
+        "novedadesSafix":archivoCargado.registrosFallidosSafix,
         "validaciones": formatearLogs.validaciones
       }
 
