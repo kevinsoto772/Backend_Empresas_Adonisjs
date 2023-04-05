@@ -1,9 +1,10 @@
 /* eslint-disable @typescript-eslint/explicit-member-accessibility */
 /* eslint-disable @typescript-eslint/semi */
 import { DateTime } from 'luxon';
-import { BaseModel, column, HasMany, hasMany} from '@ioc:Adonis/Lucid/Orm';
+import { BaseModel, column, HasMany, hasMany, ManyToMany, manyToMany} from '@ioc:Adonis/Lucid/Orm';
 import { Empresa } from '../../../Dominio/Datos/Entidades/Empresa';
 import TblUsuariosEmpresas from './UsuarioEmpresa';
+import TblArchivos from './Archivo';
 export default class TblEmpresas extends BaseModel {
   @column({ isPrimary: true, columnName: 'emp_id' })
   public id: string
@@ -54,4 +55,16 @@ export default class TblEmpresas extends BaseModel {
 
   @hasMany(() => TblUsuariosEmpresas)
   public UsuarioEmpresa: HasMany<typeof TblUsuariosEmpresas>
+
+
+  @manyToMany(() => TblArchivos, {
+    localKey: 'id',
+    pivotForeignKey: 'are_empresa_id',
+    relatedKey: 'id',
+    pivotRelatedForeignKey: 'are_archivo_id',
+    pivotTable: 'tbl_archivos_empresas'
+
+  })
+
+  public ArchivosEmpresa: ManyToMany<typeof TblArchivos>
 }
