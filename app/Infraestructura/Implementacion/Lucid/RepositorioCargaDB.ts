@@ -378,6 +378,8 @@ export class RepositorioCargaDB implements RepositorioCarga {
 
   actualizarEstadoCarga = async (id: string, estado: number, encontrados?: number, fallidos?: number) => {
     let cargaEspecifica = await TblCargaDatos.findOrFail(id)
+    console.log({encontrados}, {fallidos});
+    
     cargaEspecifica.actualizarEstadoCargaService(estado, encontrados, fallidos)
     await cargaEspecifica.save()
   }
@@ -425,8 +427,7 @@ export class RepositorioCargaDB implements RepositorioCarga {
       }
 
 
-      this.enviadorEmail = new EnviadorEmailAdonis()
-      // this.enviadorEmail.enviarEmail(asunto,mensaje, [Env.get('EMAIL_TO')])
+   /*    this.enviadorEmail = new EnviadorEmailAdonis()
       this.enviadorEmail.enviarTemplate({
         asunto: asunto,
         de: Env.get('SMTP_USERNAME'),
@@ -443,7 +444,7 @@ export class RepositorioCargaDB implements RepositorioCarga {
         resultado: mensaje,
         tipoArchivo: datosAdicionales.tipoArchivo,
         url: `${Env.get('HOSTING')}/Front-novafianza/dist/admin`
-      }))
+      })) */
 
     } else {
       return this.actualizarEstadoCarga(idCarga, 3)

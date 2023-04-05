@@ -96,6 +96,7 @@ export default class TblCargaDatos extends BaseModel {
   public actualizarEstadoCargaService(estado: number, encontrados?:number,fallidos?:number) {
     this.estadoProceso = estado
     if(encontrados){
+      this.registrosEncontrados= encontrados?? 0
       this.registrosFallidosSafix = fallidos?? 0  
       this.registrosAprobadosSafix = this.registrosEncontrados - this.registrosFallidos
       }
