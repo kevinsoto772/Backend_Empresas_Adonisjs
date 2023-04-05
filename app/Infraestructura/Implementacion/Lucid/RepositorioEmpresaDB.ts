@@ -10,7 +10,9 @@ import { MapeadorPaginacionDB } from './MapeadorPaginacionDB';
 export class RepositorioEmpresaDB implements RepositorioEmpresa {
   async obtenerEmpresas(params: any): Promise<{ empresas: Empresa[], paginacion: Paginador }> {
     const empresas: any[] = []
-    const empresasDB = await Tblempresas.query().preload('ArchivosEmpresa').orderBy('id', 'desc').paginate(params.pagina, params.limite)
+    const empresasDB = await Tblempresas.query().preload('ArchivosEmpresa', sql =>{
+      sql.where('are_estado', true)
+    }).orderBy('id', 'desc').paginate(params.pagina, params.limite)
     empresasDB.forEach(async empresaDB => {
       const { ArchivosEmpresa, ...datos } = empresaDB
       const servicios = await ArchivosEmpresa.map(archivo => {
