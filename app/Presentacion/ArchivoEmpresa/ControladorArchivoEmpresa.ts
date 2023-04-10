@@ -4,13 +4,15 @@ import { ServicioArchivoEmpresa } from 'App/Dominio/Datos/Servicios/ServicioArch
 import { RepositorioArchivoEmpresaDB } from 'App/Infraestructura/Implementacion/Lucid/RepositorioArchivoEmpresaDB'
 import { validadorArchivosEmpresa } from './Validadores/ValidadorArchivosEmpresa'
 import { extname } from 'path';
-import Env from '@ioc:Adonis/Core/Env';
 import Drive from '@ioc:Adonis/Core/Drive';
+import { validadorVincularManual } from './Validadores/ValidadorVincularManual';
+import { MapeadorFicheroAdonis } from '../Mapeadores/MapeadorFicheroAdonis';
+import { RepositorioFicheroLocal } from 'App/Infraestructura/Ficheros/RepositorioFicheroLocal';
 
 export default class ControladorArchivoEmpresa {
   private service: ServicioArchivoEmpresa
   constructor() {
-    this.service = new ServicioArchivoEmpresa(new RepositorioArchivoEmpresaDB())
+    this.service = new ServicioArchivoEmpresa(new RepositorioArchivoEmpresaDB(), new RepositorioFicheroLocal)
   }
 
   public async listarPorEmpresa({ request, response }: HttpContextContract) {
@@ -38,7 +40,7 @@ export default class ControladorArchivoEmpresa {
       return response.status(400).send({ mensaje: 'Formato incorrecto para el archivo' })
     }
     const dataArchivoEmpresa = request.all() as any
-    const archivoEmpresa = await this.service.actualizarArchivoEmpresa(params.id, dataArchivoEmpresa, manual)
+    const archivoEmpresa = await this.service.actualizarArchivoEmpresa(params.id, dataArchivoEmpresa)
     return archivoEmpresa
   }
 
@@ -51,8 +53,18 @@ export default class ControladorArchivoEmpresa {
       return response.status(400).send({ mensaje: 'Formato incorrecto para el archivo' })
     }
     const dataArchivoEmpresa = request.all()
-    const archivoEmpresa = await this.service.guardarArchivoEmpresa(dataArchivoEmpresa, manual)
+    const archivoEmpresa = await this.service.guardarArchivoEmpresa(dataArchivoEmpresa)
     return archivoEmpresa
+  }
+
+  public async vincularManual({request, response}: HttpContextContract){
+    const { manual, idArchivo, idEmpresa } = await request.validate({ schema: validadorVincularManual })
+    const ficheroManual = await MapeadorFicheroAdonis.obtenerFichero(manual)
+    await this.service.guardarManual(ficheroManual, idEmpresa, idArchivo)
+    response.status(200).send({
+      mensaje: "Manual asociado correctamente.",
+      estado: 200
+    })
   }
 
   public async guardarMultiplesArchivosEmpresa({ request, response }: HttpContextContract) {
@@ -93,8 +105,6 @@ export default class ControladorArchivoEmpresa {
 
       return response.stream(await Drive.getStream(ubicacion))
     } catch (error) {
-      console.log(error);
-
       response.status(400).send("Archivo no encontrado")
     }
 
