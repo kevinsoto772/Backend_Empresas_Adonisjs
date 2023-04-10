@@ -10,6 +10,7 @@ Route.group(() => {
   Route.get('/:id', accion_path + '.obtenerArchivoEmpresaPorId')
   Route.post('/registro', accion_path + '.guardarArchivoEmpresa')
   Route.post('/registro-multiple', accion_path + '.guardarMultiplesArchivosEmpresa')
+  Route.post('/vincular-manual', accion_path + '.vincularManual')
   Route.patch('/:id', accion_path + '.actualizarArchivoEmpresa')
   Route.put('/estado/:id', accion_path + '.cambiarEstado')
 }).prefix('api/v1/archivo_empresa').middleware('autenticacionJwt')

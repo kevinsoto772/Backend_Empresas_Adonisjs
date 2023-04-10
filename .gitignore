@@ -9,3 +9,5 @@ uploads/logos_empresas/*
 !uploads/logos_empresas/.gitkeep
 uploads/reportes_archivo/*
 !uploads/reportes_archivo/.gitkeep
+uploads/manuales/*
+!uploads/manuales/.gitkeep

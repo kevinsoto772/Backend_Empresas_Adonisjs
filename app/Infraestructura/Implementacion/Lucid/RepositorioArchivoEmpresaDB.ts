@@ -1,16 +1,20 @@
-/* eslint-disable max-len */
-/* eslint-disable @typescript-eslint/semi */
-/* eslint-disable @typescript-eslint/naming-convention */
-/* eslint-disable @typescript-eslint/explicit-member-accessibility */
 import { Paginador } from 'App/Dominio/Paginador';
 import { MapeadorPaginacionDB } from './MapeadorPaginacionDB';
 import { RepositorioArchivoEmpresa } from 'App/Dominio/Repositorios/RepositorioArchivoEmpresa';
 import { ArchivoEmpresa } from 'App/Dominio/Datos/Entidades/ArchivoEmpresa';
 import TblArchivoEmpresa from '../../Datos/Entidad/ArchivoEmpresa';
-import Env from '@ioc:Adonis/Core/Env';
-import Drive from '@ioc:Adonis/Core/Drive';
+import { Exception } from '@adonisjs/core/build/standalone';
 
 export class RepositorioArchivoEmpresaDB implements RepositorioArchivoEmpresa {
+  async obtenerArchivoEmpresa({ idArchivo, idEmpresa }: { idArchivo: string; idEmpresa: string; }) {
+    return await TblArchivoEmpresa.query().where('are_archivo_id', idArchivo).andWhere('are_empresa_id', idEmpresa).first()
+  }
+
+  async cambiarEstadoArchivosEmpresa(idEmpresa: string, idArchivos: string[], nuevoEstado: boolean): Promise<void> {
+    await TblArchivoEmpresa.query().update({
+      are_estado: nuevoEstado
+    }).where('are_empresa_id', idEmpresa).andWhereIn('are_archivo_id', idArchivos)
+  }
 
   async eliminarArchivosEmpresa(idEmpresa: string, idArchivos: string[]): Promise<number> {
     const resultado = await TblArchivoEmpresa.query()
@@ -21,7 +25,7 @@ export class RepositorioArchivoEmpresaDB implements RepositorioArchivoEmpresa {
   }
 
   async obtenerArchivosPorEmpresa(idEmpresa: string): Promise<ArchivoEmpresa[]> {
-    const archivosEmpresaDb = await TblArchivoEmpresa.query().where({'idEmpresa': idEmpresa, 'estado':true})
+    const archivosEmpresaDb = await TblArchivoEmpresa.query().where({ 'idEmpresa': idEmpresa })
     return archivosEmpresaDb.map(archivoEmpresaDb => {
       return archivoEmpresaDb.obtenerArchivoEmpresa()
     })
@@ -49,43 +53,28 @@ export class RepositorioArchivoEmpresaDB implements RepositorioArchivoEmpresa {
   }
 
   async obtenerArchivoEmpresaPorId(id: string): Promise<ArchivoEmpresa> {
-    const archivoEmpresa = await TblArchivoEmpresa.findOrFail(id)
-    return archivoEmpresa.obtenerArchivoEmpresa()
+    try{
+      const archivoEmpresa = await TblArchivoEmpresa.findOrFail(id)
+      return archivoEmpresa.obtenerArchivoEmpresa()  
+    }catch{
+      throw new Exception('No se encontró el archivo empresa con id: ' + id, 404)
+    }
   }
 
-  async guardarArchivoEmpresa(archivoEmpresa: ArchivoEmpresa, manual: any): Promise<ArchivoEmpresa> {
-    if (manual) {
-      manual.clientName.replace(/\s+/g, '_');
-      await manual.moveToDisk('manuales', {
-        name: `${archivoEmpresa.id}.${manual.extname}`
-      });
-    }
+  async guardarArchivoEmpresa(archivoEmpresa: ArchivoEmpresa): Promise<ArchivoEmpresa> {
     let archivoEmpresaDB = new TblArchivoEmpresa()
-    archivoEmpresa.manual = `${archivoEmpresa.id}.${manual.extname}`;
     archivoEmpresaDB.establecerArchivoEmpresaDb(archivoEmpresa)
     await archivoEmpresaDB.save()
     return archivoEmpresaDB
   }
 
-  async actualizarArchivoEmpresa(id: string, archivoEmpresa: ArchivoEmpresa, manual?: any): Promise<any> {
+  async actualizarArchivoEmpresa(id: string, archivoEmpresa: ArchivoEmpresa): Promise<any> {
     try {
-
       let archivoEmpresaRetorno = await TblArchivoEmpresa.findOrFail(id)
-      if (manual) {
-        await manual.moveToDisk('tmp', { name: manual.clientName });
-        const path = `./tmp/${manual.clientName}`;
-        const contents = await Drive.get(path)
-        await Drive.put(`/manuales/${archivoEmpresaRetorno.id}.${manual.extname}`, contents)
-        await Drive.delete(path)
-      }
-      archivoEmpresa.manual = `${archivoEmpresaRetorno.id}.${manual.extname}`
       archivoEmpresaRetorno.establecerArchivoEmpresaConId(archivoEmpresa)
-      
-      await archivoEmpresaRetorno.save()
-      return archivoEmpresaRetorno
+      return await archivoEmpresaRetorno.save()
     } catch (error) {
-      console.log(error);
-
+      console.error(error);
     }
   }
 }
