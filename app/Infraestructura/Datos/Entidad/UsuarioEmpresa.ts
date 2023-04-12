@@ -33,6 +33,8 @@ export default class TblUsuariosEmpresas extends BaseModel {
 
   @column({ columnName: 'use_cargo' }) public cargo: string
 
+  @column({ columnName: 'use_otro_cargo' }) public otroCargo: string
+
   @column({ columnName: 'use_apellido' }) public apellido: string
 
   @column({ columnName: 'use_clave' }) public clave: string
@@ -55,6 +57,7 @@ export default class TblUsuariosEmpresas extends BaseModel {
     this.identificacion = usuarioEmpresa.identificacion
     this.apellido = usuarioEmpresa.apellido
     this.cargo = usuarioEmpresa.cargo
+    this.otroCargo = usuarioEmpresa.otroCargo
     this.fechaNacimiento = usuarioEmpresa.fechaNacimiento
     this.correo = usuarioEmpresa.correo
     this.celular = usuarioEmpresa.celular
@@ -73,6 +76,7 @@ export default class TblUsuariosEmpresas extends BaseModel {
     this.identificacion = usuarioEmpresa.identificacion
     this.apellido = usuarioEmpresa.apellido
     this.cargo = usuarioEmpresa.cargo
+    this.otroCargo = usuarioEmpresa.otroCargo
     this.fechaNacimiento = usuarioEmpresa.fechaNacimiento
     this.correo = usuarioEmpresa.correo
     this.celular = usuarioEmpresa.celular
@@ -90,6 +94,7 @@ export default class TblUsuariosEmpresas extends BaseModel {
     this.identificacion = usuarioEmpresa.identificacion
     this.apellido = usuarioEmpresa.apellido
     this.cargo = usuarioEmpresa.cargo
+    this.otroCargo = usuarioEmpresa.otroCargo
     this.fechaNacimiento = usuarioEmpresa.fechaNacimiento
     this.correo = usuarioEmpresa.correo
     this.celular = usuarioEmpresa.celular
@@ -111,6 +116,7 @@ export default class TblUsuariosEmpresas extends BaseModel {
     usuarioEmpresa.correo = this.correo
     usuarioEmpresa.fechaNacimiento = this.fechaNacimiento
     usuarioEmpresa.cargo = this.cargo
+    usuarioEmpresa.otroCargo = this.otroCargo
     usuarioEmpresa.celular = this.celular
     usuarioEmpresa.telefono = this.telefono
     usuarioEmpresa.extension = this.extension
