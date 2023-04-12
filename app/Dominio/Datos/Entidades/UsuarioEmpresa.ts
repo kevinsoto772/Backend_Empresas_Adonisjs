@@ -10,6 +10,7 @@ export class UsuarioEmpresa{
   apellido: string;
   fechaNacimiento: DateTime;
   cargo: string;
+  otroCargo: string;
   correo: string;
   celular?: string;
   telefono?: string;
