@@ -1,5 +1,3 @@
-/* eslint-disable @typescript-eslint/explicit-member-accessibility */
-/* eslint-disable @typescript-eslint/semi */
 import { DateTime } from 'luxon';
 import { BaseModel, BelongsTo, belongsTo, column, HasMany, hasMany} from '@ioc:Adonis/Lucid/Orm';
 import { UsuarioEmpresa } from 'App/Dominio/Datos/Entidades/UsuarioEmpresa';

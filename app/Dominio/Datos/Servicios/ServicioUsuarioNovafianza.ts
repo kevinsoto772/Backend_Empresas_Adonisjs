@@ -1,8 +1,3 @@
-/* eslint-disable max-len */
-/* eslint-disable @typescript-eslint/explicit-member-accessibility */
-/* eslint-disable @typescript-eslint/quotes */
-/* eslint-disable @typescript-eslint/semi */
-
 import { Paginador } from "App/Dominio/Paginador";
 import { v4 as uuidv4 } from 'uuid'
 import { RepositorioUsuarioNovafianza } from "App/Dominio/Repositorios/RepositorioUsuarioNovafianza";
@@ -10,6 +5,8 @@ import { UsuarioNovafianza } from "../Entidades/UsuarioNovafianza";
 import { GeneradorContrasena } from "App/Dominio/GenerarContrasena/GenerarContrasena";
 import { Encriptador } from "App/Dominio/Encriptacion/Encriptador";
 import { EnviadorEmail } from "App/Dominio/Email/EnviadorEmail";
+import { EmailBienvenida } from "App/Dominio/Email/Emails/EmailBienvenida";
+import Env from "@ioc:Adonis/Core/Env"
 
 export class ServicioUsuarioNovafianza {
   constructor(
@@ -35,12 +32,16 @@ export class ServicioUsuarioNovafianza {
     usuarioNovafianza.id = uuidv4();
     usuarioNovafianza.clave = await this.encriptador.encriptar(clave)
     usuarioNovafianza.usuario = usuarioNovafianza.identificacion.toString()
-    const usuario = this.repositorio.guardarUsuarioNovafianza(usuarioNovafianza);
-    await this.enviadorEmail.enviarEmail(
-      `Bienvenido ${usuarioNovafianza.nombre}`,
-      `Tu contraseña es: ${clave}`,
-      [usuarioNovafianza.correo]
-    )
+    const usuario = await this.repositorio.guardarUsuarioNovafianza(usuarioNovafianza);
+    await this.enviadorEmail.enviarTemplate({
+      asunto: 'Bienvenido al portal de autogestión',
+      destinatarios: usuario.correo,
+      de: Env.get('SMTP_USERNAME')
+    }, new EmailBienvenida({
+      nombre: usuario.nombre,
+      clave: clave,
+      usuario: usuario.identificacion
+    }))
     return usuario
   }
 
