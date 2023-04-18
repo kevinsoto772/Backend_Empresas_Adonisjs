@@ -3,7 +3,7 @@ import { Credenciales } from "../Modelos/Credenciales";
 
 export class EmailRecuperacionContrasena implements Email<Credenciales>{
     private readonly _modelo: Credenciales
-    private readonly _rutaTemplate: string = "App/Dominio/Email/Templates/recuperacion-contrasena.edge"
+    private readonly _rutaTemplate: string = "app/Dominio/Email/Templates/recuperacion-contrasena.edge"
 
     constructor(modelo: Credenciales) {
         this._modelo = modelo
