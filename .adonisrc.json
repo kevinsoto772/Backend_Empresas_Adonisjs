@@ -78,8 +78,8 @@
   ],
   "metaFiles": [
     {
-      "pattern": "/**/*.edge",
-      "reloadServer": false
+      "pattern": "**/*.edge",
+      "reloadServer": true
     }
   ]
 }
