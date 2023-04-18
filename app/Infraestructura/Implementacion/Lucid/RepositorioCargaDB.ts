@@ -179,31 +179,19 @@ export class RepositorioCargaDB implements RepositorioCarga {
 
 
         if (errores.length != 0) {
+          
           this.guardarErrores(idDatosGuardados, errores, '1', archivoArreglo.length, errores.length)
 
-          this.enviadorEmail = new EnviadorEmailAdonis()
-          this.enviadorEmail.enviarTemplate({
-            asunto: 'Archivo Rechazado',
-            de: Env.get('SMTP_USERNAME'),
-            destinatarios: Env.get('EMAIL_TO'),
-            copias: Env.get('EMAIL_CO'),
-            alias: Env.get('EMAIL_ALIAS')
-
-          }, new EmailNotificarCargaArchivo({
-            titulo: 'estructura',
-            fechaCargue: DateTime.now(),
-            nombre: `${usuarioDB.nombre} ${usuarioDB.apellido}`,
-            nombreArchivo: archivo.clientName,
-            numeroRadicado: idDatosGuardados,
-            resultado: 'Falló',
-            tipoArchivo: tipoArchivo.nombre,
-            url: `${Env.get('HOSTING')}/Front-novafianza/dist/admin`
-          }))
-
+          this.enviarCorreo('Archivo Rechazado', usuarioDB.correo, 'estructura', `${usuarioDB.nombre} ${usuarioDB.apellido}`,
+          archivo.clientName, idDatosGuardados, 'Falló', tipoArchivo.nombre)
 
         }
         if (errores.length == 0) {
           this.actualizarEstadoEstructura(idDatosGuardados, (issues.length != 0) ? 4 : 2, archivoArreglo.length)
+
+          this.enviarCorreo('Archivo procesado correctamente', usuarioDB.correo, 'estructura', `${usuarioDB.nombre} ${usuarioDB.apellido}`,
+          archivo.clientName, idDatosGuardados, 'Exitoso', tipoArchivo.nombre)
+
 
           const archivoBase64 = fs.readFileSync(path, { encoding: "base64" });
 
@@ -227,7 +215,8 @@ export class RepositorioCargaDB implements RepositorioCarga {
             const datosAdicionales = {
               tipoArchivo: tipoArchivo.nombre,
               usuario: `${usuarioDB.nombre} ${usuarioDB.apellido}`,
-              nombreArchivo: archivo.clientName
+              nombreArchivo: archivo.clientName,
+              correo: usuarioDB.correo
             }
 
             this.validarRespuesta(respuesta.data, idDatosGuardados, data, tipoDeProceso, datosAdicionales, archivoArreglo.length);
@@ -425,27 +414,10 @@ export class RepositorioCargaDB implements RepositorioCarga {
         const archivoRecibido = Buffer.from(archivoLog, "base64")
         this.formatearRespuesta(archivoRecibido.toString(), idCarga, registros)
       }
+      this.enviarCorreo(asunto, datosAdicionales.correo, 'datos', datosAdicionales.usuario,
+      datosAdicionales.nombreArchivo, idCarga, mensaje, datosAdicionales.tipoArchivo)
 
-
-      this.enviadorEmail = new EnviadorEmailAdonis()
-      this.enviadorEmail.enviarTemplate({
-        asunto: asunto,
-        de: Env.get('SMTP_USERNAME'),
-        destinatarios: Env.get('EMAIL_TO'),
-        copias: Env.get('EMAIL_CO'),
-        alias: Env.get('EMAIL_ALIAS')
-
-      }, new EmailNotificarCargaArchivo({
-        fechaCargue: DateTime.now(),
-        titulo: 'datos',
-        nombre: datosAdicionales.usuario,
-        nombreArchivo: datosAdicionales.nombreArchivo,
-        numeroRadicado: idCarga,
-        resultado: mensaje,
-        tipoArchivo: datosAdicionales.tipoArchivo,
-        url: `${Env.get('HOSTING')}/Front-novafianza/dist/admin`
-      }))
-
+      
     } else {
       return this.actualizarEstadoCarga(idCarga, 3)
     }
@@ -622,5 +594,28 @@ export class RepositorioCargaDB implements RepositorioCarga {
     } catch (error) {
       console.log(error);
     }
+  }
+
+  enviarCorreo = (asunto: string, destinatarios: string, titulo: string, nombre: string,
+    nombreArchivo: string, numeroRadicado: string, resultado:any, tipoArchivo:any) => {
+   
+    this.enviadorEmail = new EnviadorEmailAdonis()
+    this.enviadorEmail.enviarTemplate({
+      asunto,
+      de: Env.get('SMTP_USERNAME'),
+      destinatarios,
+      alias: Env.get('EMAIL_ALIAS')
+
+    }, new EmailNotificarCargaArchivo({
+      fechaCargue: DateTime.now(),
+      titulo,
+      nombre,
+      nombreArchivo,
+      numeroRadicado,
+      resultado,
+      tipoArchivo,
+      url: `${Env.get('DOMINIO')}/Front-novafianza/dist/admin`
+    }))
+    
   }
 }
