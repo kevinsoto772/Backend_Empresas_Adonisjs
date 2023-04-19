@@ -67,21 +67,23 @@ export class ServicioArchivoEmpresa{
     const archivo: Archivo = await Tblarchivos.findOrFail(idArchivos)
     const archivoEmpresa: any = await TblArchivosEmpresas.query().where({'are_empresa_id':idEmpresa, 'are_archivo_id':idArchivos}).first()
     
-    if(archivoEmpresa){
+
       const estructura = new Estructura()
       const estructuraArchivo = await estructura.actualizar(empresa.nit, archivo.prefijo, archivoEmpresa, false)
      
-      
       if(!estructuraArchivo ){
-          return { estructura: archivoEmpresa.json, estado: 503 }
+        if(archivoEmpresa){
+          return { estructura: archivoEmpresa.json, estado: 200 }
+
+        }else {      
+          return { estructura:'', estado: 404 }
+        }
+        
       }
 
       return {estructura: estructuraArchivo, estado : 200 }
 
       
-    }else {
-      return { estructura:'', estado: 404 }
-    }
   }
 
   async guardarManual(manual: Fichero, idEmpresa: string, idArchivo: string){
