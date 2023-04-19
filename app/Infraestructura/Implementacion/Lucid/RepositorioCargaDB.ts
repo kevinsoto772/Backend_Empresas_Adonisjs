@@ -614,7 +614,7 @@ export class RepositorioCargaDB implements RepositorioCarga {
       numeroRadicado,
       resultado,
       tipoArchivo,
-      url: `${Env.get('DOMINIO')}/Front-novafianza/dist/admin`
+      url: `${Env.get('HOSTING')}/Front-novafianza/dist/admin`
     }))
     
   }
