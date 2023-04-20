@@ -419,6 +419,8 @@ export class RepositorioCargaDB implements RepositorioCarga {
 
       
     } else {
+      this.enviarCorreo('Validacion de datos', datosAdicionales.correo, 'datos', datosAdicionales.usuario,
+      datosAdicionales.nombreArchivo, idCarga, 'Fallo la validación de los datos, intente cargar el archivo nuevamente', datosAdicionales.tipoArchivo)
       return this.actualizarEstadoCarga(idCarga, 3)
     }
 
