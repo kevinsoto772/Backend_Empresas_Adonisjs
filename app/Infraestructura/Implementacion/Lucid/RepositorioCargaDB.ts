@@ -222,13 +222,20 @@ export class RepositorioCargaDB implements RepositorioCarga {
               correo: usuarioDB.correo
             }
 
-            console.log(respuesta);
+            console.log({respuesta});
             
 
             this.validarRespuesta(respuesta.data, idDatosGuardados, data, tipoDeProceso, datosAdicionales, archivoArreglo.length);
 
           } catch (error) {
-            console.log(error);
+
+            errores.push({
+              "descripcion": 'Fallo la carga del archivo para la validación de datos, intente mas tarde',
+              "linea": 0,
+              "variable": ''
+            })
+            this.guardarErrores(idDatosGuardados, errores, '2')
+            return
 
           }
         }
