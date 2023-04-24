@@ -49,7 +49,7 @@ export class ServicioEmail{
     }
 
     await this.enviadorEmail.enviarTemplate({
-      asunto: 'Recuperación de contraseña',
+      asunto: 'Recuperación de contraseña Novafianza S.A.S',
       destinatarios: usuarioVerificado.correo,
       de: Env.get('SMTP_USERNAME')
     }, new EmailRecuperacionContrasena({

@@ -187,7 +187,10 @@ export class RepositorioCargaDB implements RepositorioCarga {
 
         }
         if (errores.length == 0) {
+          console.log(" No hay errores de estructura");
+          
           this.actualizarEstadoEstructura(idDatosGuardados, (issues.length != 0) ? 4 : 2, archivoArreglo.length)
+          this.actualizarEstadoCarga(idDatosGuardados, 1);
 
           this.enviarCorreo('Archivo procesado correctamente', usuarioDB.correo, 'estructura', `${usuarioDB.nombre} ${usuarioDB.apellido}`,
           archivo.clientName, idDatosGuardados, 'Exitoso', tipoArchivo.nombre)
@@ -218,6 +221,9 @@ export class RepositorioCargaDB implements RepositorioCarga {
               nombreArchivo: archivo.clientName,
               correo: usuarioDB.correo
             }
+
+            console.log(respuesta);
+            
 
             this.validarRespuesta(respuesta.data, idDatosGuardados, data, tipoDeProceso, datosAdicionales, archivoArreglo.length);
 
@@ -287,8 +293,7 @@ export class RepositorioCargaDB implements RepositorioCarga {
       }
 
     }
-    console.log(filas.length);
-    
+    console.log("Guardar errores dato");
 
 
     this.guardarErrores(id, errores, '2', registros, filas.length)
@@ -366,10 +371,12 @@ export class RepositorioCargaDB implements RepositorioCarga {
   }
 
   actualizarEstadoCarga = async (id: string, estado: number, encontrados?: number, fallidos?: number) => {
-    let cargaEspecifica = await TblCargaDatos.findOrFail(id)
-    console.log({encontrados}, {fallidos});
-    
-    cargaEspecifica.actualizarEstadoCargaService(estado, encontrados, fallidos)
+    let cargaEspecifica = await TblCargaDatos.findOrFail(id)   
+    if(encontrados) {
+      cargaEspecifica.actualizarEstadoCargaService(estado, encontrados, fallidos)
+    }else{
+      cargaEspecifica.actualizarEstadoCargaService(estado)
+    }
     await cargaEspecifica.save()
   }
   actualizarEstadoEstructura = async (id: string, estado: number, encontrados?: number, fallidos?: number) => {
@@ -392,14 +399,14 @@ export class RepositorioCargaDB implements RepositorioCarga {
     const idRetorno = respuestaAxio.RespuestaMetodo.IdRetorno;
     const archivoLog = respuestaAxio.ArchivoLog;
 
-    console.log(archivoLog);
+    console.log({archivoLog});
 
 
     if (idRetorno === 0) {
       let asunto = '';
       let mensaje = '';
       if (archivoLog === '') {
-        //Enviar correo
+        console.log("No tiene archivo log");
         asunto = 'Archivo Aprobado'
         mensaje = 'Exitoso'
 
@@ -409,6 +416,9 @@ export class RepositorioCargaDB implements RepositorioCarga {
       }
 
       if (archivoLog !== '') {
+
+        console.log("Tiene archivo log");
+        
         asunto = 'Archivo Rechazado'
         mensaje = 'Falló'
         const archivoRecibido = Buffer.from(archivoLog, "base64")
@@ -440,6 +450,7 @@ export class RepositorioCargaDB implements RepositorioCarga {
     const actualizar = (tipo == '1')
       ? this.actualizarEstadoEstructura(idCarga, 3)
       : this.actualizarEstadoCarga(idCarga, 3, encontrados, fallidos)
+
 
     return actualizar
   }
