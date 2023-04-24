@@ -188,6 +188,7 @@ export class RepositorioCargaDB implements RepositorioCarga {
         }
         if (errores.length == 0) {
           this.actualizarEstadoEstructura(idDatosGuardados, (issues.length != 0) ? 4 : 2, archivoArreglo.length)
+          this.actualizarEstadoCarga(idDatosGuardados, 1);
 
           this.enviarCorreo('Archivo procesado correctamente', usuarioDB.correo, 'estructura', `${usuarioDB.nombre} ${usuarioDB.apellido}`,
           archivo.clientName, idDatosGuardados, 'Exitoso', tipoArchivo.nombre)
@@ -287,8 +288,7 @@ export class RepositorioCargaDB implements RepositorioCarga {
       }
 
     }
-    console.log(filas.length);
-    
+    console.log("Guardar errores dato");
 
 
     this.guardarErrores(id, errores, '2', registros, filas.length)
@@ -440,6 +440,7 @@ export class RepositorioCargaDB implements RepositorioCarga {
     const actualizar = (tipo == '1')
       ? this.actualizarEstadoEstructura(idCarga, 3)
       : this.actualizarEstadoCarga(idCarga, 3, encontrados, fallidos)
+
 
     return actualizar
   }
