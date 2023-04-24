@@ -234,7 +234,7 @@ export class RepositorioCargaDB implements RepositorioCarga {
               "linea": 0,
               "variable": ''
             })
-            this.guardarErrores(idDatosGuardados, errores, '2')
+            this.guardarErrores(idDatosGuardados, errores, '2', archivoArreglo.length, archivoArreglo.length)
             return
 
           }
