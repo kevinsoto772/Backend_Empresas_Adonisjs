@@ -21,14 +21,14 @@ import { EmailNotificarCargaArchivo } from 'App/Dominio/Email/Emails/EmailNotifi
 import { DateTime } from 'luxon';
 import { EnviadorEmailAdonis } from '../../Email/EnviadorEmailAdonis';
 import { generarExcelValidaciones } from 'App/Infraestructura/Utils/GenerarExcelValidaciones';
-import TblFormatoArchivo from 'App/Infraestructura/Datos/Entidad/FormatoArchivo';
-import { extname } from 'path';
+import { MapeadorFicheroAdonis } from 'App/Presentacion/Mapeadores/MapeadorFicheroAdonis';
+import { MultipartFileContract } from '@ioc:Adonis/Core/BodyParser';
 const fs = require('fs')
 export class RepositorioCargaDB implements RepositorioCarga {
   private servicioUsuario = new ServicioUsuario(new RepositorioUsuarioNovafianzaDB(), new RepositorioUsuarioEmpresaDB())
   private enviadorEmail: EnviadorEmail
   private enviadorEmail2: EnviadorEmail
-  async procesarArchivo(archivo: any, datos: string): Promise<void> {
+  async procesarArchivo(archivo: MultipartFileContract, datos: string): Promise<void> {
     const { usuario, ...datosCarga } = JSON.parse(datos);
 
     // llamar a la funcion para guardar el estado de la carga
@@ -123,15 +123,18 @@ export class RepositorioCargaDB implements RepositorioCarga {
 
 
     const tipoDeProceso = tipoArchivo.tipoArchivo.map((tipo) => tipo.valor)[0]
-
+    
+    const fichero = await MapeadorFicheroAdonis.obtenerFichero(archivo);
     //Carga de archivo
-    await archivo.moveToDisk('./', { name: archivo.clientName });
+  /*   await archivo.moveToDisk('./', { name: archivo.clientName });
     const path = `./uploads/${archivo.clientName}`;
+ */
 
+
+    const path = archivo.tmpPath;
+    
     //Validar estructura
     const validatEstructura = new ValidarEstructura();
-    // const  {esCorrecta}  = await validatEstructura.validar(entidad, tipoArchivo, path, empresa.id, idDatosGuardados)
-
 
     const archivosEmpresa = await TblArchivosEmpresas.query().where({ 'are_archivo_id': tipoArchivo.id, 'are_empresa_id': empresa.id }).first()
 
@@ -158,11 +161,6 @@ export class RepositorioCargaDB implements RepositorioCarga {
 
     const campos = estructuraJson['Campos']
 
-
-    /*  const archivoTxt = await fs.createReadStream(path, "utf8")
-     await archivoTxt.on('data', async (chunk) => { */
-
-
     await fs.readFile(path, "utf8", async (err, data) => {
       if (err) {
         console.log('error: ', err);
@@ -182,8 +180,8 @@ export class RepositorioCargaDB implements RepositorioCarga {
           
           this.guardarErrores(idDatosGuardados, errores, '1', archivoArreglo.length, errores.length)
 
-          this.enviarCorreo('Archivo Rechazado', usuarioDB.correo, 'estructura', `${usuarioDB.nombre} ${usuarioDB.apellido}`,
-          archivo.clientName, idDatosGuardados, 'Falló', tipoArchivo.nombre)
+          this.enviarCorreo('NOVAFIANZA S.A.S - Archivo con novedades', usuarioDB.correo, 'estructura', `${usuarioDB.nombre} ${usuarioDB.apellido}`,
+          archivo.clientName, idDatosGuardados, 'Falló', tipoArchivo.nombre, fichero)
 
         }
         if (errores.length == 0) {
@@ -192,8 +190,8 @@ export class RepositorioCargaDB implements RepositorioCarga {
           this.actualizarEstadoEstructura(idDatosGuardados, (issues.length != 0) ? 4 : 2, archivoArreglo.length)
           this.actualizarEstadoCarga(idDatosGuardados, 1);
 
-          this.enviarCorreo('Archivo procesado correctamente', usuarioDB.correo, 'estructura', `${usuarioDB.nombre} ${usuarioDB.apellido}`,
-          archivo.clientName, idDatosGuardados, 'Exitoso', tipoArchivo.nombre)
+          this.enviarCorreo('NOVAFIANZA S.A.S - Archivo sin novedades', usuarioDB.correo, 'estructura', `${usuarioDB.nombre} ${usuarioDB.apellido}`,
+          archivo.clientName, idDatosGuardados, 'Exitoso', tipoArchivo.nombre, fichero)
 
 
           const archivoBase64 = fs.readFileSync(path, { encoding: "base64" });
@@ -222,10 +220,9 @@ export class RepositorioCargaDB implements RepositorioCarga {
               correo: usuarioDB.correo
             }
 
-            console.log({respuesta});
             
 
-            this.validarRespuesta(respuesta.data, idDatosGuardados, data, tipoDeProceso, datosAdicionales, archivoArreglo.length);
+            this.validarRespuesta(respuesta.data, idDatosGuardados, data, tipoDeProceso, datosAdicionales, archivoArreglo.length, fichero);
 
           } catch (error) {
 
@@ -402,11 +399,9 @@ export class RepositorioCargaDB implements RepositorioCarga {
     return [entidad, convenio, prefijo];
   }
 
-  validarRespuesta = async (respuestaAxio: any, idCarga: string, data: any, tipoDeProceso: string, datosAdicionales: any, registros: number) => {
+  validarRespuesta = async (respuestaAxio: any, idCarga: string, data: any, tipoDeProceso: string, datosAdicionales: any, registros: number, fichero) => {
     const idRetorno = respuestaAxio.RespuestaMetodo.IdRetorno;
     const archivoLog = respuestaAxio.ArchivoLog;
-
-    console.log({archivoLog});
 
 
     if (idRetorno === 0) {
@@ -414,11 +409,13 @@ export class RepositorioCargaDB implements RepositorioCarga {
       let mensaje = '';
       if (archivoLog === '') {
         console.log("No tiene archivo log");
-        asunto = 'Archivo Aprobado'
+        asunto = 'NOVAFIANZA S.A.S - Archivo sin novedades'
         mensaje = 'Exitoso'
 
         this.enviarPdf(data, false, idCarga);
 
+        //Almacenar archivo localmente
+        await fichero.moveToDisk('./', { name: fichero.clientName });
         this.actualizarEstadoCarga(idCarga, 2)
       }
 
@@ -426,18 +423,18 @@ export class RepositorioCargaDB implements RepositorioCarga {
 
         console.log("Tiene archivo log");
         
-        asunto = 'Archivo Rechazado'
+        asunto = 'NOVAFIANZA S.A.S - Archivo con novedades'
         mensaje = 'Falló'
         const archivoRecibido = Buffer.from(archivoLog, "base64")
         this.formatearRespuesta(archivoRecibido.toString(), idCarga, registros)
       }
       this.enviarCorreo(asunto, datosAdicionales.correo, 'datos', datosAdicionales.usuario,
-      datosAdicionales.nombreArchivo, idCarga, mensaje, datosAdicionales.tipoArchivo)
+      datosAdicionales.nombreArchivo, idCarga, mensaje, datosAdicionales.tipoArchivo, fichero)
 
       
     } else {
-      this.enviarCorreo('Validacion de datos', datosAdicionales.correo, 'datos', datosAdicionales.usuario,
-      datosAdicionales.nombreArchivo, idCarga, 'Fallo la validación de los datos, intente cargar el archivo nuevamente', datosAdicionales.tipoArchivo)
+      this.enviarCorreo('NOVAFIANZA S.A.S - Archivo con novedades', datosAdicionales.correo, 'datos', datosAdicionales.usuario,
+      datosAdicionales.nombreArchivo, idCarga, 'Fallo la validación de los datos, intente cargar el archivo nuevamente', datosAdicionales.tipoArchivo, fichero)
       return this.actualizarEstadoCarga(idCarga, 3)
     }
 
@@ -617,7 +614,13 @@ export class RepositorioCargaDB implements RepositorioCarga {
   }
 
   enviarCorreo = (asunto: string, destinatarios: string, titulo: string, nombre: string,
-    nombreArchivo: string, numeroRadicado: string, resultado:any, tipoArchivo:any) => {
+    nombreArchivo: string, numeroRadicado: string, resultado:any, tipoArchivo:any, fichero) => {
+
+      
+const today = new Date();
+const date = today.getFullYear()+'-'+(today.getMonth()+1)+'-'+today.getDate();
+const time = today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
+const dateTime = date+' '+time;
    
     this.enviadorEmail = new EnviadorEmailAdonis()
     this.enviadorEmail.enviarTemplate({
@@ -627,7 +630,7 @@ export class RepositorioCargaDB implements RepositorioCarga {
       alias: Env.get('EMAIL_ALIAS')
 
     }, new EmailNotificarCargaArchivo({
-      fechaCargue: DateTime.now(),
+      fechaCargue: dateTime,
       titulo,
       nombre,
       nombreArchivo,
@@ -635,7 +638,7 @@ export class RepositorioCargaDB implements RepositorioCarga {
       resultado,
       tipoArchivo,
       url: `${Env.get('DOMINIO')}/Front-novafianza/dist/admin`
-    }))
+    }),fichero)
     
   }
 }

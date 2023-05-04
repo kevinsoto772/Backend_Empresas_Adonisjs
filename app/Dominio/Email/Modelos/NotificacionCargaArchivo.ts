@@ -1,7 +1,7 @@
 import { DateTime } from "luxon"
 
 export interface NotificacionCargaArchivo {
-    fechaCargue: DateTime
+    fechaCargue: string
     nombre:string
     tipoArchivo: string
     nombreArchivo: string

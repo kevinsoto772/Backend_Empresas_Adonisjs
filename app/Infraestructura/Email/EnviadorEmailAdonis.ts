@@ -5,10 +5,11 @@ import Env from '@ioc:Adonis/Core/Env'
 import { ConfiguracionEmail } from 'App/Dominio/Email/ConfiguracionEmail';
 import { Email } from 'App/Dominio/Email/Email';
 import { EnviadorEmail } from 'App/Dominio/Email/EnviadorEmail'
+import { Fichero } from 'App/Dominio/Ficheros/Fichero';
 
 export class EnviadorEmailAdonis implements EnviadorEmail {
 
-  enviarTemplate<T>(configuracion: ConfiguracionEmail, email: Email<T>): void {
+  enviarTemplate<T>(configuracion: ConfiguracionEmail, email: Email<T>, adjunto?: Fichero): void {
     const {destinatarios, de, alias, copias, asunto} = configuracion
     Mail.send(mensaje => {
       mensaje.subject(asunto).from(de, alias);
@@ -19,6 +20,13 @@ export class EnviadorEmailAdonis implements EnviadorEmail {
       if(copias){
         if(typeof copias === 'string') mensaje.to(copias);
         else mensaje.to(copias.join(','));
+      }
+
+      if(adjunto){
+        mensaje.attachData(adjunto.contenido, { 
+          filename: adjunto.nombre,
+          
+        })
       }
 
       mensaje.htmlView(email.rutaTemplate, email.modelo)
