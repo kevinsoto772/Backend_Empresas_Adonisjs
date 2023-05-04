@@ -616,11 +616,6 @@ export class RepositorioCargaDB implements RepositorioCarga {
   enviarCorreo = (asunto: string, destinatarios: string, titulo: string, nombre: string,
     nombreArchivo: string, numeroRadicado: string, resultado:any, tipoArchivo:any, fichero) => {
 
-      
-const today = new Date();
-const date = this.format(new Date());
-const time = today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
-const dateTime = date+' '+time;
    
     this.enviadorEmail = new EnviadorEmailAdonis()
     this.enviadorEmail.enviarTemplate({
@@ -630,7 +625,7 @@ const dateTime = date+' '+time;
       alias: Env.get('EMAIL_ALIAS')
 
     }, new EmailNotificarCargaArchivo({
-      fechaCargue: dateTime,
+      fechaCargue: this.format(new Date()),
       titulo,
       nombre,
       nombreArchivo,
@@ -643,21 +638,22 @@ const dateTime = date+' '+time;
   }
 
   format(inputDate) {
-    let date, month, year;
+    let date, month, year, hour, minute, second;
   
     date = inputDate.getDate();
     month = inputDate.getMonth() + 1;
     year = inputDate.getFullYear();
+    hour = inputDate.getHours() ;
+    minute = inputDate.getMinutes();
+    second = inputDate.getSeconds();
   
-      date = date
-          .toString()
-          .padStart(2, '0');
+      date = date.toString().padStart(2, '0');  
+      month = month.toString().padStart(2, '0');
+      hour = hour.toString().padStart(2, '0');
+      minute = minute.toString().padStart(2, '0');
+      second = second.toString().padStart(2, '0');
   
-      month = month
-          .toString()
-          .padStart(2, '0');
-  
-    return `${year}-${month}-${date}`;
+    return `${year}-${month}-${date} ${hour}:${minute}:${second}`;
   }
   
 }
