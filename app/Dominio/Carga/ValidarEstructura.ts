@@ -34,7 +34,7 @@ let i = 0
           return campo.NombreCampo;
         }) */
         errores.push({
-          "descripcion": 'Los campos del archivo no tienen la estructura correcta',
+          "descripcion": 'La cantidad de columnas del archivo no corresponde con la cantidad de parámetros por cargar',
           "linea": 0,
           "variable": ''
         })
@@ -55,26 +55,5 @@ let i = 0
     return { errores, issues }
 
   }
-
-/*   guardarErrores = async (idCarga: string, errores: []) => {
-    let datosGuardar: LogErrores = {
-      id: uuidv4(),
-      error: JSON.stringify(errores),
-      idCarga,
-      tipo: '1',
-      estado: true
-    }
-    let guardarErr = new TblLogsErrores()
-    guardarErr.establecerLogErroresDb(datosGuardar)
-    await guardarErr.save()
-    return this.actualizarEstadoCarga(idCarga, 3)
-  }
-
-  actualizarEstadoCarga = async (id: string, estado: number) => {
-    let cargaEspecifica = await TblCargaDatos.findOrFail(id)
-    cargaEspecifica.actualizarEstadoCargaEstructura(estado)
-    await cargaEspecifica.save()
-  }
- */
 
 }
