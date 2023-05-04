@@ -618,7 +618,7 @@ export class RepositorioCargaDB implements RepositorioCarga {
 
       
 const today = new Date();
-const date = today.getFullYear()+'-'+(today.getMonth()+1)+'-'+today.getDate();
+const date = this.format(new Date());
 const time = today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
 const dateTime = date+' '+time;
    
@@ -641,4 +641,23 @@ const dateTime = date+' '+time;
     }),fichero)
     
   }
+
+  format(inputDate) {
+    let date, month, year;
+  
+    date = inputDate.getDate();
+    month = inputDate.getMonth() + 1;
+    year = inputDate.getFullYear();
+  
+      date = date
+          .toString()
+          .padStart(2, '0');
+  
+      month = month
+          .toString()
+          .padStart(2, '0');
+  
+    return `${year}-${month}-${date}`;
+  }
+  
 }
