@@ -31,7 +31,7 @@ export class ServicioUsuarioEmpresa{
     usuarioEmpresa.usuario = usuarioEmpresa.identificacion.toString()
     const usuario = await this.repositorio.guardarUsuarioEmpresa(usuarioEmpresa);
     await this.enviadorEmail.enviarTemplate({
-      asunto: 'Bienvenido al portal de autogestión',
+      asunto: 'Bienvenido al portal de autogestión de Novafianza S.A.S',
       destinatarios: usuario.correo,
       de: Env.get('SMTP_USERNAME')
     }, new EmailBienvenida({
