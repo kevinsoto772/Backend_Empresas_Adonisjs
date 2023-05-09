@@ -85,7 +85,7 @@ export class RepositorioCargaDB implements RepositorioCarga {
         "pNombreArchivo": archivo.clientName,
         "pArchivoBase64": archivoBase64
       }
-      this.enviarPdf(data, false, idDatosGuardados);
+      this.enviarPdf(data, true, idDatosGuardados);
       return
     }
 
@@ -415,7 +415,7 @@ export class RepositorioCargaDB implements RepositorioCarga {
         this.enviarPdf(data, false, idCarga);
 
         //Almacenar archivo localmente
-        await fichero.moveToDisk('./', { name: fichero.clientName });
+        //await fichero.moveToDisk('./', { name: fichero.clientName });
         this.actualizarEstadoCarga(idCarga, 2)
       }
 
