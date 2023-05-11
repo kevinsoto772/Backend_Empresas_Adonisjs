@@ -57,6 +57,8 @@ export default class TblArchivos extends BaseModel {
     archivo.estado = this.estado
     archivo.formatoId = this.formatoId
     archivo.descripcion = this.descripcion
+    archivo.createdAt = this.createdAt
+    archivo.updatedAt = this.updatedAt
     return archivo
   }
 
