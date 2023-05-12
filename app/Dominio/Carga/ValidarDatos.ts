@@ -43,7 +43,7 @@ export class ValidarDatos {
     //TODO: INVERTIR SIGNO < POR >
     if (item.length == 0 && campo.Obligatorio == 'N') {
       const alerta = {
-        'alerta': "El campo se encuentra vacío",
+        'descripcion': "El campo se encuentra vacío",
         'datoOriginal': item,
         'variable': campo.NombreCampo,
         "linea": linea,
@@ -76,7 +76,7 @@ export class ValidarDatos {
       }
       if (campo.Obligatorio == 'N') {        
         const alerta = {
-          'alerta': "El campo no es un número o está vacío",
+          'descripcion': "El campo no es un número o está vacío",
           'datoOriginal': item,
           'variable': campo.NombreCampo,
           "linea": linea,
