@@ -51,4 +51,35 @@ export class RepositorioArchivoDB implements RepositorioArchivo {
     const paginacion = MapeadorPaginacionDB.obtenerPaginacion(archivosDB)
     return {archivos , paginacion}
   }
+
+  async obtenerArchivosPorEmpresa(idEmpresa: string): Promise<any> {
+    /* const archivosEmpresaDb = await TblArchivoEmpresa.query().preload('archivo').where({ 'idEmpresa': idEmpresa })
+    console.log(archivosEmpresaDb[0].archivo);
+    
+    return archivosEmpresaDb.map(archivoEmpresaDb => {
+      return archivoEmpresaDb.obtenerArchivoEmpresa()
+    }) */
+    const archivos: Archivo[] = [];
+    const archivosEmpresaDb = await Tblarchivos.query().preload('ArchivosEmpresa').whereHas('ArchivosEmpresa', sql =>{
+      sql.where('emp_id', idEmpresa)
+    }).orderBy('id', 'desc').paginate(1, 100)
+
+     archivosEmpresaDb.map(archivo =>{
+      archivos.push({
+        "id": archivo.id ,
+            "nombre": archivo.nombre ,
+            "tipo": archivo.tipo ,
+            "prefijo": archivo.prefijo ,
+            "prefijoArchivo": archivo.prefijoArchivo ,
+            "estado": archivo.estado ,
+            "formatoId": archivo.formatoId ,
+            "descripcion": archivo.descripcion ,
+            "createdAt": archivo.createdAt ,
+            "updatedAt": archivo.updatedAt 
+      })
+    })
+//    return archivosEmpresaDb;
+return  {archivos}
+
+  }
 }

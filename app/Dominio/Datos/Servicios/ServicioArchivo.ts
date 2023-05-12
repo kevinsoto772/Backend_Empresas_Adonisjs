@@ -38,4 +38,8 @@ export class ServicioArchivo{
     return this.repositorio.buscar(parametros)
   }
 
+  async obtenerArchivosPorEmpresa (id: string): Promise<any>{
+    return this.repositorio.obtenerArchivosPorEmpresa(id);
+  }
+
 }
