@@ -12,6 +12,7 @@ export class RespuestaInicioSesion {
       telefono?: string,
       correo?: string,
       idEmpresa?: string
+      logoEmpresa?: string
     },
     public readonly token: string,
     public readonly rol: Rol,

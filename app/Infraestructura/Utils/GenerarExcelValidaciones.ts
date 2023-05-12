@@ -32,7 +32,7 @@ const generarExcelValidaciones = async (errores: any[], alertas: any[], tipoErro
             descripcion: registro.descripcion,
             variable: registro.variable,
             tipo: tipoError === '1' ? 'Validacion de estructura' : 'Validacion de datos',
-            categoria: 'Registros obligatorios',
+            categoria: 'Sin categorias',
             alerta: 'No',
             error: 'Sí'
         }
@@ -41,10 +41,10 @@ const generarExcelValidaciones = async (errores: any[], alertas: any[], tipoErro
     alertas.forEach( registro => {
         filas.push({
             linea: registro.linea,
-            descripcion: registro.alerta,
+            descripcion: registro.descripcion,
             variable: registro.variable,
             tipo: tipoError === '1' ? 'Validacion de estructura' : 'Validacion de datos',
-            categoria: 'Registros obligatorios',
+            categoria: 'Sin categorias',
             alerta: 'Sí',
             error: 'No'
         })
