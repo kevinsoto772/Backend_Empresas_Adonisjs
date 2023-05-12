@@ -206,7 +206,10 @@ export class RepositorioCargaDB implements RepositorioCarga {
               "pTipoProceso": tipoArchivo.prefijo,
               "pRutaArchivo": "",
               "pNombreArchivo": archivo.clientName,
-              "pArchivoBase64": archivoBase64
+              "pArchivoBase64": archivoBase64,
+              "pAnioLote": 2023,
+              "pMesLote": 3,
+              "pAprobarAutomatico": "S"
             }
             const headers = {
               'Content-Type': 'application/json'
