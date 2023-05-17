@@ -183,8 +183,8 @@ export class RepositorioCargaDB implements RepositorioCarga {
             let data;
             if(tipoDeProceso == 'WebApiCertificacionFia'){
                data = {
-                "pEntidad": entidad,
-                "pConvenio": convenio,
+                "pEntidad": empresa.nit,
+                "pConvenio": empresa.convenio,
                 "pFechaInicio": datosCarga.fechaInicial,
                 "pFechaFin": datosCarga.fechaFinal,
                 "pAnioLote": datosCarga.anio??2023,
@@ -198,8 +198,8 @@ export class RepositorioCargaDB implements RepositorioCarga {
 
             if(tipoDeProceso == 'WebApiReclamacionesFia'){
               data = {
-               "pEntidad": entidad,
-               "pConvenio": convenio,
+               "pEntidad": empresa.nit,
+               "pConvenio": empresa.convenio,
                "pFechaInicio": datosCarga.fechaInicial,
                "pFechaFin": datosCarga.fechaFinal,
                "pFechaCargue": this.format(new Date(), 2),
