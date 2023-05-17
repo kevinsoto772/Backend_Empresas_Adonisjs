@@ -29,16 +29,16 @@ export class RepositorioCargaDB implements RepositorioCarga {
   private enviadorEmail: EnviadorEmail
   private enviadorEmail2: EnviadorEmail
   async procesarArchivo(archivo: MultipartFileContract, datos: string): Promise<void> {
-    const { usuario, ...datosCarga } = JSON.parse(datos);
+    const { usuario, idEmpresa, ...datosCarga } = JSON.parse(datos);
 
     // llamar a la funcion para guardar el estado de la carga
     const idDatosGuardados = await this.guardarCarga(datos, archivo.clientName);
 
-    this.inicioValidaciones(idDatosGuardados, datosCarga, usuario, archivo, datos);
+    this.inicioValidaciones(idDatosGuardados, datosCarga, usuario, archivo, datos, idEmpresa);
 
   }
 
-  inicioValidaciones = async (idDatosGuardados, datosCarga, usuario, archivo, datos) => {
+  inicioValidaciones = async (idDatosGuardados, datosCarga, usuario, archivo, datos, idEmpresa) => {
     let errores: any = [];
     let issues: any[] = [];
 
@@ -89,64 +89,27 @@ export class RepositorioCargaDB implements RepositorioCarga {
       return
     }
 
-
-
-    const [entidad, convenio, prefijo] = this.validarNombre(archivo.clientName, tipoArchivo);
-
-
-
-    //TODO cargar archivo pdf
-
-
-    if (!prefijo) {
-      errores.push({
-        "descripcion": 'El nombre del archivo no es correcto',
-        "linea": 0,
-        "variable": ''
-      })
-      this.guardarErrores(idDatosGuardados, errores, '1')
-      return
-    }
-
-    const empresa = await TblEmpresas.findBy('emp_nit', entidad)
+    const empresa = await TblEmpresas.findBy('emp_id', idEmpresa)    
     if (!empresa) {
       errores.push({
-        "descripcion": 'La empresa no existe en la base de datos',
+        "descripcion": 'El nit de la empresa en el nombre del archivo no existe en la base de datos',
         "linea": 0,
         "variable": ''
       })
       this.guardarErrores(idDatosGuardados, errores, '1')
       return
     }
-
-
-
-
-    const tipoDeProceso = tipoArchivo.tipoArchivo.map((tipo) => tipo.valor)[0]
-    
-    const fichero = await MapeadorFicheroAdonis.obtenerFichero(archivo);
-    //Carga de archivo
-  /*   await archivo.moveToDisk('./', { name: archivo.clientName });
-    const path = `./uploads/${archivo.clientName}`;
- */
-
-
-    const path = archivo.tmpPath;
-    
-    //Validar estructura
-    const validatEstructura = new ValidarEstructura();
-
     const archivosEmpresa = await TblArchivosEmpresas.query().where({ 'are_archivo_id': tipoArchivo.id, 'are_empresa_id': empresa.id }).first()
 
     if (!archivosEmpresa) {
       errores.push({
-        "descripcion": 'El archivo no existe en la base de datos',
+        "descripcion": 'La empresa no tiene asignado este servicio, consulte con el admnistrador',
         "linea": 0,
         "variable": ''
       })
       this.guardarErrores(idDatosGuardados, errores, '1')
       return
-    }
+    }  
 
     const estructuraJson = (archivosEmpresa.json) ?? {};
     if (Object.keys(estructuraJson).length == 0) {
@@ -159,7 +122,26 @@ export class RepositorioCargaDB implements RepositorioCarga {
       return
     }
 
+
+    const isValid = this.validarNombre(archivo.clientName, empresa.nit, empresa.convenio, estructuraJson['EstructuraNombreArchivo']);
+    if (!isValid) {
+      errores.push({
+        "descripcion": `La estructura del nombre del archivo no es correcto ( ${estructuraJson['EstructuraNombreArchivo']} )`,
+        "linea": 0,
+        "variable": ''
+      })
+      this.guardarErrores(idDatosGuardados, errores, '1')
+      return
+    }
+    
+    
     const campos = estructuraJson['Campos']
+    const tipoDeProceso = tipoArchivo.tipoArchivo.map((tipo) => tipo.valor)[0]
+    
+    const fichero = await MapeadorFicheroAdonis.obtenerFichero(archivo);
+    
+    const validatEstructura = new ValidarEstructura();
+    const path = archivo.tmpPath;
 
     await fs.readFile(path, "utf8", async (err, data) => {
       if (err) {
@@ -198,19 +180,39 @@ export class RepositorioCargaDB implements RepositorioCarga {
 
           //Validacion de datos
           try {
-            const data = {
-              "pEntidad": entidad,
-              "pConvenio": convenio,
-              "pFechaInicio": datosCarga.fechaInicial,
-              "pFechaFin": datosCarga.fechaFinal,
-              "pTipoProceso": tipoArchivo.prefijo,
-              "pRutaArchivo": "",
-              "pNombreArchivo": archivo.clientName,
-              "pArchivoBase64": archivoBase64,
-              "pAnioLote": 2023,
-              "pMesLote": 3,
-              "pAprobarAutomatico": "S"
+            let data;
+            if(tipoDeProceso == 'WebApiCertificacionFia'){
+               data = {
+                "pEntidad": entidad,
+                "pConvenio": convenio,
+                "pFechaInicio": datosCarga.fechaInicial,
+                "pFechaFin": datosCarga.fechaFinal,
+                "pAnioLote": datosCarga.anio??2023,
+                "pMesLote": datosCarga.mes??3,
+                "pTipoProceso": tipoArchivo.prefijo,
+                "pRutaArchivo": "",
+                "pArchivoBase64": archivoBase64,
+                "pAprobarAutomatico": datosCarga.automatico??"S"
+              }
             }
+
+            if(tipoDeProceso == 'WebApiReclamacionesFia'){
+              data = {
+               "pEntidad": entidad,
+               "pConvenio": convenio,
+               "pFechaInicio": datosCarga.fechaInicial,
+               "pFechaFin": datosCarga.fechaFinal,
+               "pFechaCargue": this.format(new Date(), 2),
+               "pAnioReclamacion": datosCarga.anio??2023,
+               "pMesReclamacion": datosCarga.mes??3,               
+               "pTipoProceso": tipoArchivo.prefijo,
+               "pRutaArchivo": "",
+               "pArchivoBase64": archivoBase64,
+               "pAprobarAutomatico": datosCarga.automatico??"S"
+             }
+           }
+
+
             const headers = {
               'Content-Type': 'application/json'
             }
@@ -241,8 +243,6 @@ export class RepositorioCargaDB implements RepositorioCarga {
         }
       }
     })
-
-    // });
   }
 
   formatearRespuesta = async (archivo: string, id: string, registros: number) => {
@@ -392,14 +392,20 @@ export class RepositorioCargaDB implements RepositorioCarga {
     await cargaEspecifica.save()
   }
 
-  validarNombre = (nombreArchivo: string, tipoDeProceso: any): [string, number, boolean] => {
+  validarNombre = (nombreArchivo: string, nit, convenio, estructura): boolean => {
     const arrNombre = nombreArchivo.split('_');
     const entidad = arrNombre[1];
-    const convenio = parseInt(arrNombre[2]);
-    const prefijo = (tipoDeProceso?.prefijoArchivo !== arrNombre[0]) ? false : true;
+    const convenioA = arrNombre[2];
+    const prefijo = arrNombre[0];
+    const estructuraNombre = estructura
+    const arrNombreE = estructuraNombre.split('_');
 
-    //TODO: validar entidad(empresa)
-    return [entidad, convenio, prefijo];
+    
+    if (entidad == nit &&  convenioA == convenio && prefijo == arrNombreE[0] ) {
+      return true;
+    }
+    return false;           
+   
   }
 
   validarRespuesta = async (respuestaAxio: any, idCarga: string, data: any, tipoDeProceso: string, datosAdicionales: any, registros: number, fichero) => {
@@ -628,7 +634,7 @@ export class RepositorioCargaDB implements RepositorioCarga {
       alias: Env.get('EMAIL_ALIAS')
 
     }, new EmailNotificarCargaArchivo({
-      fechaCargue: this.format(new Date()),
+      fechaCargue: this.format(new Date(), 1),
       titulo,
       nombre,
       nombreArchivo,
@@ -640,7 +646,7 @@ export class RepositorioCargaDB implements RepositorioCarga {
     
   }
 
-  format(inputDate) {
+  format(inputDate, tipo: number) {
     let date, month, year, hour, minute, second;
   
     date = inputDate.getDate();
@@ -655,8 +661,11 @@ export class RepositorioCargaDB implements RepositorioCarga {
       hour = hour.toString().padStart(2, '0');
       minute = minute.toString().padStart(2, '0');
       second = second.toString().padStart(2, '0');
-  
-    return `${year}-${month}-${date} ${hour}:${minute}:${second}`;
+
+      if(tipo == 1)  {
+        return `${year}-${month}-${date} ${hour}:${minute}:${second}`;
+      }
+        return `${year}-${month}-${date}`;
   }
   
 }
