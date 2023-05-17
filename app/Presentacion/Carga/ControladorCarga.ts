@@ -30,15 +30,9 @@ export default class ControladorCarga {
       }
 
       let token = request.header('Authorization').split(' ')[1]
-      const {documento} = ServicioAutenticacionJWT.obtenerPayload(token)
+      const {documento, idEmpresa} = ServicioAutenticacionJWT.obtenerPayload(token)
       datos['usuario'] = documento
-
-     // const empresa = 
-      //const arrNombre = archivo.clientName.split('_');
-     /*  const tipoDeProceso = await Tblarchivos.find(datos.tipoArchivo)
-    if( tipoDeProceso?.prefijoArchivo !== arrNombre[0]){
-      return response.status(415).send({ mensaje: `Formato inválido: el tipo de archivo no coincide con el archivo cargado` })
-    } */
+      datos['idEmpresa'] = idEmpresa
 
     
 

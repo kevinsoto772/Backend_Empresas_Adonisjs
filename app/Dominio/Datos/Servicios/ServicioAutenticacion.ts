@@ -88,7 +88,8 @@ export class ServicioAutenticacion {
     const rolUsuario = await this.repositorioAutorizacion.obtenerRolConModulosYPermisos(usuarioVerificado.idRol)
     const token = ServicioAutenticacionJWT.generarToken({
       documento: usuarioVerificado.identificacion,
-      idRol: usuarioVerificado.idRol
+      idRol: usuarioVerificado.idRol,
+      idEmpresa:(usuarioVerificado instanceof UsuarioEmpresa)?usuarioVerificado.idEmpresa:"1"
     })
     let logoEmpresa:string | undefined = undefined;
     if(usuarioVerificado instanceof UsuarioEmpresa){
