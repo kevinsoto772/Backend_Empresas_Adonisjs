@@ -35,7 +35,7 @@ export class RepositorioCargaDB implements RepositorioCarga {
     // llamar a la funcion para guardar el estado de la carga
     const idDatosGuardados = await this.guardarCarga(datos, archivo.clientName, automatico);
 
-   // this.inicioValidaciones(idDatosGuardados, datosCarga, usuario, archivo, datos, idEmpresa);
+    this.inicioValidaciones(idDatosGuardados, datosCarga, usuario, archivo, datos, idEmpresa);
 
   }
 
