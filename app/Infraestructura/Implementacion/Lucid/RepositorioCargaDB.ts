@@ -226,9 +226,9 @@ export class RepositorioCargaDB implements RepositorioCarga {
               correo: usuarioDB.correo
             }
 
-            
+            const envioAutomatico = (datosCarga.automatico =="S")?true:false;
 
-            this.validarRespuesta(respuesta.data, idDatosGuardados, data, tipoDeProceso, datosAdicionales, archivoArreglo.length, fichero);
+            this.validarRespuesta(respuesta.data, idDatosGuardados, data, tipoDeProceso, datosAdicionales, archivoArreglo.length, fichero, envioAutomatico);
 
           } catch (error) {
 
@@ -411,7 +411,7 @@ export class RepositorioCargaDB implements RepositorioCarga {
    
   }
 
-  validarRespuesta = async (respuestaAxio: any, idCarga: string, data: any, tipoDeProceso: string, datosAdicionales: any, registros: number, fichero) => {
+  validarRespuesta = async (respuestaAxio: any, idCarga: string, data: any, tipoDeProceso: string, datosAdicionales: any, registros: number, fichero, automatico:boolean) => {
     const idRetorno = respuestaAxio.RespuestaMetodo.IdRetorno;
     const archivoLog = respuestaAxio.ArchivoLog;
 
@@ -419,18 +419,20 @@ export class RepositorioCargaDB implements RepositorioCarga {
     if (idRetorno === 0) {
       let asunto = '';
       let mensaje = '';
-      if (archivoLog === '') {
+      if (archivoLog === '' ) {
         console.log("No tiene archivo log");
         asunto = 'NOVAFIANZA S.A.S - Archivo sin novedades'
         mensaje = 'Exitoso'
 
+        if(automatico){
         this.enviarPdf(data, false, idCarga);
-
+        }
         //Almacenar archivo localmente
         //await fichero.moveToDisk('./', { name: fichero.clientName });
         this.actualizarEstadoCarga(idCarga, 2)
       }
 
+     
       if (archivoLog !== '') {
 
         console.log("Tiene archivo log");
