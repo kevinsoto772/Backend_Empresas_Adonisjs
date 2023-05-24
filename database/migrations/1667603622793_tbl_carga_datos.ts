@@ -22,7 +22,7 @@ export default class extends BaseSchema {
       table.string('car_empresa_id')
       table.integer('car_registros_fallidos_safix')
       table.integer('car_registros_aprobados_safix')
-      
+      table.boolean('car_automatico').defaultTo(false)
     })
   }
 

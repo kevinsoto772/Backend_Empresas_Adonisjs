@@ -30,11 +30,12 @@ export class RepositorioCargaDB implements RepositorioCarga {
   private enviadorEmail2: EnviadorEmail
   async procesarArchivo(archivo: MultipartFileContract, datos: string): Promise<void> {
     const { usuario, idEmpresa, ...datosCarga } = JSON.parse(datos);
+    const automatico = (datosCarga.automatico == "S")?true:false
 
     // llamar a la funcion para guardar el estado de la carga
-    const idDatosGuardados = await this.guardarCarga(datos, archivo.clientName);
+    const idDatosGuardados = await this.guardarCarga(datos, archivo.clientName, automatico);
 
-    this.inicioValidaciones(idDatosGuardados, datosCarga, usuario, archivo, datos, idEmpresa);
+   // this.inicioValidaciones(idDatosGuardados, datosCarga, usuario, archivo, datos, idEmpresa);
 
   }
 
@@ -327,7 +328,8 @@ export class RepositorioCargaDB implements RepositorioCarga {
           nombreArchivo: sql.nombre,
           nombreTipoArchivo: sql.archivo.nombre,
           estadoValidacion: sql.estadoCargaProceso.nombre,
-          estadoValidacionEstructura: sql.estadoCargaEstructura.nombre
+          estadoValidacionEstructura: sql.estadoCargaEstructura.nombre,
+          tipoCarga: (sql.automatico)?"Automático":"Prueba"
         })
 
       }
@@ -349,7 +351,7 @@ export class RepositorioCargaDB implements RepositorioCarga {
 
 
 
-  guardarCarga = async (datos: string, nombre: string): Promise<string> => {
+  guardarCarga = async (datos: string, nombre: string, automatico: boolean): Promise<string> => {
     const obtenerDatos = JSON.parse(datos);
 
     let empresa = ''
@@ -365,13 +367,14 @@ export class RepositorioCargaDB implements RepositorioCarga {
       tipoArchivo: obtenerDatos.tipoArchivo,
       empresa,
       estadoProceso: 0,
-      estadoEstructura: 1
+      estadoEstructura: 1,
+      automatico
     }
 
     let cargaArchivo = new TblCargaDatos();
 
     cargaArchivo.establecerCargaArcivoDb(datosGuardar)
-    cargaArchivo.save()
+    await cargaArchivo.save()
 
     return datosGuardar.id;
 
