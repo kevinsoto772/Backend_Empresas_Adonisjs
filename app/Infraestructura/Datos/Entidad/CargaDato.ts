@@ -24,7 +24,7 @@ export default class TblCargaDatos extends BaseModel {
   @column({ columnName: 'car_empresa_id' }) public empresa: string
   @column({ columnName: 'car_registros_fallidos_safix' }) public registrosFallidosSafix: number
   @column({ columnName: 'car_registros_aprobados_safix' }) public registrosAprobadosSafix: number
-  
+  @column({ columnName: 'car_automatico' }) public automatico: boolean
 
   @column.dateTime({ autoCreate: true, columnName: 'car_creacion' }) public createdAt: DateTime
 
@@ -46,6 +46,7 @@ export default class TblCargaDatos extends BaseModel {
     this.empresa = cargaArchivo.empresa ?? ''
     this.registrosFallidosSafix = cargaArchivo.registrosFallidosSafix ?? 0
     this.registrosAprobadosSafix = cargaArchivo.registrosAprobadosSafix ?? 0
+    this.automatico = cargaArchivo.automatico
   }
 
   public establecerCargaArcivoConId(cargaArchivo: CargaArchivo) {
@@ -63,6 +64,7 @@ export default class TblCargaDatos extends BaseModel {
     this.empresa = cargaArchivo.empresa ?? ''
     this.registrosFallidosSafix = cargaArchivo.registrosFallidosSafix ?? 0
     this.registrosAprobadosSafix = cargaArchivo.registrosAprobadosSafix ?? 0
+    this.automatico = cargaArchivo.automatico
   }
 
   public obtenerCargaArcivo(): CargaArchivo {
@@ -81,6 +83,7 @@ export default class TblCargaDatos extends BaseModel {
     cargaArchivo.empresa = this.empresa
     cargaArchivo.registrosFallidosSafix = this.registrosFallidosSafix
     cargaArchivo.registrosAprobadosSafix = this.registrosAprobadosSafix
+    cargaArchivo.automatico = this.automatico
     return cargaArchivo
   }
 

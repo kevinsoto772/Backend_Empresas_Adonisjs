@@ -16,4 +16,5 @@ export class CargaArchivo{
   empresa?:string;
   registrosFallidosSafix?: number
   registrosAprobadosSafix?: number
+  automatico:boolean
 }
