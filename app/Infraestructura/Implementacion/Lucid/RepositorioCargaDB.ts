@@ -188,12 +188,12 @@ export class RepositorioCargaDB implements RepositorioCarga {
                 "pConvenio": empresa.convenio,
                 "pFechaInicio": datosCarga.fechaInicial,
                 "pFechaFin": datosCarga.fechaFinal,
-                "pAnioLote": datosCarga.anio??2023,
-                "pMesLote": datosCarga.mes??3,
+                "pAnioLote": datosCarga.anio,
+                "pMesLote": datosCarga.mes,
                 "pTipoProceso": tipoArchivo.prefijo,
                 "pRutaArchivo": "",
                 "pArchivoBase64": archivoBase64,
-                "pAprobarAutomatico": datosCarga.automatico??"S"
+                "pAprobarAutomatico": datosCarga.automatico
               }
             }
 
@@ -204,12 +204,12 @@ export class RepositorioCargaDB implements RepositorioCarga {
                "pFechaInicio": datosCarga.fechaInicial,
                "pFechaFin": datosCarga.fechaFinal,
                "pFechaCargue": this.format(new Date(), 2),
-               "pAnioReclamacion": datosCarga.anio??2023,
-               "pMesReclamacion": datosCarga.mes??3,               
+               "pAnioReclamacion": datosCarga.anio,
+               "pMesReclamacion": datosCarga.mes,               
                "pTipoProceso": tipoArchivo.prefijo,
                "pRutaArchivo": "",
                "pArchivoBase64": archivoBase64,
-               "pAprobarAutomatico": datosCarga.automatico??"S"
+               "pAprobarAutomatico": datosCarga.automatico
              }
            }
 
