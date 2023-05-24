@@ -35,11 +35,11 @@ export class RepositorioCargaDB implements RepositorioCarga {
     // llamar a la funcion para guardar el estado de la carga
     const idDatosGuardados = await this.guardarCarga(datos, archivo.clientName, automatico);
 
-    this.inicioValidaciones(idDatosGuardados, datosCarga, usuario, archivo, datos, idEmpresa);
+    this.inicioValidaciones(idDatosGuardados, datosCarga, usuario, archivo, datos, idEmpresa, automatico);
 
   }
 
-  inicioValidaciones = async (idDatosGuardados, datosCarga, usuario, archivo, datos, idEmpresa) => {
+  inicioValidaciones = async (idDatosGuardados, datosCarga, usuario, archivo, datos, idEmpresa, automatico:boolean) => {
     let errores: any = [];
     let issues: any[] = [];
 
@@ -164,7 +164,7 @@ export class RepositorioCargaDB implements RepositorioCarga {
           this.guardarErrores(idDatosGuardados, errores, '1', archivoArreglo.length, errores.length)
 
           this.enviarCorreo('NOVAFIANZA S.A.S - Archivo con novedades', usuarioDB.correo, 'estructura', `${usuarioDB.nombre} ${usuarioDB.apellido}`,
-          archivo.clientName, idDatosGuardados, 'Falló', tipoArchivo.nombre, fichero)
+          archivo.clientName, idDatosGuardados, 'Falló', tipoArchivo.nombre, fichero, automatico)
 
         }
         if (errores.length == 0) {
@@ -174,7 +174,7 @@ export class RepositorioCargaDB implements RepositorioCarga {
           this.actualizarEstadoCarga(idDatosGuardados, 1);
 
           this.enviarCorreo('NOVAFIANZA S.A.S - Archivo sin novedades', usuarioDB.correo, 'estructura', `${usuarioDB.nombre} ${usuarioDB.apellido}`,
-          archivo.clientName, idDatosGuardados, 'Exitoso', tipoArchivo.nombre, fichero)
+          archivo.clientName, idDatosGuardados, 'Exitoso', tipoArchivo.nombre, fichero, automatico)
 
 
           const archivoBase64 = fs.readFileSync(path, { encoding: "base64" });
@@ -443,12 +443,12 @@ export class RepositorioCargaDB implements RepositorioCarga {
         this.formatearRespuesta(archivoRecibido.toString(), idCarga, registros)
       }
       this.enviarCorreo(asunto, datosAdicionales.correo, 'datos', datosAdicionales.usuario,
-      datosAdicionales.nombreArchivo, idCarga, mensaje, datosAdicionales.tipoArchivo, fichero)
+      datosAdicionales.nombreArchivo, idCarga, mensaje, datosAdicionales.tipoArchivo, fichero, automatico)
 
       
     } else {
       this.enviarCorreo('NOVAFIANZA S.A.S - Archivo con novedades', datosAdicionales.correo, 'datos', datosAdicionales.usuario,
-      datosAdicionales.nombreArchivo, idCarga, 'Fallo la validación de los datos, intente cargar el archivo nuevamente', datosAdicionales.tipoArchivo, fichero)
+      datosAdicionales.nombreArchivo, idCarga, 'Fallo la validación de los datos, intente cargar el archivo nuevamente', datosAdicionales.tipoArchivo, fichero, automatico)
       return this.actualizarEstadoCarga(idCarga, 3)
     }
 
@@ -628,9 +628,9 @@ export class RepositorioCargaDB implements RepositorioCarga {
   }
 
   enviarCorreo = (asunto: string, destinatarios: string, titulo: string, nombre: string,
-    nombreArchivo: string, numeroRadicado: string, resultado:any, tipoArchivo:any, fichero) => {
+    nombreArchivo: string, numeroRadicado: string, resultado:any, tipoArchivo:any, fichero, automatico:boolean) => {
 
-   
+   if(automatico){
     this.enviadorEmail = new EnviadorEmailAdonis()
     this.enviadorEmail.enviarTemplate({
       asunto,
@@ -648,7 +648,7 @@ export class RepositorioCargaDB implements RepositorioCarga {
       tipoArchivo,
       url: `${Env.get('DOMINIO')}/Front-novafianza/dist/admin`
     }),fichero)
-    
+  }
   }
 
   format(inputDate, tipo: number) {
