@@ -132,8 +132,7 @@ export class RepositorioCargaDB implements RepositorioCarga {
       console.log("Estructura en bd");   
 
     } else {
-      console.log("Actualizo la estructura");      
-      estructuraJson = estructuraArchivo;
+      console.log("Actualizo la estructura");    
       console.log(estructuraArchivo);     
     }
 

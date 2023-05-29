@@ -102,7 +102,7 @@ export class ValidarDatos {
       
       if (campo.Obligatorio == 'S') {
         const error = {
-          'descripcion': "El dato debe ser una fecha",
+          'descripcion': `El dato debe ser una fecha o el formato no corresponde, ${campo.FormatoFecha}`,
           'datoOriginal': item,
           'formatosPermitidos': campo.FormatoFecha,
           'variable': campo.NombreCampo,
@@ -116,7 +116,7 @@ export class ValidarDatos {
       if (campo.Obligatorio == 'N') {
 
         const alerta = {
-          'descripcion': "El dato debe ser una fecha",
+          'descripcion': `El dato debe ser una fecha o el formato no corresponde, ${campo.FormatoFecha}`,
           'datoOriginal': item,
           'formatosPermitidos': campo.FormatoFecha,
           'variable': campo.NombreCampo,
