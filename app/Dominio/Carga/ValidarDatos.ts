@@ -94,9 +94,12 @@ export class ValidarDatos {
 
   validarDate = (item: string, campo: ColumnaArchivo, errors: any[], issus: any[], linea:number) => {
     const formats = [campo.FormatoFecha];
+    
     const dateMomentIsValid = moment(item, formats, true).isValid();
-
+    
     if (!dateMomentIsValid) {
+      console.log({item, formats, dateMomentIsValid});
+      
       if (campo.Obligatorio == 'S') {
         const error = {
           'descripcion': "El dato debe ser una fecha",
@@ -111,6 +114,7 @@ export class ValidarDatos {
       }
 
       if (campo.Obligatorio == 'N') {
+
         const alerta = {
           'descripcion': "El dato debe ser una fecha",
           'datoOriginal': item,
