@@ -242,7 +242,10 @@ export class RepositorioCargaDB implements RepositorioCarga {
               correo: usuarioDB.correo
             }
 
-            const envioAutomatico = (datosCarga.automatico == "S") ? true : false;
+            const envioAutomatico = (datosCarga.automatico === "S") ? true : false;
+
+            console.log({envioAutomatico});
+            
 
             this.validarRespuesta(respuesta.data, idDatosGuardados, data, tipoDeProceso, datosAdicionales, archivoArreglo.length, fichero, envioAutomatico);
 
@@ -431,6 +434,7 @@ export class RepositorioCargaDB implements RepositorioCarga {
     const idRetorno = respuestaAxio.RespuestaMetodo.IdRetorno;
     const archivoLog = respuestaAxio.ArchivoLog;
 
+console.log({automatico1: automatico});
 
     if (idRetorno === 0) {
       let asunto = '';
@@ -646,6 +650,8 @@ export class RepositorioCargaDB implements RepositorioCarga {
   enviarCorreo = (asunto: string, destinatarios: string, titulo: string, nombre: string,
     nombreArchivo: string, numeroRadicado: string, resultado: any, tipoArchivo: any, fichero, automatico: boolean) => {
 
+      console.log({automatico2: automatico});
+      
     if (automatico) {
       this.enviadorEmail = new EnviadorEmailAdonis()
       this.enviadorEmail.enviarTemplate({
