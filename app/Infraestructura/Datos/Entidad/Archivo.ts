@@ -19,6 +19,8 @@ export default class TblArchivos extends BaseModel {
 
   @column({ columnName: 'arc_prefijo_archivo' }) public prefijoArchivo: string
 
+  @column({ columnName: 'arc_prefijo_parametrizacion' }) public prefijoParametrizacion?: string
+ 
   @column({ columnName: 'arc_formato_id' }) public formatoId: string
 
   @column({ columnName: 'arc_descripcion' }) public descripcion?: string
@@ -33,6 +35,7 @@ export default class TblArchivos extends BaseModel {
     this.tipo = archivo.tipo
     this.prefijo = archivo.prefijo
     this.prefijoArchivo = archivo.prefijoArchivo
+    this.prefijoParametrizacion = archivo.prefijoParametrizacion
     this.estado = archivo.estado
     this.formatoId = archivo.formatoId
     this.descripcion = archivo.descripcion
@@ -43,6 +46,7 @@ export default class TblArchivos extends BaseModel {
     this.tipo = archivo.tipo
     this.prefijo = archivo.prefijo
     this.prefijoArchivo = archivo.prefijoArchivo
+    this.prefijoParametrizacion = archivo.prefijoParametrizacion
     this.estado = archivo.estado
     this.formatoId = archivo.formatoId
     this.descripcion = archivo.descripcion
@@ -55,7 +59,7 @@ export default class TblArchivos extends BaseModel {
     archivo.tipo = this.tipo
     archivo.prefijo = this.prefijo
     archivo.prefijoArchivo = this.prefijoArchivo
-    archivo.estado = this.estado
+    archivo.prefijoParametrizacion = this.prefijoParametrizacion
     archivo.formatoId = this.formatoId
     archivo.descripcion = this.descripcion
     archivo.createdAt = this.createdAt

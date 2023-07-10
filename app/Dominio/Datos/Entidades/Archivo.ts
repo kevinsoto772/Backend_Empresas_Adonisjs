@@ -9,6 +9,7 @@ export class Archivo{
   tipo: string;
   prefijo: string;
   prefijoArchivo: string;
+  prefijoParametrizacion?: string;
   estado: boolean;
   descripcion?:string;
   formatoId:string;
