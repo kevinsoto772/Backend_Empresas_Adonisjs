@@ -115,7 +115,7 @@ export class RepositorioCargaDB implements RepositorioCarga {
     }
 
     const estructura = new Estructura()
-    const estructuraArchivo = await estructura.actualizar(empresa.nit, tipoArchivo.prefijo, archivosEmpresa, false)
+    const estructuraArchivo = await estructura.actualizar(empresa.nit, tipoArchivo.prefijoParametrizacion, archivosEmpresa, false)
 
     let estructuraJson = {}
     if (!estructuraArchivo) {
@@ -228,6 +228,13 @@ export class RepositorioCargaDB implements RepositorioCarga {
                 "pAprobarAutomatico": datosCarga.automatico
               }
             }
+            console.log('===============DATOS DE ENVIO==============');
+            
+
+            console.log(`${Env.get('URL_CARGA')}/${tipoDeProceso}/api/ValidarArchivo/ValidarCargarArchivo`);            
+            console.log(data);
+            
+            console.log('==============RESPUESTA===============');
 
 
             const headers = {
@@ -235,6 +242,9 @@ export class RepositorioCargaDB implements RepositorioCarga {
             }
             const respuesta = await axios.post(`${Env.get('URL_CARGA')}/${tipoDeProceso}/api/ValidarArchivo/ValidarCargarArchivo`, data, { headers })
 
+            console.log(respuesta);
+            console.log('=============================');
+            
             const datosAdicionales = {
               tipoArchivo: tipoArchivo.nombre,
               usuario: `${usuarioDB.nombre} ${usuarioDB.apellido}`,
@@ -244,7 +254,7 @@ export class RepositorioCargaDB implements RepositorioCarga {
 
             const envioAutomatico = (datosCarga.automatico === "S") ? true : false;
 
-            console.log({envioAutomatico});
+         //   console.log({envioAutomatico});
             
 
             this.validarRespuesta(respuesta.data, idDatosGuardados, data, tipoDeProceso, datosAdicionales, archivoArreglo.length, fichero, envioAutomatico);
@@ -434,7 +444,7 @@ export class RepositorioCargaDB implements RepositorioCarga {
     const idRetorno = respuestaAxio.RespuestaMetodo.IdRetorno;
     const archivoLog = respuestaAxio.ArchivoLog;
 
-console.log({automatico1: automatico});
+//console.log({automatico1: automatico});
 
     if (idRetorno === 0) {
       let asunto = '';
@@ -650,7 +660,7 @@ console.log({automatico1: automatico});
   enviarCorreo = (asunto: string, destinatarios: string, titulo: string, nombre: string,
     nombreArchivo: string, numeroRadicado: string, resultado: any, tipoArchivo: any, fichero, automatico: boolean) => {
 
-      console.log({automatico2: automatico});
+    //  console.log({automatico2: automatico});
       
     if (automatico) {
       this.enviadorEmail = new EnviadorEmailAdonis()

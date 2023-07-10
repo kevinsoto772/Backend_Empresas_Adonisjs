@@ -69,7 +69,7 @@ export class ServicioArchivoEmpresa{
     
 
       const estructura = new Estructura()
-      const estructuraArchivo = await estructura.actualizar(empresa.nit, archivo.prefijo, archivoEmpresa, false)
+      const estructuraArchivo = await estructura.actualizar(empresa.nit, archivo.prefijoParametrizacion, archivoEmpresa, false)
      
       if(!estructuraArchivo ){
         console.log("entro");

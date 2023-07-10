@@ -14,7 +14,7 @@ export class Estructura {
         const empresa = await TblEmpresas.query().where('emp_id', archivoEmpresa.idEmpresa).first()
         const archivo = await TblArchivos.query().where('arc_id', archivoEmpresa.idArchivo).first()
         if (empresa && archivo) {
-          const json = await this.actualizar(empresa.nit, archivo.prefijo, archivoEmpresa, true)
+          const json = await this.actualizar(empresa.nit, archivo.prefijoParametrizacion, archivoEmpresa, true)
           console.log("Estructura");
           console.log(json);
 
