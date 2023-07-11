@@ -231,7 +231,9 @@ export class RepositorioCargaDB implements RepositorioCarga {
             console.log('===============DATOS DE ENVIO==============');
             
 
-            console.log(`${Env.get('URL_CARGA')}/${tipoDeProceso}/api/ValidarArchivo/ValidarCargarArchivo`);            
+            console.log(`${Env.get('URL_CARGA')}/${tipoDeProceso}/api/ValidarArchivo/ValidarCargarArchivo`); 
+            console.log(" ----- ");
+                       
             console.log(data);
             
             console.log('==============RESPUESTA===============');
@@ -242,7 +244,7 @@ export class RepositorioCargaDB implements RepositorioCarga {
             }
             const respuesta = await axios.post(`${Env.get('URL_CARGA')}/${tipoDeProceso}/api/ValidarArchivo/ValidarCargarArchivo`, data, { headers })
 
-            console.log(respuesta);
+            console.log(respuesta.data??respuesta);
             console.log('=============================');
             
             const datosAdicionales = {
