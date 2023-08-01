@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/explicit-member-accessibility */
 /* eslint-disable @typescript-eslint/semi */
 import { DateTime } from 'luxon';
-import { BaseModel, column, HasMany, hasMany} from '@ioc:Adonis/Lucid/Orm';
+import { BaseModel, column, HasMany, hasMany } from '@ioc:Adonis/Lucid/Orm';
 import { ArchivoEmpresa } from 'App/Dominio/Datos/Entidades/ArchivoEmpresa';
 import TblArchivos from './Archivo';
 import TblEmpresas from './Empresa';
@@ -16,35 +16,44 @@ export default class TblArchivosEmpresas extends BaseModel {
 
   @column({ columnName: 'are_tipo' }) public tipo?: string
 
-  @column({columnName: 'are_estado'}) public estado: boolean
+  @column({ columnName: 'are_manual' }) public manual?: string
 
-  @column.dateTime({ autoCreate: true , columnName: 'are_creacion'}) public createdAt: DateTime
+  @column({ columnName: 'are_estructura' }) public json?: JSON
+
+  @column({ columnName: 'are_estado' }) public estado: boolean
+
+  @column.dateTime({ autoCreate: true, columnName: 'are_creacion' }) public createdAt: DateTime
 
   @column.dateTime({ autoCreate: true, autoUpdate: true, columnName: 'are_actualizacion' }) public updatedAt: DateTime
 
-  public establecerArchivoEmpresaDb (archivoEmpresa: ArchivoEmpresa) {
+  public establecerArchivoEmpresaDb(archivoEmpresa: ArchivoEmpresa) {
     this.id = archivoEmpresa.id
     this.tipo = archivoEmpresa.tipo
+    this.manual = archivoEmpresa.manual
     this.idArchivo = archivoEmpresa.idArchivo
     this.idEmpresa = archivoEmpresa.idEmpresa
     this.estado = archivoEmpresa.estado
+    this.json = archivoEmpresa.json
   }
 
-  public establecerArchivoEmpresaConId (archivoEmpresa: ArchivoEmpresa) {
+  public establecerArchivoEmpresaConId(archivoEmpresa: ArchivoEmpresa) {
     this.tipo = archivoEmpresa.tipo
+    this.manual = archivoEmpresa.manual
     this.idArchivo = archivoEmpresa.idArchivo
     this.idEmpresa = archivoEmpresa.idEmpresa
     this.estado = archivoEmpresa.estado
+    this.json = archivoEmpresa.json
   }
 
-  public obtenerArchivoEmpresa (): ArchivoEmpresa {
+  public obtenerArchivoEmpresa(): ArchivoEmpresa {
     const archivoEmpresa = new ArchivoEmpresa()
     archivoEmpresa.id = this.id
     archivoEmpresa.tipo = this.tipo
+    archivoEmpresa.manual = this.manual
     archivoEmpresa.idArchivo = this.idArchivo
     archivoEmpresa.idEmpresa = this.idEmpresa
     archivoEmpresa.estado = this.estado
-
+    archivoEmpresa.json = this.json
     return archivoEmpresa
   }
 

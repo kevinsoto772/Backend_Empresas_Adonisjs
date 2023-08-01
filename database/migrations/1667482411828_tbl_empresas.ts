@@ -10,7 +10,7 @@ export default class TblEmpresas extends BaseSchema {
       table.string('emp_nit')
       table.string('emp_logo')
       table.boolean('emp_estado').defaultTo(true)
-      table.integer('emp_convenio')
+      table.string('emp_convenio')
       table.timestamp('emp_creacion', { useTz: true }).defaultTo(this.now())
       table.timestamp('emp_actualizacion', { useTz: true }).defaultTo(this.now())
     })

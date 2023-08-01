@@ -1,5 +1,3 @@
-/* eslint-disable @typescript-eslint/explicit-member-accessibility */
-/* eslint-disable @typescript-eslint/semi */
 import { DateTime } from 'luxon';
 import { BaseModel, BelongsTo, belongsTo, column, HasMany, hasMany} from '@ioc:Adonis/Lucid/Orm';
 import { UsuarioEmpresa } from 'App/Dominio/Datos/Entidades/UsuarioEmpresa';
@@ -21,13 +19,19 @@ export default class TblUsuariosEmpresas extends BaseModel {
 
   @column({ columnName: 'use_empresa_id' }) public idEmpresa: string
 
-  @column({ columnName: 'use_telefono' }) public telefono: string
+  @column({ columnName: 'use_celular' }) public celular?: string
+
+  @column({ columnName: 'use_telefono' }) public telefono?: string
+
+  @column({ columnName: 'use_extension' }) public extension?: string
 
   @column({ columnName: 'use_correo' }) public correo: string
 
   @column({ columnName: 'use_fechaNacimiento' }) public fechaNacimiento: DateTime
 
   @column({ columnName: 'use_cargo' }) public cargo: string
+
+  @column({ columnName: 'use_otro_cargo' }) public otroCargo: string
 
   @column({ columnName: 'use_apellido' }) public apellido: string
 
@@ -51,9 +55,12 @@ export default class TblUsuariosEmpresas extends BaseModel {
     this.identificacion = usuarioEmpresa.identificacion
     this.apellido = usuarioEmpresa.apellido
     this.cargo = usuarioEmpresa.cargo
+    this.otroCargo = usuarioEmpresa.otroCargo
     this.fechaNacimiento = usuarioEmpresa.fechaNacimiento
     this.correo = usuarioEmpresa.correo
+    this.celular = usuarioEmpresa.celular
     this.telefono = usuarioEmpresa.telefono
+    this.extension = usuarioEmpresa.extension
     this.claveTemporal = usuarioEmpresa.claveTemporal
     this.idRol = usuarioEmpresa.idRol
   }
@@ -67,10 +74,30 @@ export default class TblUsuariosEmpresas extends BaseModel {
     this.identificacion = usuarioEmpresa.identificacion
     this.apellido = usuarioEmpresa.apellido
     this.cargo = usuarioEmpresa.cargo
+    this.otroCargo = usuarioEmpresa.otroCargo
     this.fechaNacimiento = usuarioEmpresa.fechaNacimiento
     this.correo = usuarioEmpresa.correo
+    this.celular = usuarioEmpresa.celular
     this.telefono = usuarioEmpresa.telefono
+    this.extension = usuarioEmpresa.extension
     this.claveTemporal = usuarioEmpresa.claveTemporal
+    this.idRol = usuarioEmpresa.idRol
+  }
+
+  public establecerUsuarioEmpresaConId (usuarioEmpresa: UsuarioEmpresa) {
+    this.nombre = usuarioEmpresa.nombre
+    this.estado = usuarioEmpresa.estado
+    this.usuario = usuarioEmpresa.usuario
+    this.idEmpresa = usuarioEmpresa.idEmpresa
+    this.identificacion = usuarioEmpresa.identificacion
+    this.apellido = usuarioEmpresa.apellido
+    this.cargo = usuarioEmpresa.cargo
+    this.otroCargo = usuarioEmpresa.otroCargo
+    this.fechaNacimiento = usuarioEmpresa.fechaNacimiento
+    this.correo = usuarioEmpresa.correo
+    this.celular = usuarioEmpresa.celular
+    this.telefono = usuarioEmpresa.telefono
+    this.extension = usuarioEmpresa.extension
     this.idRol = usuarioEmpresa.idRol
   }
 
@@ -87,7 +114,10 @@ export default class TblUsuariosEmpresas extends BaseModel {
     usuarioEmpresa.correo = this.correo
     usuarioEmpresa.fechaNacimiento = this.fechaNacimiento
     usuarioEmpresa.cargo = this.cargo
+    usuarioEmpresa.otroCargo = this.otroCargo
+    usuarioEmpresa.celular = this.celular
     usuarioEmpresa.telefono = this.telefono
+    usuarioEmpresa.extension = this.extension
     usuarioEmpresa.apellido = this.apellido
     usuarioEmpresa.idRol = this.idRol
 

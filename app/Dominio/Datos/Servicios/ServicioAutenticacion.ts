@@ -15,6 +15,7 @@ import { RepositorioAutorizacion } from 'App/Dominio/Repositorios/RepositorioAut
 import { RepositorioUsuarioNovafianza } from 'App/Dominio/Repositorios/RepositorioUsuarioNovafianza'
 import { RepositorioUsuarioEmpresa } from 'App/Dominio/Repositorios/RepositorioUsuarioEmpresa'
 import { EnviadorEmail } from 'App/Dominio/Email/EnviadorEmail'
+import Tblempresas from 'App/Infraestructura/Datos/Entidad/Empresa';
 
 export class ServicioAutenticacion {
   private servicioUsuarioEmpresa: ServicioUsuarioEmpresa
@@ -87,8 +88,16 @@ export class ServicioAutenticacion {
     const rolUsuario = await this.repositorioAutorizacion.obtenerRolConModulosYPermisos(usuarioVerificado.idRol)
     const token = ServicioAutenticacionJWT.generarToken({
       documento: usuarioVerificado.identificacion,
-      idRol: usuarioVerificado.idRol
+      idRol: usuarioVerificado.idRol,
+      idEmpresa:(usuarioVerificado instanceof UsuarioEmpresa)?usuarioVerificado.idEmpresa:"1"
     })
+    let logoEmpresa:string | undefined = undefined;
+    if(usuarioVerificado instanceof UsuarioEmpresa){
+      
+      const empresa = await Tblempresas.findBy('emp_id', usuarioVerificado.idEmpresa)
+      logoEmpresa = empresa?.logo;
+      
+    }
 
     return new RespuestaInicioSesion(
       {
@@ -98,7 +107,9 @@ export class ServicioAutenticacion {
         apellido: usuarioVerificado.apellido,
         telefono: usuarioVerificado.telefono,
         correo: usuarioVerificado.correo,
-        idEmpresa: usuarioVerificado instanceof UsuarioEmpresa ? usuarioVerificado.idEmpresa : undefined
+        idEmpresa: usuarioVerificado instanceof UsuarioEmpresa ? usuarioVerificado.idEmpresa : undefined,
+        logoEmpresa: logoEmpresa?? undefined
+
       },
       token,
       rolUsuario,

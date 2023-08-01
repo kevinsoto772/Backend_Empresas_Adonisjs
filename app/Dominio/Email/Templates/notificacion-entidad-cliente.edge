@@ -1,48 +1,42 @@
 <html>
+<head>
+  <style>*{margin:0;padding:0;box-sizing:border-box;}.saludo{padding:10px 0;}.container{width:794;height:616;background-color:#F4F4F4;border-radius:20px;}.container img{display:block;margin:0 auto;padding-top:60px;}.container h2{text-align:center;padding:10px;font-size:20px;}.container hr{margin:20px 0 20px;}.container table{width:80%;margin:0 auto;border:1px solid #707070;border-collapse:collapse;text-align:center;}.container table tbody tr td{border:1px solid #707070;height:45px;}.container p{text-align:center;padding:40px 0 20px;}.container a{display:block;border-radius:19px;text-decoration:none;width:132px;padding: 10px;background-color:#1FAEEF;text-align:center;padding-top:10px;color:#fff;margin:0 auto;}</style>
+</head>
+<body>
 
-    <head>
-        <style>
+  <h2 class="saludo">Hola {{ nombre }}</h3>
+  <div class="container">
+<img src="https://novafianza.com/correo/logo.png" alt="" width="200px">
 
-        </style>
-    </head>
-
-    <body>
-        <h1>Resultado de validación de datos</h1>
-        <hr>
-        <div>
-            <!-- Tabla de datos  -->
-            <table>
-                <tbody>
-                    <tr>
-                        <td>
-                            Fecha y hora de carga: 11/11/2022 - 3:30 PM
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            Número de radicado: Numero_radicado
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            Tipo de archivo: Tipo de archivado
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            Resultado validación estructura: Exitoso
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-
-            <br>
-            <span>Puede consultar el informe completo ingresando al modulo Novedades</span>
-            <br>
-            <button>Ver detalles</button>
-
-        </div>
-    </body>
-
-
+<h2>Resultado de validación de {{ titulo }}</h2>
+  <hr>
+  <table>
+    <tbody>
+        <tr>
+            <td>
+                Fecha y hora de carga: {{ fechaCargue }}
+            </td>
+        </tr>
+        <tr>
+            <td>
+                Número de radicado: {{ numeroRadicado }}
+            </td>
+        </tr>
+        <tr>
+            <td>
+                Tipo de archivo: {{ tipoArchivo }}
+            </td>
+        </tr>
+        <tr>
+            <td>
+                Resultado validación de {{ titulo }}: {{ resultado }}
+            </td>
+        </tr>
+    </tbody>
+</table>
+<p>Puede consultar el informe completo ingresando al módulo Novedades</p>
+  <hr>
+  <a href="{{ url }}/" target="_blank">Ver detalles</a>
+</div>
+</body>
 </html>

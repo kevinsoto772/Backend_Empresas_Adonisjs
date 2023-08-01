@@ -1,13 +1,24 @@
-const generarJsonValidaciones= async (errores: string, alertas: []) => {
+const generarJsonValidaciones = async (errores: string, alertas: string, tipoError: string) => {
 
     let arrRegistros: any = [];
     arrRegistros['registros'] = errores;
 
+    let arrRegistrosAlertas: any = [];
+    arrRegistrosAlertas['registros'] = alertas;
+
     let arrCategorias: any = [];
     arrCategorias['categorias'] = [
         {
-            "nombre":"Registros obligatorios",
+            "nombre": "Registros obligatorios",
             "registros": arrRegistros['registros']
+        }
+    ];
+
+    let arrCategoriasAlertas: any = [];
+    arrCategoriasAlertas['categorias'] = [
+        {
+            "nombre": "Registros obligatorios",
+            "registros": arrRegistrosAlertas['registros']
         }
     ];
 
@@ -16,18 +27,25 @@ const generarJsonValidaciones= async (errores: string, alertas: []) => {
         {
             "nombre": "Errores",
             "categorias": arrCategorias['categorias']
+        },
+        {
+            "nombre": "Alertas",
+            "categorias": arrCategoriasAlertas['categorias']
         }
     ];
 
     let arrValidaciones: any = [];
-    arrValidaciones['validaciones'] = [
-        {
-           "nombre":"Validacion de datos",
-           "novedades":arrNovedades['novedades']
-        }
-    ]
+    const nombre = (tipoError === '1') ? "Validacion de estructura" : "Validacion de datos"
+    if (tipoError)
+        arrValidaciones['validaciones'] = [
+            {
+                "nombre": nombre,
+                "novedades": arrNovedades['novedades']
+            }
 
-  return arrValidaciones
+        ]
+
+    return arrValidaciones
 }
 export { generarJsonValidaciones }
 

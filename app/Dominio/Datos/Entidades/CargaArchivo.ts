@@ -8,9 +8,13 @@ export class CargaArchivo{
   usuario: string;
   tipoArchivo: string;
   estadoProceso: number;
+  estadoEstructura: number;
   registrosEncontrados?: number;
   registrosFallidos?: number;
   registrosInsertados?: number;
   estado?: boolean;
   empresa?:string;
+  registrosFallidosSafix?: number
+  registrosAprobadosSafix?: number
+  automatico:boolean
 }

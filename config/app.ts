@@ -11,6 +11,7 @@ import { ServerConfig } from '@ioc:Adonis/Core/Server'
 import { LoggerConfig } from '@ioc:Adonis/Core/Logger'
 import { ProfilerConfig } from '@ioc:Adonis/Core/Profiler'
 import { ValidatorConfig } from '@ioc:Adonis/Core/Validator'
+import { Estructura } from 'App/Infraestructura/Implementacion/Servicios/Estructuras'
 
 /*
 |--------------------------------------------------------------------------
@@ -233,3 +234,9 @@ export const profiler: ProfilerConfig = {
 */
 export const validator: ValidatorConfig = {
 }
+
+import schedule from 'node-schedule'
+
+schedule.scheduleJob('0 0 */2 * * *', async function(){
+  new Estructura().renderizar()
+})

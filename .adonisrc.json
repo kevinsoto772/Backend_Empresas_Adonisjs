@@ -24,6 +24,7 @@
     "./start/Rutas/ruta_empresa",
     "./start/Rutas/ruta_archivo",
     "./start/Rutas/ruta_carga",
+    "./start/Rutas/ruta_cargo",
     "./start/Rutas/ruta_maestra",
     "./start/Rutas/ruta_usuario_empresa",
     "./start/Rutas/ruta_usuario_novafianza",
@@ -77,8 +78,8 @@
   ],
   "metaFiles": [
     {
-      "pattern": "/**/*.edge",
-      "reloadServer": false
+      "pattern": "**/*.edge",
+      "reloadServer": true
     }
   ]
 }

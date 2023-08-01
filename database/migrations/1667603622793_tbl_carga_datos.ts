@@ -12,6 +12,7 @@ export default class extends BaseSchema {
       table.string('car_usuario_id')
       table.integer('car_registros_encontrados')
       table.integer('car_estado_proceso_id').references('esc_id').inTable('tbl_estado_cargas')
+      table.integer('car_estado_estructura_id').references('esc_id').inTable('tbl_estado_cargas')
       table.uuid('car_archivo_id').references('arc_id').inTable('tbl_archivos')
       table.integer('car_registros_fallidos')
       table.integer('car_registros_insertados')
@@ -19,6 +20,9 @@ export default class extends BaseSchema {
       table.timestamp('car_creacion', { useTz: true })
       table.timestamp('car_actualizacion', { useTz: true })
       table.string('car_empresa_id')
+      table.integer('car_registros_fallidos_safix')
+      table.integer('car_registros_aprobados_safix')
+      table.boolean('car_automatico').defaultTo(false)
     })
   }
 

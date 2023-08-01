@@ -2,9 +2,6 @@
 import { ServicioCarga } from 'App/Dominio/Datos/Servicios/ServicioCarga'
 import { RepositorioCargaDB } from '../../Infraestructura/Implementacion/Lucid/RepositorioCargaDB'
 import { HttpContextContract } from '@ioc:Adonis/Core/HttpContext';
-import Tblarchivos from 'App/Infraestructura/Datos/Entidad/Archivo';
-import { EnviadorEmailAdonis } from '../../Infraestructura/Email/EnviadorEmailAdonis';
-import { ClienteHttpAxios } from '../../Infraestructura/ClientesHttp/ClienteHttpAxios';
 import { ServicioAutenticacionJWT } from '../../Dominio/Datos/Servicios/ServicioJWT';
 import { ServicioUsuario } from "App/Dominio/Datos/Servicios/ServicioUsuario";
 import { RepositorioUsuarioNovafianzaDB } from '../../Infraestructura/Implementacion/Lucid/RepositorioUsuarioNovafianzaDB';
@@ -13,16 +10,16 @@ export default class ControladorCarga {
   private servicioUsuario: ServicioUsuario;
   private servicio: ServicioCarga;
   constructor() {
-    this.servicio = new ServicioCarga(new RepositorioCargaDB(), new EnviadorEmailAdonis(), new ClienteHttpAxios())
+    this.servicio = new ServicioCarga(new RepositorioCargaDB())
     this.servicioUsuario =  new ServicioUsuario(new RepositorioUsuarioNovafianzaDB(), new RepositorioUsuarioEmpresaDB())
   }
 
   public async cargar({ request, response }) {
     try {
-      const formatos: string[] = ['txt', 'csv']
+      const formatos: string[] = ['txt', 'csv', 'pdf']
       const datos = request.all();
       const archivo = request.file('archivo', {
-        extnames: ['txt', 'csv'],
+        extnames: ['txt', 'csv', 'pdf'],
       })
       if (!archivo) {
         return response.status(400).send({ mensaje: 'No se encontro archivo' })
@@ -33,13 +30,9 @@ export default class ControladorCarga {
       }
 
       let token = request.header('Authorization').split(' ')[1]
-      const {documento} = ServicioAutenticacionJWT.obtenerPayload(token)
+      const {documento, idEmpresa} = ServicioAutenticacionJWT.obtenerPayload(token)
       datos['usuario'] = documento
-      //const arrNombre = archivo.clientName.split('_');
-     /*  const tipoDeProceso = await Tblarchivos.find(datos.tipoArchivo)
-    if( tipoDeProceso?.prefijoArchivo !== arrNombre[0]){
-      return response.status(415).send({ mensaje: `Formato inválido: el tipo de archivo no coincide con el archivo cargado` })
-    } */
+      datos['idEmpresa'] = idEmpresa
 
     
 
@@ -56,14 +49,14 @@ export default class ControladorCarga {
     let token: any = request.header('Authorization')?.split(' ')[1]
     const {documento} = ServicioAutenticacionJWT.obtenerPayload(token)
     datos['usuario'] = documento
-        
+      
     const usuario = await this.servicioUsuario.obtenerUsuario(datos.usuario)
+    if(!datos.entidadId && usuario['idEmpresa']) datos.entidadId = usuario['idEmpresa'] 
+
     if(usuario['idEmpresa'] && datos.entidadId != usuario['idEmpresa']){
       return response.status(400).send({ mensaje: 'No tiene autorizacion para realizar esta consulta' })
     }
     
-
-
     const archivos = await this.servicio.archivosCargados(JSON.stringify(datos))
     if (Object.keys(archivos).length !== 0) {
       response.status(202).send(archivos)
@@ -83,7 +76,20 @@ export default class ControladorCarga {
   }
 
   public async buscar({ request, response }: HttpContextContract) {
-    const archivos = await this.servicio.buscarCargados(JSON.stringify(request.all()))
+    const datos = request.all();
+    let token: any = request.header('Authorization')?.split(' ')[1]
+    const {documento} = ServicioAutenticacionJWT.obtenerPayload(token)
+    datos['usuario'] = documento
+      
+    const usuario = await this.servicioUsuario.obtenerUsuario(datos.usuario)
+    if(!datos.entidadId && usuario['idEmpresa']) datos.entidadId = usuario['idEmpresa'] 
+
+
+    if(usuario['idEmpresa'] && datos.entidadId != usuario['idEmpresa']){
+      return response.status(400).send({ mensaje: 'No tiene autorizacion para realizar esta consulta' })
+    }
+    
+    const archivos = await this.servicio.buscarCargados(JSON.stringify(datos))
 
     if (Object.keys(archivos).length !== 0) {
       response.status(202).send(archivos)

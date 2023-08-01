@@ -1,7 +1,10 @@
 /* eslint-disable @typescript-eslint/semi */
 import { DateTime } from 'luxon';
-import { BaseModel, column} from '@ioc:Adonis/Lucid/Orm';
+import { BaseModel, column, belongsTo, BelongsTo, hasMany, HasMany, manyToMany, ManyToMany } from '@ioc:Adonis/Lucid/Orm';
 import { Archivo } from 'App/Dominio/Datos/Entidades/Archivo';
+import TblTipoArchivos from './TipoArchivo';
+import TblFormatoArchivo from './FormatoArchivo';
+import TblEmpresas from './Empresa';
 export default class TblArchivos extends BaseModel {
   @column({ isPrimary: true, columnName: 'arc_id' })
   public id: string
@@ -16,6 +19,12 @@ export default class TblArchivos extends BaseModel {
 
   @column({ columnName: 'arc_prefijo_archivo' }) public prefijoArchivo: string
 
+  @column({ columnName: 'arc_prefijo_parametrizacion' }) public prefijoParametrizacion?: string
+ 
+  @column({ columnName: 'arc_formato_id' }) public formatoId: string
+
+  @column({ columnName: 'arc_descripcion' }) public descripcion?: string
+
   @column.dateTime({ autoCreate: true, columnName: 'arc_creacion' }) public createdAt: DateTime
 
   @column.dateTime({ autoCreate: true, autoUpdate: true, columnName: 'arc_actualizacion' }) public updatedAt: DateTime
@@ -26,7 +35,10 @@ export default class TblArchivos extends BaseModel {
     this.tipo = archivo.tipo
     this.prefijo = archivo.prefijo
     this.prefijoArchivo = archivo.prefijoArchivo
+    this.prefijoParametrizacion = archivo.prefijoParametrizacion
     this.estado = archivo.estado
+    this.formatoId = archivo.formatoId
+    this.descripcion = archivo.descripcion
   }
 
   public establecerArchivoConId (archivo: Archivo) {
@@ -34,7 +46,10 @@ export default class TblArchivos extends BaseModel {
     this.tipo = archivo.tipo
     this.prefijo = archivo.prefijo
     this.prefijoArchivo = archivo.prefijoArchivo
+    this.prefijoParametrizacion = archivo.prefijoParametrizacion
     this.estado = archivo.estado
+    this.formatoId = archivo.formatoId
+    this.descripcion = archivo.descripcion
   }
 
   public obtenerArchivo (): Archivo {
@@ -44,7 +59,35 @@ export default class TblArchivos extends BaseModel {
     archivo.tipo = this.tipo
     archivo.prefijo = this.prefijo
     archivo.prefijoArchivo = this.prefijoArchivo
-    archivo.estado = this.estado
+    archivo.prefijoParametrizacion = this.prefijoParametrizacion
+    archivo.formatoId = this.formatoId
+    archivo.descripcion = this.descripcion
+    archivo.createdAt = this.createdAt
+    archivo.updatedAt = this.updatedAt
     return archivo
   }
+
+  @hasMany(() => TblTipoArchivos, {
+    localKey: 'tipo',
+    foreignKey: 'id',
+  })
+  public tipoArchivo: HasMany<typeof TblTipoArchivos>
+
+  @hasMany(() => TblFormatoArchivo, {
+    localKey: 'formatoId',
+    foreignKey: 'id',
+  })
+  public formato: HasMany<typeof TblFormatoArchivo>
+
+  @manyToMany(() => TblEmpresas, {
+    localKey: 'id',
+    pivotForeignKey: 'are_archivo_id',
+    relatedKey: 'id',
+    pivotRelatedForeignKey:  'are_empresa_id',
+    pivotTable: 'tbl_archivos_empresas'
+
+  })
+
+  public ArchivosEmpresa: ManyToMany<typeof TblEmpresas>
+
 }

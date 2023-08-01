@@ -40,6 +40,11 @@ export default class ControladorArchivo {
     }
   }
 
+  public async obtenerArchivosPorEmpresa ({ params }) {
+    const archivo = await this.service.obtenerArchivosPorEmpresa(params.id)
+    return archivo
+  }
+
   public async buscar({ request, response }: HttpContextContract) {
     const archivos = await this.service.buscar(JSON.stringify(request.all()))
 

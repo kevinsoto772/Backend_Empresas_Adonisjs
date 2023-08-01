@@ -1,6 +1,3 @@
-/* eslint-disable max-len */
-/* eslint-disable @typescript-eslint/explicit-member-accessibility */
-
 import { Exception } from '@adonisjs/core/build/standalone'
 import { EnviadorEmail } from 'App/Dominio/Email/EnviadorEmail'
 import { GeneradorContrasena } from 'App/Dominio/GenerarContrasena/GenerarContrasena'
@@ -9,6 +6,8 @@ import { UsuarioNovafianza } from '../Entidades/UsuarioNovafianza'
 import { ServicioUsuarioEmpresa } from './ServicioUsuarioEmpresa'
 import { ServicioUsuarioNovafianza } from './ServicioUsuarioNovafianza'
 import { RepositorioBloqueoUsuario } from 'App/Dominio/Repositorios/RepositorioBloqueoUsuario'
+import Env from '@ioc:Adonis/Core/Env'
+import { EmailRecuperacionContrasena } from 'App/Dominio/Email/Emails/EmailRecuperacionContrasena'
 
 export class ServicioEmail{
   constructor (
@@ -49,13 +48,15 @@ export class ServicioEmail{
       } 
     }
 
-    this.enviarEmail('Recuperar contraseña novafianza (No responder)', `Hola ${usuarioVerificado.nombre} ${usuarioVerificado.apellido} recibimos su solicitud
-    su nueva contraseña es: ${clave}`, [correo]
-    )
-  }
-
-  enviarEmail (asunto:string, texto:string, destinatarios:string[], etiquetas?:string[]): void{
-    return this.enviadorEmail.enviarEmail(asunto, texto, destinatarios, etiquetas)
+    await this.enviadorEmail.enviarTemplate({
+      asunto: 'Recuperación de contraseña Novafianza S.A.S',
+      destinatarios: usuarioVerificado.correo,
+      de: Env.get('SMTP_USERNAME')
+    }, new EmailRecuperacionContrasena({
+      nombre: usuarioVerificado.nombre,
+      clave: clave,
+      usuario: usuarioVerificado.identificacion
+    }))
   }
 
   public async verificarUsuario (usuario: string): Promise<UsuarioEmpresa | UsuarioNovafianza> {

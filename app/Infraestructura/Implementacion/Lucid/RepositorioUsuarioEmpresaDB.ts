@@ -46,6 +46,13 @@ export class RepositorioUsuarioEmpresaDB implements RepositorioUsuarioEmpresa {
     return usuarioEmpresaRetorno
   }
 
+  async actualizaUsuarioEmpresa (id: string, usuarioEmpresa: UsuarioEmpresa): Promise<UsuarioEmpresa> {
+    let usuarioEmpresaRetorno = await TblUsuariosEmpresas.findOrFail(id)
+    usuarioEmpresaRetorno.establecerUsuarioEmpresaConId(usuarioEmpresa)
+    await usuarioEmpresaRetorno.save()
+    return usuarioEmpresaRetorno
+  }
+
   async obtenerUsuariosEmpresaPorIdEmpresa (params: any): Promise<{usuariosEmpresa: UsuarioEmpresa[], paginacion: Paginador}> {
     const usuariosEmpresa: UsuarioEmpresa[] = []
     const usuariosEmpresaDB = await TblUsuariosEmpresas.query().where('use_empresa_id', params.idEmpresa).orderBy('id', 'desc').paginate(params.pagina, params.limite)
@@ -55,4 +62,25 @@ export class RepositorioUsuarioEmpresaDB implements RepositorioUsuarioEmpresa {
     const paginacion = MapeadorPaginacionDB.obtenerPaginacion(usuariosEmpresaDB)
     return {usuariosEmpresa , paginacion}
   }
+
+  async buscar (params: string): Promise<{usuarioEmpresa: UsuarioEmpresa[], paginacion: Paginador}> {
+    const { entidadId, pagina = 1, limite = 5, frase } = JSON.parse(params);
+
+    const usuarioEmpresa: UsuarioEmpresa[] = []
+    const usuariosEmpresaDB = await TblUsuariosEmpresas.query()
+        .where('use_empresa_id', entidadId)
+        .whereILike('use_nombre', `%${frase}%`)
+        .orWhereILike('use_apellido', `%${frase}%`)
+        .orWhereILike('use_identificacion', `%${frase}%`)
+        .orWhereILike('use_correo', `%${frase}%`)
+        .paginate(pagina, limite)
+
+  
+        usuariosEmpresaDB.forEach(usuarioEmpresaDB => {
+          usuarioEmpresa.push(usuarioEmpresaDB.obtenerUsuarioEmpresa())
+    })
+    const paginacion = MapeadorPaginacionDB.obtenerPaginacion(usuariosEmpresaDB)
+    return {usuarioEmpresa , paginacion}
+  }
+
 }
